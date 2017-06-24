@@ -66,8 +66,8 @@
 				51839D1F1EFD95EC003B7B40 /* NodeView.swift */,
 				51839D211EFDABAB003B7B40 /* EdgeView.swift */,
 				51839D111EFD9240003B7B40 /* Main.storyboard */,
-				51839D141EFD9240003B7B40 /* Assets.xcassets */,
 				51839D161EFD9240003B7B40 /* LaunchScreen.storyboard */,
+				51839D141EFD9240003B7B40 /* Assets.xcassets */,
 				51839D191EFD9240003B7B40 /* Info.plist */,
 			);
 			path = "Seven Bridges";

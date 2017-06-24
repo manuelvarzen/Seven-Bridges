@@ -19,8 +19,14 @@ import UIKit
     // Color of the Node's border
     @IBInspectable var strokeColor = UIColor.gray
     
-    init(at location: CGPoint) {
+    // Label for the Node
+    @IBInspectable var label: String?
+    
+    init(color: UIColor = UIColor.gray, at location: CGPoint) {
         super.init(frame: CGRect(x: location.x-24, y: location.y-24, width: 48, height: 48))
+        
+        fillColor = color.withAlphaComponent(0.5)
+        strokeColor = color
         
         self.isUserInteractionEnabled = true
         self.backgroundColor = UIColor.clear

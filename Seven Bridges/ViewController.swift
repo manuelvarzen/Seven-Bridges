@@ -10,11 +10,6 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    // TEMP
-    @IBOutlet var blueNode: NodeView!
-    @IBOutlet var pinkNode: NodeView!
-    @IBOutlet var greenNode: NodeView!
-    
     @IBOutlet weak var editButton: UIBarButtonItem!
     
     @IBOutlet weak var graphView: GraphView!
