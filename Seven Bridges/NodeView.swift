@@ -10,42 +10,49 @@ import UIKit
 
 @IBDesignable class NodeView: UIView {
     
-    // Width of the Node's border
+    // Width of the node's border
     @IBInspectable var lineWidth = CGFloat(4)
     
-    // Color of the Node's center
-    @IBInspectable var fillColor = UIColor.lightGray
+    // Previous color of the node's center
+    @IBInspectable var previousfillColor: UIColor?
     
-    // Color of the Node's border
+    // Color of the node's border
     @IBInspectable var strokeColor = UIColor.gray
     
-    // Label for the Node
+    // Color of the node's center
+    @IBInspectable var fillColor = UIColor.lightGray
+    
+    // Label for the node
     @IBInspectable var label: String?
     
+    static let diameter: CGFloat = 36
+    
+    static let radius: CGFloat = diameter / 2
+    
     init(color: UIColor = UIColor.gray, at location: CGPoint) {
-        super.init(frame: CGRect(x: location.x-24, y: location.y-24, width: 48, height: 48))
+        super.init(frame: CGRect(x: location.x - NodeView.radius, y: location.y - NodeView.radius, width: NodeView.diameter, height: NodeView.diameter))
         
-        fillColor = color.withAlphaComponent(0.5)
         strokeColor = color
+        fillColor = strokeColor
         
-        self.isUserInteractionEnabled = true
-        self.backgroundColor = UIColor.clear
+        isUserInteractionEnabled = true
+        backgroundColor = UIColor.clear
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.frame.size = CGSize(width: 48, height: 48)
+        self.frame.size = CGSize(width: NodeView.diameter, height: NodeView.diameter)
         
-        self.isUserInteractionEnabled = true
-        self.backgroundColor = UIColor.clear
+        isUserInteractionEnabled = true
+        backgroundColor = UIColor.clear
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        self.isUserInteractionEnabled = true
-        self.backgroundColor = UIColor.clear
+        isUserInteractionEnabled = true
+        backgroundColor = UIColor.clear
     }
     
     override func draw(_ rect: CGRect) {
@@ -60,23 +67,38 @@ import UIKit
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if (self.superview as! GraphView).isInEditMode {
-            self.superview?.bringSubview(toFront: self)
-        }
+        guard (superview as! GraphView).isInEditMode else { return }
+        
+        // bring selected node to front
+        superview?.bringSubview(toFront: self)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //
+        // select node if graph is making edges
+        let graphView = (superview as! GraphView)
+        
+        guard graphView.isInEditMode && graphView.isMakingEdges else { return }
+        
+        guard graphView.selectedNodeToMakeEdge != nil else {
+            graphView.selectedNodeToMakeEdge = self
+            
+            return
+        }
+        
+        graphView.makeEdge(to: self)
+        
+        // TODO: long press gives option to delete node or give node a label
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if (self.superview as! GraphView).isInEditMode {
-            for touch in touches {
-                let location = touch.location(in: self)
-                let previousLocation = touch.previousLocation(in: self)
-                
-                self.frame = self.frame.offsetBy(dx: (location.x - previousLocation.x), dy: (location.y - previousLocation.y))
-            }
+        let graphView = (superview as! GraphView)
+        guard graphView.isInEditMode && !graphView.isMakingEdges else { return }
+        
+        for touch in touches {
+            let location = touch.location(in: self)
+            let previousLocation = touch.previousLocation(in: self)
+            
+            frame = frame.offsetBy(dx: (location.x - previousLocation.x), dy: (location.y - previousLocation.y))
         }
     }
  
