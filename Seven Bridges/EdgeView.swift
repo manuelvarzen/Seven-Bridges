@@ -13,6 +13,15 @@ import UIKit
     // Thickness of the line
     private let lineWidth = CGFloat(4)
     
+    // Path of the line
+    private var path = UIBezierPath()
+    
+    // Start point of the line
+    private var startPoint: CGPoint?
+    
+    // End point of the line
+    private var endPoint: CGPoint?
+    
     // Node at beginning of edge
     var startNode: NodeView?
     
@@ -25,43 +34,40 @@ import UIKit
         self.startNode = startNode
         self.endNode = endNode
         
-        // determine size of frame
-        let width = abs(startNode.frame.origin.x - endNode.frame.origin.x) + NodeView.diameter
-        let height = abs(startNode.frame.origin.y - endNode.frame.origin.y) + NodeView.diameter
-        let size = CGSize(width: width, height: height)
+        // register edge with nodes
+        startNode.edges.append(self)
+        endNode.edges.append(self)
         
-        // set size of frame
-        frame.size = size
+        updateSize()
         
-        // set location of frame around nodes
-        frame.origin = CGPoint(x: min(startNode.frame.origin.x, endNode.frame.origin.x), y: min(startNode.frame.origin.y, endNode.frame.origin.y))
+        updateOrigin()
         
         backgroundColor = UIColor.clear
+        
+        clearsContextBeforeDrawing = true
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    // Draws a line from startNode to endNode
-    override func draw(_ rect: CGRect) {
-        /* determine size of frame
+    func updateSize() {
+        // determine size of frame
         let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + NodeView.diameter
-        let height = abs(startNode!.frame.origin.y - endNode!.frame.origin.y) + NodeView.diameter*/
+        let height = abs(startNode!.frame.origin.y - endNode!.frame.origin.y) + NodeView.diameter
+        let size = CGSize(width: width, height: height)
         
-        /* set size of frame
-        frame.size.width = width
-        frame.size.height = height*/
-        
-        /* set location of frame around nodes
-        frame.origin = CGPoint(x: min(startNode!.frame.origin.x, endNode!.frame.origin.x), y: min(startNode!.frame.origin.y, endNode!.frame.origin.y))*/
-        
-        // path of the line
-        let path = UIBezierPath()
-        
-        // start and end points of the line
-        var startPoint: CGPoint!
-        var endPoint: CGPoint!
+        // set size of frame
+        frame.size = size
+    }
+    
+    func updateOrigin() {
+        // set location of frame around nodes
+        frame.origin = CGPoint(x: min(startNode!.frame.origin.x, endNode!.frame.origin.x), y: min(startNode!.frame.origin.y, endNode!.frame.origin.y))
+    }
+    
+    func updatePath() {
+        path = UIBezierPath()
         
         // predefined coordinates of nodes relative to frame
         let upperLeft = CGPoint(x: NodeView.radius, y: NodeView.radius)
@@ -89,8 +95,13 @@ import UIKit
         }
         
         // define the line
-        path.move(to: startPoint)
-        path.addLine(to: endPoint)
+        path.move(to: startPoint!)
+        path.addLine(to: endPoint!)
+    }
+    
+    // Draws a line from startNode to endNode
+    override func draw(_ rect: CGRect) {
+        updatePath()
         
         // set color of line to stroke color of start node
         startNode?.strokeColor.setStroke()

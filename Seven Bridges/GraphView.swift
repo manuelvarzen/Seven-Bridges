@@ -46,6 +46,9 @@ import UIKit
         
         // reset color cycle
         colorCycle = 0
+        
+        // deselect selected node
+        selectedNodeToMakeEdge = nil
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
