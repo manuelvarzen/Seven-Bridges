@@ -76,6 +76,8 @@ import UIKit
         
         // bring selected node to front
         superview?.bringSubview(toFront: self)
+        
+        // TODO: bring connected edges to front (of edges)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -106,12 +108,9 @@ import UIKit
             frame = frame.offsetBy(dx: (location.x - previousLocation.x), dy: (location.y - previousLocation.y))
         }
         
-        // TODO: update size and origin of connected edges
+        // update size and origin of connected edges to move with node
         for edge in edges {
-            edge.updateSize()
-            edge.updateOrigin()
-            edge.updatePath()
-            edge.setNeedsDisplay()
+            edge.followConnectedNodes()
         }
     }
  

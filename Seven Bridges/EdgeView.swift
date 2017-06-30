@@ -51,7 +51,14 @@ import UIKit
         super.init(coder: aDecoder)
     }
     
-    func updateSize() {
+    func followConnectedNodes() {
+        updateSize()
+        updateOrigin()
+        updatePath()
+        setNeedsDisplay()
+    }
+    
+    private func updateSize() {
         // determine size of frame
         let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + NodeView.diameter
         let height = abs(startNode!.frame.origin.y - endNode!.frame.origin.y) + NodeView.diameter
@@ -61,12 +68,12 @@ import UIKit
         frame.size = size
     }
     
-    func updateOrigin() {
+    private func updateOrigin() {
         // set location of frame around nodes
         frame.origin = CGPoint(x: min(startNode!.frame.origin.x, endNode!.frame.origin.x), y: min(startNode!.frame.origin.y, endNode!.frame.origin.y))
     }
     
-    func updatePath() {
+    private func updatePath() {
         path = UIBezierPath()
         
         // predefined coordinates of nodes relative to frame

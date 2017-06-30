@@ -14,11 +14,14 @@ import UIKit
     
     var isMakingEdges = false
     
+    // All nodes in the graph
     var nodes = [NodeView]()
     
-    var matrixForm: [[NodeView]]?
+    // Matrix representation of the graph TODO: implement
+    var matrixForm = [[NodeView?]]()
     
-    var listForm: [NodeView: NodeView?]?
+    // List representation of the graph TODO: implement
+    var listForm = [NodeView: NodeView?]()
     
     var selectedNodeToMakeEdge: NodeView?
     
@@ -66,8 +69,13 @@ import UIKit
             // create new node at location of touch
             let node = NodeView(color: colors[colorCycle], at: location)
             
-            // TODO: add new node to data structure
+            // add node to nodes array
             nodes.append(node)
+            
+            // TODO: add node to matrix representation
+            
+            // add node to list representation
+            listForm[node] = nil
             
             // add new node to the view
             addSubview(node)
