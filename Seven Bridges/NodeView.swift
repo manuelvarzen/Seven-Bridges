@@ -74,10 +74,10 @@ import UIKit
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard (superview as! GraphView).isInEditMode else { return }
         
+        // TODO: bring connected edges to front (of edges)
+        
         // bring selected node to front
         superview?.bringSubview(toFront: self)
-        
-        // TODO: bring connected edges to front (of edges)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -86,13 +86,12 @@ import UIKit
         
         guard graphView.isInEditMode && graphView.isMakingEdges else { return }
         
-        guard graphView.selectedNodeToMakeEdge != nil else {
-            graphView.selectedNodeToMakeEdge = self
-            
-            return
+        // select this node as a start node for a new edge if selected node is nil
+        if graphView.selectedNodeToMakeEdge == nil {
+            graphView.makeEdge(from: self)
+        } else {
+            graphView.makeEdge(to: self)
         }
-        
-        graphView.makeEdge(to: self)
         
         // TODO: long press gives option to delete node or give node a label
     }
@@ -100,6 +99,8 @@ import UIKit
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let graphView = (superview as! GraphView)
         guard graphView.isInEditMode && !graphView.isMakingEdges else { return }
+        
+        // TODO: limit coordinates to positive values to prevent going off screen
         
         for touch in touches {
             let location = touch.location(in: self)

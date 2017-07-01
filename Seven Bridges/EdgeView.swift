@@ -28,6 +28,9 @@ import UIKit
     // Node at end of edge
     var endNode: NodeView?
     
+    // Weight of the edge
+    var weight: Double?
+    
     init(from startNode: NodeView, to endNode: NodeView) {
         super.init(frame: CGRect())
         

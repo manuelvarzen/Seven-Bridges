@@ -10,8 +10,10 @@ import UIKit
 
 @IBDesignable class GraphView: UIScrollView {
     
+    // Whether the graph is in edit mode
     var isInEditMode = false
     
+    // Whether the graph is making edges or nodes
     var isMakingEdges = false
     
     // All nodes in the graph
@@ -23,8 +25,10 @@ import UIKit
     // List representation of the graph TODO: implement
     var listForm = [NodeView: NodeView?]()
     
+    // Selected node to be used as the start node for a new edge
     var selectedNodeToMakeEdge: NodeView?
     
+    // Current index in the colors array
     private var colorCycle = 0
     
     // Colors to cycle through when making new node
@@ -51,6 +55,43 @@ import UIKit
         colorCycle = 0
         
         // deselect selected node
+        selectedNodeToMakeEdge = nil
+    }
+    
+    // Selects a start node for making a new edge
+    func makeEdge(from startNode: NodeView) {
+        selectedNodeToMakeEdge = startNode
+        
+        startNode.previousfillColor = startNode.fillColor
+        startNode.fillColor = UIColor.white
+        startNode.setNeedsDisplay()
+    }
+    
+    // Makes a new edge between the selected node and an end node
+    func makeEdge(to endNode: NodeView) {
+        guard selectedNodeToMakeEdge != nil else { return }
+        
+        // check if start node and end node are not the same
+        // if so, make an edge
+        if endNode != selectedNodeToMakeEdge! {
+            // create the edge
+            let edge = EdgeView(from: selectedNodeToMakeEdge!, to: endNode)
+            
+            // add the edge to the graph
+            addSubview(edge)
+            
+            // send edge to the back
+            sendSubview(toBack: edge)
+            
+            // add new edge to list representation
+            listForm[selectedNodeToMakeEdge!] = endNode
+        }
+        
+        // return selected node to original color config
+        selectedNodeToMakeEdge!.fillColor = selectedNodeToMakeEdge!.previousfillColor!
+        selectedNodeToMakeEdge!.setNeedsDisplay()
+        
+        // clear the selected node
         selectedNodeToMakeEdge = nil
     }
     
@@ -87,21 +128,6 @@ import UIKit
                 colorCycle = 0
             }
         }
-    }
-    
-    // Makes a new edge between the selected node and an end node
-    func makeEdge(to endNode: NodeView) {
-        guard selectedNodeToMakeEdge != nil else { return }
-        
-        let edge = EdgeView(from: selectedNodeToMakeEdge!, to: endNode)
-        
-        addSubview(edge)
-        
-        sendSubview(toBack: edge)
-        
-        // TODO: add new edge to data structure
-        
-        selectedNodeToMakeEdge = nil
     }
     
 }
