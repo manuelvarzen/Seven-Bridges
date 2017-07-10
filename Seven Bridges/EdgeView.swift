@@ -3,7 +3,6 @@
 //  Seven Bridges
 //
 //  Created by Dillon Fagan on 6/23/17.
-//  Copyright © 2017 Dillon Fagan. All rights reserved.
 //
 
 import UIKit
@@ -37,7 +36,7 @@ import UIKit
         self.startNode = startNode
         self.endNode = endNode
         
-        // register edge with nodes
+        // Register edge with nodes.
         startNode.edges.append(self)
         endNode.edges.append(self)
         
@@ -54,6 +53,7 @@ import UIKit
         super.init(coder: aDecoder)
     }
     
+    // Updates size, origin, and path of line relative to the startNode and endNode.
     func followConnectedNodes() {
         updateSize()
         updateOrigin()
@@ -62,30 +62,30 @@ import UIKit
     }
     
     private func updateSize() {
-        // determine size of frame
+        // Determine size of frame.
         let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + NodeView.diameter
         let height = abs(startNode!.frame.origin.y - endNode!.frame.origin.y) + NodeView.diameter
         let size = CGSize(width: width, height: height)
         
-        // set size of frame
+        // Set size of frame.
         frame.size = size
     }
     
     private func updateOrigin() {
-        // set location of frame around nodes
+        // Set location of frame around nodes.
         frame.origin = CGPoint(x: min(startNode!.frame.origin.x, endNode!.frame.origin.x), y: min(startNode!.frame.origin.y, endNode!.frame.origin.y))
     }
     
     private func updatePath() {
         path = UIBezierPath()
         
-        // predefined coordinates of nodes relative to frame
+        // Predefined coordinates of nodes relative to frame.
         let upperLeft = CGPoint(x: NodeView.radius, y: NodeView.radius)
         let lowerLeft = CGPoint(x: NodeView.radius, y: frame.size.height - NodeView.radius)
         let upperRight = CGPoint(x: frame.size.width - NodeView.radius, y: NodeView.radius)
         let lowerRight = CGPoint(x: frame.size.width - NodeView.radius, y: frame.size.height - NodeView.radius)
         
-        // locate nodes within frame and set start and end points of line
+        // Locate nodes within frame and set start and end points of line.
         if startNode!.frame.origin.y > frame.origin.y {
             if startNode!.frame.origin.x <= frame.origin.x {
                 startPoint = lowerLeft
@@ -104,22 +104,22 @@ import UIKit
             }
         }
         
-        // define the line
+        // Define the line.
         path.move(to: startPoint!)
         path.addLine(to: endPoint!)
     }
     
-    // Draws a line from startNode to endNode
+    // Draws a line from startNode to endNode.
     override func draw(_ rect: CGRect) {
         updatePath()
         
-        // set color of line to stroke color of start node
+        // Set color of line to stroke color of start node.
         startNode?.strokeColor.setStroke()
         
-        // set thickness of the line
+        // Set thickness of the line.
         path.lineWidth = lineWidth
         
-        // stroke the line
+        // Stroke the line.
         path.stroke()
     }
     

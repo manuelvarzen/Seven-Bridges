@@ -3,7 +3,6 @@
 //  Seven Bridges
 //
 //  Created by Dillon Fagan on 6/23/17.
-//  Copyright © 2017 Dillon Fagan. All rights reserved.
 //
 
 import UIKit
