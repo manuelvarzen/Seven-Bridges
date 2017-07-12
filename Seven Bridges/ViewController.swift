@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         selectingToolbarItems.append(deleteButton)
     }
     
-    func deleteSelectedNodes(_ sender: UIBarButtonItem) {
+    @objc func deleteSelectedNodes(_ sender: UIBarButtonItem) {
         graphView.deleteSelectedNodes()
     }
     
