@@ -23,14 +23,15 @@ import UIKit
     // Whether the graph is directed
     var isDirected = false
     
-    // Matrix representation of the graph
-    var matrixForm = [[NodeView?]]()
+    // TODO: Matrix representation of the graph.
     
     // List representation of the graph
     var listForm = [NodeView: NodeView?]()
     
     // Selected node to be used as the start node for a new edge
     var selectedNodeToMakeEdge: NodeView?
+    
+    private var selectedNodes: [NodeView]?
     
     // Current index in the colors array
     private var colorCycle = 0
@@ -66,9 +67,7 @@ import UIKit
     func makeEdge(from startNode: NodeView) {
         selectedNodeToMakeEdge = startNode
         
-        startNode.previousfillColor = startNode.fillColor
-        startNode.fillColor = UIColor.white
-        startNode.setNeedsDisplay()
+        startNode.changeFillColor(to: UIColor.white)
     }
     
     // Makes a new edge between the selected node and an end node.
@@ -94,38 +93,85 @@ import UIKit
         }
         
         // Return selected node to original color config
-        selectedNodeToMakeEdge!.fillColor = selectedNodeToMakeEdge!.previousfillColor
-        selectedNodeToMakeEdge!.setNeedsDisplay()
+        selectedNodeToMakeEdge!.revertFillColor()
         
         // Clear the selected node
         selectedNodeToMakeEdge = nil
     }
     
+    // Adds the given node to an array and updates the state of the node.
+    func selectNode(_ node: NodeView) {
+        // Initialize the array if nil.
+        if selectedNodes == nil {
+            selectedNodes = [NodeView]()
+        }
+        
+        // Update state of node.
+        node.changeFillColor(to: UIColor.white)
+        
+        // Add node to array.
+        selectedNodes?.append(node)
+    }
+    
+    // Clears the selected nodes array and returns the nodes to their original state.
+    func deselectNodes() {
+        guard selectedNodes != nil else { return }
+        
+        // Return all nodes in array to original state.
+        for node in selectedNodes! {
+            node.revertFillColor()
+        }
+        
+        // Set the array to nil.
+        selectedNodes = nil
+    }
+    
+    func deleteSelectedNodes() {
+        guard selectedNodes != nil else { return }
+        
+        for node in selectedNodes! {
+            node.removeFromSuperview()
+            
+            for edge in node.edges {
+                edge.removeFromSuperview()
+                
+                if let index = edge.startNode?.edges.index(of: edge) {
+                    edge.startNode?.edges.remove(at: index)
+                }
+                
+                if let index = edge.endNode?.edges.index(of: edge) {
+                    edge.endNode?.edges.remove(at: index)
+                }
+            }
+        }
+    }
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // Continue if graph is in nodes mode.
         guard mode == .nodes else { return }
         
+        // Make new node where the graph view was touched.
         makeNode(with: touches)
     }
     
     // Makes a new node at the location of the touch.
     private func makeNode(with touches: Set<UITouch>) {
         for touch in touches {
-            // Get location of the touch
+            // Get location of the touch.
             let location = touch.location(in: self)
             
-            // Create new node at location of touch
+            // Create new node at location of touch.
             let node = NodeView(color: colors[colorCycle], at: location)
             
-            // TODO: Add node to matrix representation
-            
-            // Add node to list representation
+            // Add node to list representation.
             listForm[node] = nil
             
-            // Add new node to the view
-            addSubview(node)
-            //addSubview(node.label)
+            // TODO: Add node to matrix representation.
             
-            // Cycle through colors
+            // Add new node to the view.
+            addSubview(node)
+            
+            // Cycle through colors.
             if colorCycle < colors.count - 1 {
                 colorCycle += 1
             } else {

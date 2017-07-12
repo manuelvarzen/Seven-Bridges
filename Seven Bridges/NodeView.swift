@@ -31,19 +31,13 @@ import UIKit
     @IBInspectable var fillColor: UIColor!
     
     // Label for the node
-    var label = UILabel()
+    var label: UILabel?
     
     init(color: UIColor = UIColor.lightGray, at location: CGPoint) {
         super.init(frame: CGRect(x: location.x - NodeView.radius, y: location.y - NodeView.radius, width: NodeView.diameter, height: NodeView.diameter))
         
         fillColor = color
         strokeColor = fillColor
-        
-        // FIXME:
-        label.text = "TEST"
-        label.frame.origin = self.frame.origin
-        label.isEnabled = true
-        label.isHidden = false
         
         isUserInteractionEnabled = true
         backgroundColor = UIColor.clear
@@ -65,6 +59,19 @@ import UIKit
         backgroundColor = UIColor.clear
     }
     
+    // Changes the fill color to the given color and saves the previous color
+    func changeFillColor(to color: UIColor) {
+        previousfillColor = fillColor
+        fillColor = color
+        setNeedsDisplay()
+    }
+    
+    // Changes the fill color back to the previous color
+    func revertFillColor() {
+        fillColor = previousfillColor
+        setNeedsDisplay()
+    }
+    
     override func draw(_ rect: CGRect) {
         let path = UIBezierPath(ovalIn: rect.insetBy(dx: lineWidth/2, dy: lineWidth/2))
         path.lineWidth = lineWidth
@@ -77,7 +84,8 @@ import UIKit
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard (superview as! GraphView).mode == .dragging else { return }
+        let graphView = (superview as! GraphView)
+        guard graphView.mode == .dragging || graphView.mode == .selecting else { return }
         
         // TODO: Bring connected edges to front (of edges).
         
@@ -97,7 +105,8 @@ import UIKit
                 alert.addTextField(configurationHandler: nil)
                 
                 alert.addAction(UIAlertAction(title: "Rename", style: UIAlertActionStyle.default, handler: { a in
-                    self.label.text = alert.textFields?[0].text!
+                    self.label = UILabel()
+                    self.label?.text = alert.textFields?[0].text!
                 }))
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
@@ -107,13 +116,17 @@ import UIKit
             }
         }
         
-        guard graphView.mode == .edges else { return }
+        if graphView.mode == .edges {
+            // Select this node as a start node for a new edge if the selected node is nil.
+            if graphView.selectedNodeToMakeEdge == nil {
+                graphView.makeEdge(from: self)
+            } else {
+                graphView.makeEdge(to: self)
+            }
+        }
         
-        // Select this node as a start node for a new edge if the selected node is nil.
-        if graphView.selectedNodeToMakeEdge == nil {
-            graphView.makeEdge(from: self)
-        } else {
-            graphView.makeEdge(to: self)
+        if graphView.mode == .selecting {
+            graphView.selectNode(self)
         }
     }
     

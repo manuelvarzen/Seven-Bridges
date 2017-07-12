@@ -10,7 +10,7 @@ import UIKit
 @IBDesignable class EdgeView: UIView {
     
     // Thickness of the line
-    private let lineWidth = CGFloat(4)
+    private let lineWidth: CGFloat = 4
     
     // Path of the line
     private var path = UIBezierPath()
@@ -53,7 +53,7 @@ import UIKit
         super.init(coder: aDecoder)
     }
     
-    // Updates size, origin, and path of line relative to the startNode and endNode.
+    // Updates size, origin, and path of line relative to the start node and end node.
     func followConnectedNodes() {
         updateSize()
         updateOrigin()
@@ -61,6 +61,7 @@ import UIKit
         setNeedsDisplay()
     }
     
+    // Updates size of the frame based on the distance between the start node and end node.
     private func updateSize() {
         // Determine size of frame.
         let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + NodeView.diameter
@@ -71,11 +72,13 @@ import UIKit
         frame.size = size
     }
     
+    // Updates origin of the frame based on the leftmost node.
     private func updateOrigin() {
         // Set location of frame around nodes.
         frame.origin = CGPoint(x: min(startNode!.frame.origin.x, endNode!.frame.origin.x), y: min(startNode!.frame.origin.y, endNode!.frame.origin.y))
     }
     
+    // Updates the line based on the positions of the start node and end node.
     private func updatePath() {
         path = UIBezierPath()
         
@@ -107,9 +110,11 @@ import UIKit
         // Define the line.
         path.move(to: startPoint!)
         path.addLine(to: endPoint!)
+        
+        // TODO: Add arrow for directed graph.
     }
     
-    // Draws a line from startNode to endNode.
+    // Draws a line from the start node to the end node.
     override func draw(_ rect: CGRect) {
         updatePath()
         
