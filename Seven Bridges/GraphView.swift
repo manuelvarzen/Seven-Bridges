@@ -23,6 +23,9 @@ import UIKit
     // Whether the graph is directed
     var isDirected = false
     
+    // All nodes in the graph.
+    var nodes = [NodeView]()
+    
     // TODO: Matrix representation of the graph.
     
     // List representation of the graph
@@ -33,7 +36,10 @@ import UIKit
     
     private var selectedNodes: [NodeView]?
     
-    // Current index in the colors array
+    // Number of nodes in the graph.
+    private var nodeCount = 0
+    
+    // Current index in the colors array.
     private var colorCycle = 0
     
     // Colors to cycle through when making a new node.
@@ -50,16 +56,19 @@ import UIKit
         UIColor(red: 106/255, green: 24/255, blue: 170/255, alpha: 1.0)
     ]
     
-    // Clears all subviews.
+    // Clears the graph of all nodes and edges.
     func clear() {
         for subview in subviews {
             subview.removeFromSuperview()
         }
         
-        // Reset color cycle
+        // Reset color cycle.
         colorCycle = 0
         
-        // Deselect selected node
+        // Reset node count.
+        nodeCount = 0
+        
+        // Deselect selected node.
         selectedNodeToMakeEdge = nil
     }
     
@@ -67,7 +76,7 @@ import UIKit
     func makeEdge(from startNode: NodeView) {
         selectedNodeToMakeEdge = startNode
         
-        startNode.changeFillColor(to: UIColor.white)
+        startNode.fillColor = UIColor.white
     }
     
     // Makes a new edge between the selected node and an end node.
@@ -93,7 +102,7 @@ import UIKit
         }
         
         // Return selected node to original color config
-        selectedNodeToMakeEdge!.revertFillColor()
+        selectedNodeToMakeEdge!.fillColor = selectedNodeToMakeEdge!.previousfillColor
         
         // Clear the selected node
         selectedNodeToMakeEdge = nil
@@ -107,7 +116,7 @@ import UIKit
         }
         
         // Update state of node.
-        node.changeFillColor(to: UIColor.white)
+        node.fillColor = UIColor.white
         
         // Add node to array.
         selectedNodes?.append(node)
@@ -119,13 +128,14 @@ import UIKit
         
         // Return all nodes in array to original state.
         for node in selectedNodes! {
-            node.revertFillColor()
+            node.fillColor = node.previousfillColor
         }
         
         // Set the array to nil.
         selectedNodes = nil
     }
     
+    // Deletes all selected nodes and their edges.
     func deleteSelectedNodes() {
         guard selectedNodes != nil else { return }
         
@@ -146,6 +156,22 @@ import UIKit
         }
     }
     
+    // TODO: Recolors all nodes so that no adjacent nodes are the same color.
+    func colorizeNodes() {
+        nodes[0].color = UIColor.cyan
+        
+        for node in nodes[1...] {
+            for adjacentNode in node.adjacentNodes {
+                if adjacentNode.color == node.color {
+                    node.color = UIColor.red
+                }
+            }
+        }
+    }
+    
+    // TODO: Recolors all edges so that no adjacent edges are the same color.
+    func colorizeEdges() {}
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Continue if graph is in nodes mode.
         guard mode == .nodes else { return }
@@ -160,8 +186,13 @@ import UIKit
             // Get location of the touch.
             let location = touch.location(in: self)
             
+            nodeCount += 1
+            
             // Create new node at location of touch.
             let node = NodeView(color: colors[colorCycle], at: location)
+            node.label.text = String(nodeCount)
+            
+            nodes.append(node)
             
             // Add node to list representation.
             listForm[node] = nil

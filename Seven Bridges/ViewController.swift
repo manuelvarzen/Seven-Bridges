@@ -24,13 +24,13 @@ class ViewController: UIViewController {
         // Create the delete button.
         let deleteButton = UIBarButtonItem()
         deleteButton.title = "Delete"
-        deleteButton.action = #selector(deleteSelectedNodes(_:))
+        deleteButton.action = #selector(deleteSelectedNodes)
         
         selectingToolbarItems = [UIBarButtonItem]()
         selectingToolbarItems.append(deleteButton)
     }
     
-    @objc func deleteSelectedNodes(_ sender: UIBarButtonItem) {
+    @objc func deleteSelectedNodes() {
         graphView.deleteSelectedNodes()
     }
     

@@ -9,35 +9,75 @@ import UIKit
 
 @IBDesignable class NodeView: UIView {
     
-    // Diameter of the node
-    static let diameter: CGFloat = 42
+    // Diameter of the node.
+    static let diameter: CGFloat = 48
     
-    // Radius of the node, computed as half the diameter
+    // Radius of the node, computed as half the diameter.
     static let radius: CGFloat = diameter / 2
     
-    // Edges connected to the node
+    // Edges connected to the node.
     var edges = [EdgeView]()
     
-    // Width of the node's border
-    @IBInspectable var lineWidth: CGFloat = diameter / 6
+    // All nodes that are adjacent.
+    var adjacentNodes: [NodeView] {
+        get {
+            var results = [NodeView]()
+            
+            for edge in edges {
+                if edge.startNode! != self {
+                    results.append(edge.startNode!)
+                } else if edge.endNode! != self {
+                    results.append(edge.endNode!)
+                }
+            }
+            
+            return results
+        }
+    }
     
-    // Previous color of the node's center
-    @IBInspectable var previousfillColor: UIColor!
+    // Width of the node's border.
+    var lineWidth: CGFloat = diameter / 6
     
-    // Color of the node's border
-    @IBInspectable var strokeColor: UIColor!
+    // Previous color of the node's center.
+    var previousfillColor: UIColor!
     
-    // Color of the node's center
-    @IBInspectable var fillColor: UIColor!
+    // Color of the node's border.
+    var strokeColor: UIColor!
     
-    // Label for the node
-    var label: UILabel?
+    // Color of the node's center. Changing its value saves the previous color.
+    var fillColor: UIColor! {
+        willSet {
+            previousfillColor = self.fillColor
+        }
+        
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    // Unified color of the node's fill and border.
+    var color: UIColor! {
+        didSet {
+            strokeColor = self.color
+            fillColor = self.color
+            
+            setNeedsDisplay()
+        }
+    }
+    
+    // Label for the node.
+    var label = UILabel()
     
     init(color: UIColor = UIColor.lightGray, at location: CGPoint) {
         super.init(frame: CGRect(x: location.x - NodeView.radius, y: location.y - NodeView.radius, width: NodeView.diameter, height: NodeView.diameter))
         
-        fillColor = color
-        strokeColor = fillColor
+        self.color = color
+        strokeColor = self.color
+        fillColor = self.color
+        
+        label.textColor = UIColor.white
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = NSTextAlignment.center
         
         isUserInteractionEnabled = true
         backgroundColor = UIColor.clear
@@ -59,17 +99,13 @@ import UIKit
         backgroundColor = UIColor.clear
     }
     
-    // Changes the fill color to the given color and saves the previous color
-    func changeFillColor(to color: UIColor) {
-        previousfillColor = fillColor
-        fillColor = color
-        setNeedsDisplay()
-    }
-    
-    // Changes the fill color back to the previous color
-    func revertFillColor() {
-        fillColor = previousfillColor
-        setNeedsDisplay()
+    // Determines whether a given node is adjacent.
+    func isAdjacent(to node: NodeView) -> Bool {
+        if adjacentNodes.contains(node) {
+            return true
+        } else {
+            return false
+        }
     }
     
     override func draw(_ rect: CGRect) {
@@ -81,6 +117,8 @@ import UIKit
         
         strokeColor.setStroke()
         path.stroke()
+        
+        label.drawText(in: rect)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -98,15 +136,14 @@ import UIKit
         
         // TODO: Replace double-tap with selection mode in the graph view.
         // Detect double-tap and prompt to rename the node.
-        for touch in touches {
+        /*for touch in touches {
             if touch.tapCount == 2 {
                 let alert = UIAlertController(title: "Rename Node?", message: nil, preferredStyle: UIAlertControllerStyle.alert)
                 
                 alert.addTextField(configurationHandler: nil)
                 
                 alert.addAction(UIAlertAction(title: "Rename", style: UIAlertActionStyle.default, handler: { a in
-                    self.label = UILabel()
-                    self.label?.text = alert.textFields?[0].text!
+                    self.label.text = alert.textFields?[0].text!
                 }))
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
@@ -114,7 +151,7 @@ import UIKit
                 let parentViewController = UIApplication.shared.windows[0].rootViewController
                 parentViewController?.present(alert, animated: true, completion: nil)
             }
-        }
+        }*/
         
         if graphView.mode == .edges {
             // Select this node as a start node for a new edge if the selected node is nil.
