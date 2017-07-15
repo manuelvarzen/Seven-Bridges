@@ -7,7 +7,7 @@
 
 import UIKit
 
-@IBDesignable class EdgeView: UIView {
+@IBDesignable class Edge: UIView {
     
     // Thickness of the line
     private let lineWidth: CGFloat = 4
@@ -22,15 +22,15 @@ import UIKit
     private var endPoint: CGPoint?
     
     // Node at beginning of edge
-    var startNode: NodeView?
+    var startNode: Node?
     
     // Node at end of edge
-    var endNode: NodeView?
+    var endNode: Node?
     
     // Weight of the edge
     var weight: Double?
     
-    init(from startNode: NodeView, to endNode: NodeView) {
+    init(from startNode: Node, to endNode: Node) {
         super.init(frame: CGRect())
         
         self.startNode = startNode
@@ -64,8 +64,8 @@ import UIKit
     // Updates size of the frame based on the distance between the start node and end node.
     private func updateSize() {
         // Determine size of frame.
-        let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + NodeView.diameter
-        let height = abs(startNode!.frame.origin.y - endNode!.frame.origin.y) + NodeView.diameter
+        let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + Node.diameter
+        let height = abs(startNode!.frame.origin.y - endNode!.frame.origin.y) + Node.diameter
         let size = CGSize(width: width, height: height)
         
         // Set size of frame.
@@ -83,10 +83,10 @@ import UIKit
         path = UIBezierPath()
         
         // Predefined coordinates of nodes relative to frame.
-        let upperLeft = CGPoint(x: NodeView.radius, y: NodeView.radius)
-        let lowerLeft = CGPoint(x: NodeView.radius, y: frame.size.height - NodeView.radius)
-        let upperRight = CGPoint(x: frame.size.width - NodeView.radius, y: NodeView.radius)
-        let lowerRight = CGPoint(x: frame.size.width - NodeView.radius, y: frame.size.height - NodeView.radius)
+        let upperLeft = CGPoint(x: Node.radius, y: Node.radius)
+        let lowerLeft = CGPoint(x: Node.radius, y: frame.size.height - Node.radius)
+        let upperRight = CGPoint(x: frame.size.width - Node.radius, y: Node.radius)
+        let lowerRight = CGPoint(x: frame.size.width - Node.radius, y: frame.size.height - Node.radius)
         
         // Locate nodes within frame and set start and end points of line.
         if startNode!.frame.origin.y > frame.origin.y {

@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var graphView: GraphView!
+    @IBOutlet weak var graphView: Graph!
     
     @IBOutlet weak var toolbar: UIToolbar!
     
@@ -36,9 +36,9 @@ class ViewController: UIViewController {
     
     @IBAction func enableSelecting(_ sender: UIBarButtonItem) {
         if graphView.mode != .selecting {
-            graphView.mode = GraphView.Mode.selecting
+            graphView.mode = Graph.Mode.selecting
         } else {
-            graphView.mode = GraphView.Mode.dragging
+            graphView.mode = Graph.Mode.dragging
         }
         
         if graphView.mode == .selecting {
@@ -55,15 +55,15 @@ class ViewController: UIViewController {
     }
     
     @IBAction func enableDragging(_ sender: UIBarButtonItem) {
-        graphView.mode = GraphView.Mode.dragging
+        graphView.mode = Graph.Mode.dragging
     }
     
     @IBAction func makeNodes(_ sender: UIBarButtonItem) {
-        graphView.mode = GraphView.Mode.nodes
+        graphView.mode = Graph.Mode.nodes
     }
     
     @IBAction func makeEdges(_ sender: UIBarButtonItem) {
-        graphView.mode = GraphView.Mode.edges
+        graphView.mode = Graph.Mode.edges
     }
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {

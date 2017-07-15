@@ -7,7 +7,7 @@
 
 import UIKit
 
-@IBDesignable class NodeView: UIView {
+@IBDesignable class Node: UIView {
     
     // Diameter of the node.
     static let diameter: CGFloat = 48
@@ -16,12 +16,12 @@ import UIKit
     static let radius: CGFloat = diameter / 2
     
     // Edges connected to the node.
-    var edges = [EdgeView]()
+    var edges = [Edge]()
     
     // All nodes that are adjacent.
-    var adjacentNodes: [NodeView] {
+    var neighbors: [Node] {
         get {
-            var results = [NodeView]()
+            var results = [Node]()
             
             for edge in edges {
                 if edge.startNode! != self {
@@ -69,7 +69,7 @@ import UIKit
     var label = UILabel()
     
     init(color: UIColor = UIColor.lightGray, at location: CGPoint) {
-        super.init(frame: CGRect(x: location.x - NodeView.radius, y: location.y - NodeView.radius, width: NodeView.diameter, height: NodeView.diameter))
+        super.init(frame: CGRect(x: location.x - Node.radius, y: location.y - Node.radius, width: Node.diameter, height: Node.diameter))
         
         // Set the colors.
         self.color = color
@@ -92,7 +92,7 @@ import UIKit
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.frame.size = CGSize(width: NodeView.diameter, height: NodeView.diameter)
+        self.frame.size = CGSize(width: Node.diameter, height: Node.diameter)
         
         isUserInteractionEnabled = true
         backgroundColor = UIColor.clear
@@ -106,8 +106,8 @@ import UIKit
     }
     
     // Determines whether a given node is adjacent.
-    func isAdjacent(to node: NodeView) -> Bool {
-        if adjacentNodes.contains(node) {
+    func isAdjacent(to node: Node) -> Bool {
+        if neighbors.contains(node) {
             return true
         } else {
             return false
@@ -128,7 +128,7 @@ import UIKit
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let graphView = (superview as! GraphView)
+        let graphView = (superview as! Graph)
         guard graphView.mode == .dragging || graphView.mode == .selecting else { return }
         
         // TODO: Bring connected edges to front (of edges).
@@ -138,7 +138,7 @@ import UIKit
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let graphView = (superview as! GraphView)
+        let graphView = (superview as! Graph)
         
         // TODO: Replace double-tap with selection mode in the graph view.
         // Detect double-tap and prompt to rename the node.
@@ -174,7 +174,7 @@ import UIKit
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let graphView = (superview as! GraphView)
+        let graphView = (superview as! Graph)
         
         guard graphView.mode == .dragging else { return }
         

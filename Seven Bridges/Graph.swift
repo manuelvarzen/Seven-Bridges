@@ -7,7 +7,7 @@
 
 import UIKit
 
-@IBDesignable class GraphView: UIScrollView {
+@IBDesignable class Graph: UIScrollView {
     
     // Mode defining the action performed by user interaction.
     enum Mode {
@@ -24,17 +24,17 @@ import UIKit
     var isDirected = false
     
     // All nodes in the graph.
-    var nodes = [NodeView]()
+    var nodes = [Node]()
     
     // TODO: Matrix representation of the graph.
     
     // List representation of the graph
-    var listForm = [NodeView: NodeView?]()
+    var listForm = [Node: Node?]()
     
     // Selected node to be used as the start node for a new edge.
-    var selectedNodeToMakeEdge: NodeView?
+    var selectedNodeToMakeEdge: Node?
     
-    private var selectedNodes: [NodeView]?
+    private var selectedNodes: [Node]?
     
     // Number of nodes in the graph.
     private var nodeCount = 0
@@ -82,21 +82,21 @@ import UIKit
     }
     
     // Selects a start node for making a new edge.
-    func makeEdge(from startNode: NodeView) {
+    func makeEdge(from startNode: Node) {
         selectedNodeToMakeEdge = startNode
         
         startNode.fillColor = UIColor.white
     }
     
     // Makes a new edge between the selected node and an end node.
-    func makeEdge(to endNode: NodeView) {
+    func makeEdge(to endNode: Node) {
         guard selectedNodeToMakeEdge != nil else { return }
         
         // Check if start node and end node are not the same
         // If so, make an edge
         if endNode != selectedNodeToMakeEdge! {
             // Create the edge
-            let edge = EdgeView(from: selectedNodeToMakeEdge!, to: endNode)
+            let edge = Edge(from: selectedNodeToMakeEdge!, to: endNode)
             
             // Add the edge to the graph
             addSubview(edge)
@@ -118,10 +118,10 @@ import UIKit
     }
     
     // Adds the given node to an array and updates the state of the node.
-    func selectNode(_ node: NodeView) {
+    func selectNode(_ node: Node) {
         // Initialize the array if nil.
         if selectedNodes == nil {
-            selectedNodes = [NodeView]()
+            selectedNodes = [Node]()
         }
         
         // Update state of node.
@@ -166,12 +166,12 @@ import UIKit
     }
     
     // FIXME: Recolors all nodes so that no adjacent nodes are the same color.
-    func colorizeNodes() {
+    func colorize() {
         nodes[0].color = UIColor.cyan
         
         for node in nodes[1...] {
-            for adjacentNode in node.adjacentNodes {
-                if adjacentNode.color == node.color {
+            for neighbor in node.neighbors {
+                if neighbor.color == node.color {
                     node.color = UIColor.red
                 }
             }
@@ -195,7 +195,7 @@ import UIKit
             nodeCount += 1
             
             // Create new node at location of touch.
-            let node = NodeView(color: colors[colorCycle], at: location)
+            let node = Node(color: colors[colorCycle], at: location)
             node.label.text = String(nodeCount)
             
             nodes.append(node)
