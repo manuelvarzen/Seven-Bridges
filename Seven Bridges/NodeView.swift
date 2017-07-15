@@ -71,15 +71,21 @@ import UIKit
     init(color: UIColor = UIColor.lightGray, at location: CGPoint) {
         super.init(frame: CGRect(x: location.x - NodeView.radius, y: location.y - NodeView.radius, width: NodeView.diameter, height: NodeView.diameter))
         
+        // Set the colors.
         self.color = color
         strokeColor = self.color
         fillColor = self.color
         
+        // Set up the label.
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = UIColor.white
         label.adjustsFontSizeToFitWidth = true
         label.textAlignment = NSTextAlignment.center
         
+        // Enable user interaction.
         isUserInteractionEnabled = true
+        
+        // Set background color to clear.
         backgroundColor = UIColor.clear
     }
     

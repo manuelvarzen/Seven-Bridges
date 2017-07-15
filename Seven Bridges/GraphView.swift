@@ -9,7 +9,7 @@ import UIKit
 
 @IBDesignable class GraphView: UIScrollView {
     
-    // Mode defining the action performed by user interaction
+    // Mode defining the action performed by user interaction.
     enum Mode {
         case dragging
         case selecting
@@ -17,10 +17,10 @@ import UIKit
         case edges
     }
     
-    // Determines what objects are being made or manipulated by user interaction
+    // Determines what objects are being made or manipulated by user interaction.
     var mode = Mode.dragging
     
-    // Whether the graph is directed
+    // Determines whether the graph draws directed edges.
     var isDirected = false
     
     // All nodes in the graph.
@@ -31,7 +31,7 @@ import UIKit
     // List representation of the graph
     var listForm = [NodeView: NodeView?]()
     
-    // Selected node to be used as the start node for a new edge
+    // Selected node to be used as the start node for a new edge.
     var selectedNodeToMakeEdge: NodeView?
     
     private var selectedNodes: [NodeView]?
@@ -62,6 +62,12 @@ import UIKit
             subview.removeFromSuperview()
         }
         
+        // Delete all nodes.
+        nodes.removeAll()
+        
+        // Delete list form.
+        listForm.removeAll()
+        
         // Reset color cycle.
         colorCycle = 0
         
@@ -70,6 +76,9 @@ import UIKit
         
         // Deselect selected node.
         selectedNodeToMakeEdge = nil
+        
+        // Set graph to dragging mode.
+        mode = .dragging
     }
     
     // Selects a start node for making a new edge.
@@ -156,7 +165,7 @@ import UIKit
         }
     }
     
-    // TODO: Recolors all nodes so that no adjacent nodes are the same color.
+    // FIXME: Recolors all nodes so that no adjacent nodes are the same color.
     func colorizeNodes() {
         nodes[0].color = UIColor.cyan
         
@@ -168,9 +177,6 @@ import UIKit
             }
         }
     }
-    
-    // TODO: Recolors all edges so that no adjacent edges are the same color.
-    func colorizeEdges() {}
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Continue if graph is in nodes mode.
