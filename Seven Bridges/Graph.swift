@@ -34,10 +34,8 @@ import UIKit
     // Selected node to be used as the start node for a new edge.
     var selectedNodeToMakeEdge: Node?
     
+    // Nodes that have been selected.
     private var selectedNodes: [Node]?
-    
-    // Number of nodes in the graph.
-    private var nodeCount = 0
     
     // Current index in the colors array.
     private var colorCycle = 0
@@ -71,9 +69,6 @@ import UIKit
         // Reset color cycle.
         colorCycle = 0
         
-        // Reset node count.
-        nodeCount = 0
-        
         // Deselect selected node.
         selectedNodeToMakeEdge = nil
         
@@ -92,28 +87,28 @@ import UIKit
     func makeEdge(to endNode: Node) {
         guard selectedNodeToMakeEdge != nil else { return }
         
-        // Check if start node and end node are not the same
-        // If so, make an edge
+        // Check if start node and end node are not the same.
+        // If so, make an edge.
         if endNode != selectedNodeToMakeEdge! {
-            // Create the edge
+            // Create the edge.
             let edge = Edge(from: selectedNodeToMakeEdge!, to: endNode)
             
-            // Add the edge to the graph
+            // Add the edge to the graph.
             addSubview(edge)
             
-            // Send edge to the back
+            // Send edge to the back.
             sendSubview(toBack: edge)
             
             // TODO: Add new edge to matrix representation
             
-            // Add new edge to list representation
+            // Add new edge to list representation.
             listForm[selectedNodeToMakeEdge!] = endNode
         }
         
-        // Return selected node to original color config
+        // Return selected node to original color config.
         selectedNodeToMakeEdge!.fillColor = selectedNodeToMakeEdge!.previousfillColor
         
-        // Clear the selected node
+        // Clear the selected node.
         selectedNodeToMakeEdge = nil
     }
     
@@ -192,12 +187,11 @@ import UIKit
             // Get location of the touch.
             let location = touch.location(in: self)
             
-            nodeCount += 1
-            
             // Create new node at location of touch.
             let node = Node(color: colors[colorCycle], at: location)
-            node.label.text = String(nodeCount)
+            node.label.text = String(nodes.count + 1)
             
+            // Add node to nodes array.
             nodes.append(node)
             
             // Add node to list representation.

@@ -118,8 +118,13 @@ import UIKit
     override func draw(_ rect: CGRect) {
         updatePath()
         
-        // Set color of line to stroke color of start node.
-        startNode?.strokeColor.setStroke()
+        // Set color of line to stroke color of start node if graph is directed.
+        // Otherwise, stroke color is gray.
+        if (superview as! Graph).isDirected {
+            startNode?.strokeColor.setStroke()
+        } else {
+            UIColor.lightGray.setStroke()
+        }
         
         // Set thickness of the line.
         path.lineWidth = lineWidth
