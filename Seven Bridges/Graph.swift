@@ -119,11 +119,19 @@ import UIKit
             selectedNodes = [Node]()
         }
         
-        // Update state of node.
-        node.fillColor = UIColor.white
-        
-        // Add node to array.
-        selectedNodes?.append(node)
+        if (selectedNodes?.contains(node))! {
+            node.color = node.previousfillColor
+            
+            if let index = selectedNodes?.index(of: node) {
+                selectedNodes?.remove(at: index)
+            }
+        } else {
+            // Update state of node.
+            node.fillColor = UIColor.white
+            
+            // Add node to array.
+            selectedNodes?.append(node)
+        }
     }
     
     // Clears the selected nodes array and returns the nodes to their original state.
@@ -157,19 +165,50 @@ import UIKit
                     edge.endNode?.edges.remove(at: index)
                 }
             }
+            
+            nodes.remove(at: nodes.index(of: node)!)
         }
     }
     
-    // FIXME: Recolors all nodes so that no adjacent nodes are the same color.
-    func colorize() {
-        nodes[0].color = UIColor.cyan
+    // Renumbers all nodes.
+    func numberize() {
+        for (index, node) in nodes.enumerated() {
+            node.label.text = String(index + 1)
+            node.setNeedsDisplay()
+        }
         
-        for node in nodes[1...] {
-            for neighbor in node.neighbors {
-                if neighbor.color == node.color {
-                    node.color = UIColor.red
-                }
+        //numberize(nodes[0], number: 1)
+    }
+    
+    /*func numberize(_ node: Node, number: Int) {
+        node.label.text = String(number)
+        node.setNeedsDisplay()
+        
+        if number == nodes.count {
+            return
+        }
+        
+        var n = number
+        
+        for neighbor in node.neighbors {
+            n += 1
+            numberize(neighbor, number: n)
+        }
+    }*/
+    
+    // Entry for colorize recursion.
+    func colorize() {
+        colorize(nodes[0])
+    }
+    
+    // FIXME: Recursively recolors all nodes so that no adjacent nodes are the same color.
+    private func colorize(_ node: Node) {
+        for neighbor in node.neighbors {
+            if node.color == neighbor.color {
+                node.color = UIColor(red: CGFloat(arc4random()/255), green: CGFloat(arc4random()/255), blue: CGFloat(arc4random()/255), alpha: 1.0)
             }
+            
+            colorize(neighbor)
         }
     }
     

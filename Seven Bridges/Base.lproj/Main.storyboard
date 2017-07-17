@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16G24b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,14 +19,14 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cri-lb-Lak" customClass="Graph" customModule="Seven_Bridges" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                             </scrollView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jGX-9B-rSo">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <items>
                                     <barButtonItem title="Drag" id="I8u-fn-g7a">
                                         <color key="tintColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -52,32 +57,43 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h8B-zu-fmq">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h8B-zu-fmq">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
-                                    <navigationItem title="7 Bridges" id="xJu-bx-CDJ">
-                                        <barButtonItem key="leftBarButtonItem" title="Select" id="Vme-8R-o0A">
+                                    <navigationItem id="xJu-bx-CDJ">
+                                        <barButtonItem key="leftBarButtonItem" title="Select..." id="Vme-8R-o0A">
                                             <connections>
                                                 <action selector="enableSelecting:" destination="BYZ-38-t0r" id="XDU-xl-vbM"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Actions" id="kul-zV-IY1"/>
+                                        <rightBarButtonItems>
+                                            <barButtonItem title="Colorize" id="kul-zV-IY1">
+                                                <connections>
+                                                    <action selector="colorize:" destination="BYZ-38-t0r" id="93X-ro-szr"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="Numberize" id="FMj-Fv-fbs">
+                                                <connections>
+                                                    <action selector="numberize:" destination="BYZ-38-t0r" id="Rwa-rb-lLh"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="bottom" secondItem="jGX-9B-rSo" secondAttribute="top" id="8nf-dE-4mC"/>
-                            <constraint firstItem="h8B-zu-fmq" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="D3l-MB-cBL"/>
-                            <constraint firstItem="h8B-zu-fmq" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="DI1-1s-Y2W"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="bottom" secondItem="jGX-9B-rSo" secondAttribute="top" id="1cU-EB-eqT"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="h8B-zu-fmq" secondAttribute="bottom" id="Ds8-0K-kEF"/>
                             <constraint firstAttribute="trailing" secondItem="jGX-9B-rSo" secondAttribute="trailing" id="G3a-yQ-cLd"/>
                             <constraint firstItem="jGX-9B-rSo" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="LhJ-ZL-9k2"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="h8B-zu-fmq" secondAttribute="bottom" id="PmC-Ad-ySj"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="trailing" secondItem="h8B-zu-fmq" secondAttribute="trailing" id="Wgd-HF-P9y"/>
-                            <constraint firstAttribute="trailing" secondItem="h8B-zu-fmq" secondAttribute="trailing" id="jsm-AG-ECe"/>
+                            <constraint firstItem="h8B-zu-fmq" firstAttribute="leading" secondItem="jGX-9B-rSo" secondAttribute="leading" id="S1f-Qk-JSw"/>
+                            <constraint firstItem="h8B-zu-fmq" firstAttribute="trailing" secondItem="jGX-9B-rSo" secondAttribute="trailing" id="VUv-US-rHz"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="trailing" secondItem="h8B-zu-fmq" secondAttribute="trailing" id="Wsr-p5-nBn"/>
+                            <constraint firstItem="h8B-zu-fmq" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Ym2-yO-PgR"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="jGX-9B-rSo" secondAttribute="bottom" id="rdP-Sr-gcz"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="h8B-zu-fmq" secondAttribute="leading" id="ykh-00-qo6"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="h8B-zu-fmq" secondAttribute="leading" id="uj4-F7-MLy"/>
                         </constraints>
                     </view>
                     <connections>

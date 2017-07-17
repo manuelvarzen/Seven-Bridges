@@ -46,12 +46,20 @@ class ViewController: UIViewController {
             sender.style = UIBarButtonItemStyle.done
             toolbar.items = selectingToolbarItems
         } else {
-            sender.title = "Select"
+            sender.title = "Select..."
             sender.style = UIBarButtonItemStyle.plain
             toolbar.items = defaultToolbarItems
             
             graphView.deselectNodes()
         }
+    }
+    
+    @IBAction func numberize(_ sender: UIBarButtonItem) {
+        graphView.numberize()
+    }
+    
+    @IBAction func colorize(_ sender: UIBarButtonItem) {
+        graphView.colorize()
     }
     
     @IBAction func enableDragging(_ sender: UIBarButtonItem) {
