@@ -24,7 +24,6 @@ import UIKit
     var isDirected = true
     
     // All nodes in the graph.
-    // TODO: Change to set instead of array for easier removal by reference.
     var nodes = [Node]()
     
     // Matrix representation of the graph.
@@ -185,26 +184,35 @@ import UIKit
     }
     
     func shortestPath() {
-        var path: [Node]?
+        guard selectedNodes?.count == 2 else { return }
         
-        if selectedNodes?.count == 2 {
-            path = selectedNodes![0].shortestPath(to: selectedNodes![1])
+        let path = selectedNodes![0].shortestPath(to: selectedNodes![1])
             
-            if (path?.isEmpty)! {
-                print("No path found.")
-                // Modal dialogue
-            } else {
-                for (index, node) in path!.enumerated() {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(index), execute: {
-                        node.isHighlighted = true
-                    })
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(path!.count), execute: {
-                        node.isHighlighted = false
-                    })
-                }
+        if path == nil {
+            // Create modal alert for no path found.
+            let message = "No path found from node \(selectedNodes![0].label.text!) to node \(selectedNodes![1].label.text!)."
+            
+            let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            // Present alert.
+            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+        } else {
+            for (index, node) in path!.enumerated() {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(index), execute: {
+                    node.isHighlighted = true
+                })
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(path!.count), execute: {
+                    node.isHighlighted = false
+                })
             }
         }
+    }
+    
+    func editEdgeWeight() {
+        //
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
