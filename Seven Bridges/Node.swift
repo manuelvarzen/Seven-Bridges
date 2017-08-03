@@ -38,16 +38,51 @@ import UIKit
     // Width of the node's border.
     var lineWidth: CGFloat = diameter / 6
     
-    // Previous color of the node's center.
-    var previousfillColor: UIColor!
+    var highlightColor = UIColor.black
     
-    // Color of the node's border.
-    var strokeColor: UIColor!
+    var isHighlighted: Bool = false {
+        didSet {
+            if self.isHighlighted {
+                color = highlightColor
+            } else {
+                color = previousFillColor
+            }
+        }
+    }
+    
+    var isSelected: Bool = false {
+        didSet {
+            if self.isSelected {
+                fillColor = UIColor.white
+                label.textColor = previousFillColor
+            } else {
+                fillColor = previousFillColor
+                label.textColor = UIColor.white
+            }
+        }
+    }
+    
+    // Previous color of the node's center.
+    var previousFillColor: UIColor!
+    
+    // Previous color of the node's border.
+    var previousStrokeColor: UIColor!
+    
+    // Color of the node's border. Changing its value saves the previous color.
+    var strokeColor: UIColor! {
+        willSet {
+            previousStrokeColor = self.strokeColor
+        }
+        
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     // Color of the node's center. Changing its value saves the previous color.
     var fillColor: UIColor! {
         willSet {
-            previousfillColor = self.fillColor
+            previousFillColor = self.fillColor
         }
         
         didSet {
@@ -114,6 +149,34 @@ import UIKit
         }
     }
     
+    // Determines the shortest path between this node and the given node. If the path doesn't exist or the target is the origin, the method returns an empty array.
+    func shortestPath(to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
+        var path = shortestPath
+        path.append(self)
+        
+        if target == self {
+            return path
+        }
+        
+        let graph = superview as! Graph
+        
+        var shortest: [Node]?
+        
+        for node in graph.matrixForm[self]! {
+            if !path.contains(node!) {
+                let newPath = node?.shortestPath(to: target, shortestPath: path)
+                
+                if newPath != nil {
+                    if shortest == nil || (newPath?.count)! < (shortest?.count)! {
+                        shortest = newPath
+                    }
+                }
+            }
+        }
+        
+        return shortest
+    }
+    
     override func draw(_ rect: CGRect) {
         let path = UIBezierPath(ovalIn: rect.insetBy(dx: lineWidth/2, dy: lineWidth/2))
         path.lineWidth = lineWidth
@@ -139,25 +202,6 @@ import UIKit
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         let graphView = (superview as! Graph)
-        
-        // TODO: Replace double-tap with selection mode in the graph view.
-        // Detect double-tap and prompt to rename the node.
-        /*for touch in touches {
-            if touch.tapCount == 2 {
-                let alert = UIAlertController(title: "Rename Node?", message: nil, preferredStyle: UIAlertControllerStyle.alert)
-                
-                alert.addTextField(configurationHandler: nil)
-                
-                alert.addAction(UIAlertAction(title: "Rename", style: UIAlertActionStyle.default, handler: { a in
-                    self.label.text = alert.textFields?[0].text!
-                }))
-                
-                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
-                
-                let parentViewController = UIApplication.shared.windows[0].rootViewController
-                parentViewController?.present(alert, animated: true, completion: nil)
-            }
-        }*/
         
         if graphView.mode == .edges {
             // Select this node as a start node for a new edge if the selected node is nil.
