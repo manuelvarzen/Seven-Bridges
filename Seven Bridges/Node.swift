@@ -103,6 +103,8 @@ import UIKit
     // Label for the node.
     var label = UILabel()
     
+    private var isBeingDragged = false
+    
     init(color: UIColor = UIColor.lightGray, at location: CGPoint) {
         super.init(frame: CGRect(x: location.x - Node.radius, y: location.y - Node.radius, width: Node.diameter, height: Node.diameter))
         
@@ -191,9 +193,6 @@ import UIKit
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let graphView = (superview as! Graph)
-        guard graphView.mode == .dragging || graphView.mode == .selecting else { return }
-        
         // TODO: Bring connected edges to front (of edges).
         
         // Bring touched node to front.
@@ -201,30 +200,33 @@ import UIKit
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let graphView = (superview as! Graph)
+        guard !isBeingDragged else {
+            isBeingDragged = false
+            return
+        }
         
-        if graphView.mode == .edges {
+        let graph = superview as! Graph
+        
+        if graph.mode == .edges {
             // Select this node as a start node for a new edge if the selected node is nil.
-            if graphView.selectedNodeToMakeEdge == nil {
-                graphView.makeEdge(from: self)
+            if graph.selectedNodeToMakeEdge == nil {
+                graph.makeEdge(from: self)
             } else {
-                graphView.makeEdge(to: self)
+                graph.makeEdge(to: self)
             }
+            
+            return
         }
         
-        if graphView.mode == .selecting {
-            graphView.selectNode(self)
-        }
+        graph.selectNode(self)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let graphView = (superview as! Graph)
-        
-        guard graphView.mode == .dragging else { return }
-        
         for touch in touches {
             let location = touch.location(in: self)
             let previousLocation = touch.previousLocation(in: self)
+            
+            isBeingDragged = true
             
             frame = frame.offsetBy(dx: (location.x - previousLocation.x), dy: (location.y - previousLocation.y))
         }

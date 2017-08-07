@@ -9,91 +9,40 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var graphView: Graph!
-    
-    @IBOutlet weak var toolbar: UIToolbar!
-    
-    @IBOutlet weak var selectButton: UIBarButtonItem!
-    
-    private var defaultToolbarItems: [UIBarButtonItem]!
-    
-    private var selectingToolbarItems: [UIBarButtonItem]!
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     
     override func viewDidLoad() {
-        // Save the default toolbar items.
-        defaultToolbarItems = toolbar.items!
-        
-        // Create the delete button.
-        let deleteButton = UIBarButtonItem()
-        deleteButton.title = "Delete"
-        deleteButton.action = #selector(deleteSelectedNodes)
-        
-        // Create the shortest path button.
-        let shortestPathButton = UIBarButtonItem()
-        shortestPathButton.title = "Shortest Path"
-        shortestPathButton.action = #selector(shortestPath)
-        //shortestPathButton.isEnabled = false
-        
-        selectingToolbarItems = [UIBarButtonItem]()
-        selectingToolbarItems.append(deleteButton)
-        selectingToolbarItems.append(shortestPathButton)
+        graph.propertiesToolbar = propertiesToolbar
     }
     
-    @objc func deleteSelectedNodes() {
-        graphView.deleteSelectedNodes()
+    @IBOutlet weak var propertiesToolbar: UIToolbar!
+    
+    @IBOutlet var graph: Graph!
+    
+    @IBAction func deleteSelectedNodes(_ sender: UIBarButtonItem) {
+        graph.deleteSelectedNodes()
     }
     
-    @objc func shortestPath() {
-        graphView.shortestPath()
-        
-        enterDefaultMode(with: .dragging)
+    @IBAction func findShortestPath(_ sender: UIBarButtonItem) {
+        graph.shortestPath()
     }
     
-    @IBAction func enableSelecting(_ sender: UIBarButtonItem) {
-        if graphView.mode != .selecting {
-            enterSelectingMode()
-        } else {
-            enterDefaultMode(with: .dragging)
-        }
+    @IBAction func renumberNodes(_ sender: UIBarButtonItem) {
+        graph.renumberNodes()
     }
     
-    @IBAction func numberize(_ sender: UIBarButtonItem) {
-        graphView.renumberNodes()
+    @IBAction func enterNodesMode(_ sender: UIBarButtonItem) {
+        graph.mode = .nodes
     }
     
-    @IBAction func enableDragging(_ sender: UIBarButtonItem) {
-        graphView.mode = Graph.Mode.dragging
-    }
-    
-    @IBAction func makeNodes(_ sender: UIBarButtonItem) {
-        graphView.mode = Graph.Mode.nodes
-    }
-    
-    @IBAction func makeEdges(_ sender: UIBarButtonItem) {
-        graphView.mode = Graph.Mode.edges
+    @IBAction func enterEdgesMode(_ sender: UIBarButtonItem) {
+        graph.mode = .edges
     }
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {
-        graphView.clear()
-    }
-    
-    private func enterSelectingMode() {
-        graphView.mode = .selecting
-        
-        selectButton.title = "Done"
-        selectButton.style = UIBarButtonItemStyle.done
-        
-        toolbar.items = selectingToolbarItems
-    }
-    
-    private func enterDefaultMode(with mode: Graph.Mode) {
-        graphView.mode = mode
-        graphView.deselectNodes()
-        
-        selectButton.title = "Select..."
-        selectButton.style = UIBarButtonItemStyle.plain
-        
-        toolbar.items = defaultToolbarItems
+        graph.clear()
     }
     
 }

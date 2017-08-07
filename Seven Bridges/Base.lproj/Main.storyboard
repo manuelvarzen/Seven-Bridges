@@ -22,81 +22,81 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cri-lb-Lak" customClass="Graph" customModule="Seven_Bridges" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="414" height="628"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
+                                <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </scrollView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jGX-9B-rSo">
-                                <rect key="frame" x="0.0" y="692" width="414" height="44"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="top" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L0O-dN-50g">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <items>
-                                    <barButtonItem title="Drag" id="I8u-fn-g7a">
-                                        <color key="tintColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <barButtonItem title="Clear" id="IIX-sD-YGu">
                                         <connections>
-                                            <action selector="enableDragging:" destination="BYZ-38-t0r" id="bt2-E4-war"/>
+                                            <action selector="clearGraphWithSender:" destination="BYZ-38-t0r" id="23w-2D-tf0"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="24" style="plain" systemItem="fixedSpace" id="N5Z-I7-HxU"/>
-                                    <barButtonItem title="Nodes" id="RYg-40-1pd">
-                                        <color key="tintColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Dtm-PG-W3d"/>
+                                    <barButtonItem title="Node" id="i5c-yZ-CMU">
+                                        <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
-                                            <action selector="makeNodes:" destination="BYZ-38-t0r" id="Yjq-3C-mzH"/>
+                                            <action selector="enterNodesMode:" destination="BYZ-38-t0r" id="7a3-TA-t4H"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="24" style="plain" systemItem="fixedSpace" id="d9J-Tq-CMR"/>
-                                    <barButtonItem title="Edges" id="15R-vn-ZOx">
-                                        <color key="tintColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <barButtonItem title="Edge" id="So3-H1-JxB">
+                                        <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
-                                            <action selector="makeEdges:" destination="BYZ-38-t0r" id="N5q-90-qhO"/>
+                                            <action selector="enterEdgesMode:" destination="BYZ-38-t0r" id="lKi-wV-EUN"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="qlW-gU-GkS"/>
-                                    <barButtonItem width="36" style="plain" systemItem="fixedSpace" id="0wb-kX-vqs"/>
-                                    <barButtonItem title="Clear" id="RAv-wc-HUH">
+                                    <barButtonItem title="Renumber" id="Q8i-MP-B86">
+                                        <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
-                                            <action selector="clearGraphWithSender:" destination="BYZ-38-t0r" id="Epz-v7-eYZ"/>
+                                            <action selector="renumberNodes:" destination="BYZ-38-t0r" id="pbb-VR-FJx"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Path" id="UB7-tk-Moz">
+                                        <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <connections>
+                                            <action selector="findShortestPath:" destination="BYZ-38-t0r" id="eyv-qr-KZt"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h8B-zu-fmq">
-                                <rect key="frame" x="0.0" y="20" width="414" height="44"/>
+                            <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edS-Wz-lfl">
+                                <rect key="frame" x="0.0" y="692" width="414" height="44"/>
+                                <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
                                 <items>
-                                    <navigationItem id="xJu-bx-CDJ">
-                                        <barButtonItem key="leftBarButtonItem" title="Select..." id="Vme-8R-o0A">
-                                            <connections>
-                                                <action selector="enableSelecting:" destination="BYZ-38-t0r" id="XDU-xl-vbM"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Renumber" id="FMj-Fv-fbs">
-                                            <connections>
-                                                <action selector="numberize:" destination="BYZ-38-t0r" id="Rwa-rb-lLh"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
+                                    <barButtonItem systemItem="trash" id="Ldv-SX-xIS">
+                                        <connections>
+                                            <action selector="deleteSelectedNodes:" destination="BYZ-38-t0r" id="Ddf-9i-I9u"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="JEN-q8-TaJ"/>
                                 </items>
-                            </navigationBar>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="bottom" secondItem="jGX-9B-rSo" secondAttribute="top" id="1cU-EB-eqT"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="h8B-zu-fmq" secondAttribute="bottom" id="Ds8-0K-kEF"/>
-                            <constraint firstAttribute="trailing" secondItem="jGX-9B-rSo" secondAttribute="trailing" id="G3a-yQ-cLd"/>
-                            <constraint firstItem="jGX-9B-rSo" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="LhJ-ZL-9k2"/>
-                            <constraint firstItem="h8B-zu-fmq" firstAttribute="leading" secondItem="jGX-9B-rSo" secondAttribute="leading" id="S1f-Qk-JSw"/>
-                            <constraint firstItem="h8B-zu-fmq" firstAttribute="trailing" secondItem="jGX-9B-rSo" secondAttribute="trailing" id="VUv-US-rHz"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="trailing" secondItem="h8B-zu-fmq" secondAttribute="trailing" id="Wsr-p5-nBn"/>
-                            <constraint firstItem="h8B-zu-fmq" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Ym2-yO-PgR"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="jGX-9B-rSo" secondAttribute="bottom" id="rdP-Sr-gcz"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="h8B-zu-fmq" secondAttribute="leading" id="uj4-F7-MLy"/>
+                            <constraint firstAttribute="trailing" secondItem="L0O-dN-50g" secondAttribute="trailing" id="1ov-AO-fEs"/>
+                            <constraint firstItem="edS-Wz-lfl" firstAttribute="leading" secondItem="cri-lb-Lak" secondAttribute="leading" id="ABK-aC-Zrw"/>
+                            <constraint firstItem="L0O-dN-50g" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="BJg-30-lmv"/>
+                            <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" id="D43-ID-CJ5"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="44" id="FyK-Y9-n44"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="KzS-uz-vml"/>
+                            <constraint firstItem="L0O-dN-50g" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="jkU-jp-H6x"/>
+                            <constraint firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="nD6-AB-hqj"/>
+                            <constraint firstItem="edS-Wz-lfl" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="r6E-tv-vpU"/>
+                            <constraint firstItem="edS-Wz-lfl" firstAttribute="top" secondItem="cri-lb-Lak" secondAttribute="bottom" constant="-44" id="zvL-8N-ncp"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
-                        <outlet property="graphView" destination="cri-lb-Lak" id="F4g-Uv-Flw"/>
-                        <outlet property="selectButton" destination="Vme-8R-o0A" id="346-yw-mjB"/>
-                        <outlet property="toolbar" destination="jGX-9B-rSo" id="Lr2-lS-Ljb"/>
+                        <outlet property="graph" destination="cri-lb-Lak" id="F4g-Uv-Flw"/>
+                        <outlet property="propertiesToolbar" destination="edS-Wz-lfl" id="5GS-xq-2k2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="32.799999999999997" y="37.331334332833585"/>
+            <point key="canvasLocation" x="31.884057971014496" y="36.684782608695656"/>
         </scene>
     </scenes>
 </document>

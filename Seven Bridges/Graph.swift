@@ -11,14 +11,12 @@ import UIKit
     
     // Mode defining the action performed by user interaction.
     enum Mode {
-        case dragging
-        case selecting
         case nodes
         case edges
     }
     
     // Determines what objects are being made or manipulated by user interaction.
-    var mode = Mode.dragging
+    var mode = Mode.nodes
     
     // Determines whether the graph draws directed edges.
     var isDirected = true
@@ -35,8 +33,10 @@ import UIKit
     // Selected node to be used as the start node for a new edge.
     var selectedNodeToMakeEdge: Node?
     
+    var propertiesToolbar: UIToolbar?
+    
     // Nodes that have been selected.
-    private var selectedNodes: [Node]?
+    private var selectedNodes = [Node]()
     
     // Current index in the colors array.
     private var colorCycle = 0
@@ -76,8 +76,8 @@ import UIKit
         // Deselect selected node.
         selectedNodeToMakeEdge = nil
         
-        // Set graph to dragging mode.
-        mode = .dragging
+        // Deselect all selected nodes.
+        selectedNodes.removeAll()
     }
     
     // Selects a start node for making a new edge.
@@ -120,43 +120,45 @@ import UIKit
     // Adds the given node to an array and updates the state of the node.
     func selectNode(_ node: Node) {
         // Initialize the array if nil.
-        if selectedNodes == nil {
-            selectedNodes = [Node]()
-        }
-        
-        if (selectedNodes?.contains(node))! {
+        if (selectedNodes.contains(node)) {
             node.isSelected = false
             
-            if let index = selectedNodes?.index(of: node) {
-                selectedNodes?.remove(at: index)
+            selectedNodes.remove(at: selectedNodes.index(of: node)!)
+            
+            // Hide properties toolbar if no nodes are selected.
+            if selectedNodes.count == 0 {
+                propertiesToolbar?.isHidden = true
             }
         } else {
             // Update state of node.
             node.isSelected = true
             
             // Add node to array.
-            selectedNodes?.append(node)
+            selectedNodes.append(node)
+            
+            // Show properties toolbar.
+            propertiesToolbar?.isHidden = false
         }
     }
     
     // Clears the selected nodes array and returns the nodes to their original state.
     func deselectNodes() {
-        guard selectedNodes != nil else { return }
+        guard selectedNodes.count != 0 else { return }
         
         // Return all nodes in array to original state.
-        for node in selectedNodes! {
+        for node in selectedNodes {
             node.isSelected = false
         }
         
-        // Set the array to nil.
-        selectedNodes = nil
+        // Hide properties toolbar.
+        propertiesToolbar?.isHidden = true
     }
     
     // Deletes all selected nodes and their edges.
     func deleteSelectedNodes() {
-        guard selectedNodes != nil else { return }
+        guard selectedNodes.count != 0 else { return }
         
-        for node in selectedNodes! {
+        for node in selectedNodes {
             node.removeFromSuperview()
             
             for edge in node.edges {
@@ -171,7 +173,17 @@ import UIKit
                 }
             }
             
+            selectedNodes.remove(at: selectedNodes.index(of: node)!)
+            
             nodes.remove(at: nodes.index(of: node)!)
+            
+            matrixForm.removeValue(forKey: node)
+            
+            listForm.removeValue(forKey: node)
+        }
+        
+        if selectedNodes.count == 0 {
+            propertiesToolbar?.isHidden = true
         }
     }
     
@@ -184,13 +196,15 @@ import UIKit
     }
     
     func shortestPath() {
-        guard selectedNodes?.count == 2 else { return }
+        guard selectedNodes.count == 2 else { return }
         
-        let path = selectedNodes![0].shortestPath(to: selectedNodes![1])
+        deselectNodes()
+        
+        let path = selectedNodes[0].shortestPath(to: selectedNodes[1])
             
         if path == nil {
             // Create modal alert for no path found.
-            let message = "No path found from node \(selectedNodes![0].label.text!) to node \(selectedNodes![1].label.text!)."
+            let message = "No path found from node \(selectedNodes[0].label.text!) to node \(selectedNodes[1].label.text!)."
             
             let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
             
@@ -211,8 +225,26 @@ import UIKit
         }
     }
     
-    func editEdgeWeight() {
-        //
+    func editSelectedEdgeWeight() {
+        guard selectedNodes.count == 2 else { return }
+        
+        var editingEdge: Edge?
+        let originNode = selectedNodes[0]
+        let targetNode = selectedNodes[1]
+        
+        // Get the edge.
+        for edge in originNode.edges {
+            if edge.endNode == targetNode {
+                editingEdge = edge
+                break
+            }
+        }
+        
+        // If no edge was found between the nodes, skip assigning weight.
+        guard editingEdge != nil else { return }
+        
+        // TODO: Set weight from number chooser.
+        editingEdge?.weight = 1
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
