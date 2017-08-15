@@ -9,26 +9,30 @@ import UIKit
 
 @IBDesignable class Edge: UIView {
     
-    // Thickness of the line
+    // Thickness of the line.
     private let lineWidth: CGFloat = 4
     
-    // Path of the line
+    // Path of the line.
     private var path = UIBezierPath()
     
-    // Start point of the line
+    // Start point of the line.
     private var startPoint: CGPoint?
     
-    // End point of the line
+    // End point of the line.
     private var endPoint: CGPoint?
     
-    // Node at beginning of edge
+    // Node at beginning of edge.
     var startNode: Node?
     
-    // Node at end of edge
+    // Node at end of edge.
     var endNode: Node?
     
-    // Weight of the edge
-    var weight = 0
+    // Weight of the edge.
+    var weight = 0 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     init(from startNode: Node, to endNode: Node) {
         super.init(frame: CGRect())
@@ -131,6 +135,16 @@ import UIKit
         
         // Stroke the line.
         path.stroke()
+        
+        // TODO: Draw a label containing the weight of the edge.
+        if weight > 0 {
+            let weightLabel = UILabel()
+            weightLabel.text = String(weight)
+            weightLabel.textColor = startNode?.strokeColor
+            weightLabel.font = UIFont.boldSystemFont(ofSize: 18)
+            
+            weightLabel.drawText(in: rect)
+        }
     }
     
 }

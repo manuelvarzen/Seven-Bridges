@@ -179,6 +179,8 @@ import UIKit
             if !path.contains(node!) {
                 let newPath = node?.shortestPath(to: target, shortestPath: path)
                 
+                // TODO: Calculate the aggregate weight of newPath.
+                
                 if newPath != nil {
                     if shortest == nil || (newPath?.count)! < (shortest?.count)! {
                         shortest = newPath
