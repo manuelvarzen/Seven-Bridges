@@ -11,6 +11,7 @@ import UIKit
     
     // Mode defining the action performed by user interaction.
     enum Mode {
+        case select
         case nodes
         case edges
     }
@@ -27,13 +28,11 @@ import UIKit
     // Matrix representation of the graph.
     var matrixForm = [Node: [Node?]]()
     
-    // List representation of the graph
+    // List representation of the graph.
     var listForm = [Node: Node?]()
     
     // Selected node to be used as the start node for a new edge.
     var selectedNodeToMakeEdge: Node?
-    
-    var propertiesToolbar: UIToolbar?
     
     // Nodes that have been selected.
     private var selectedNodes = [Node]()
@@ -54,6 +53,12 @@ import UIKit
         // Purple
         UIColor(red: 195/255, green: 155/255, blue: 245/255, alpha: 1.0)
     ]
+    
+    private var vc: ViewController?
+    
+    func assignViewController(_ vc: ViewController) {
+        self.vc = vc
+    }
     
     // Clears the graph of all nodes and edges.
     func clear() {
@@ -93,7 +98,7 @@ import UIKit
         
         // Check if start node and end node are not the same.
         // If so, make an edge.
-        if endNode != selectedNodeToMakeEdge! {
+        if endNode != selectedNodeToMakeEdge! && !endNode.isAdjacent(to: selectedNodeToMakeEdge!) {
             // Create the edge.
             let edge = Edge(from: selectedNodeToMakeEdge!, to: endNode)
             
@@ -117,6 +122,20 @@ import UIKit
         selectedNodeToMakeEdge = nil
     }
     
+    func getSelectedEdge(from firstNode: Node, to secondNode: Node) -> Edge? {
+        var selectedEdge: Edge?
+        
+        // Get the edge.
+        for edge in firstNode.edges {
+            if edge.endNode == secondNode || edge.startNode == secondNode {
+                selectedEdge = edge
+                break
+            }
+        }
+        
+        return selectedEdge
+    }
+    
     // Adds the given node to an array and updates the state of the node.
     func selectNode(_ node: Node) {
         // Initialize the array if nil.
@@ -127,7 +146,7 @@ import UIKit
             
             // Hide properties toolbar if no nodes are selected.
             if selectedNodes.count == 0 {
-                propertiesToolbar?.isHidden = true
+                vc?.propertiesToolbar.isHidden = true
             }
         } else {
             // Update state of node.
@@ -137,7 +156,24 @@ import UIKit
             selectedNodes.append(node)
             
             // Show properties toolbar.
-            propertiesToolbar?.isHidden = false
+            vc?.propertiesToolbar.isHidden = false
+            
+            // Update items in the toolbars based on selection.
+            if selectedNodes.count == 2 {
+                // Edge weight button.
+                if let selectedEdge = getSelectedEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+                    vc?.edgeWeightButton.title = "Weight: \(selectedEdge.weight)"
+                    vc?.edgeWeightButton.isEnabled = true
+                }
+                
+                // Shortest path button.
+                vc?.findShortestPathButton.isEnabled = true
+            } else {
+                vc?.edgeWeightButton.title = ""
+                vc?.edgeWeightButton.isEnabled = false
+                
+                vc?.findShortestPathButton.isEnabled = false
+            }
         }
     }
     
@@ -147,11 +183,16 @@ import UIKit
         
         // Return all nodes in array to original state.
         for node in selectedNodes {
-            node.isSelected = false
+            if node.isSelected {
+                node.isSelected = false
+            }
         }
         
+        // Remove nodes from selected array.
+        selectedNodes.removeAll()
+        
         // Hide properties toolbar.
-        propertiesToolbar?.isHidden = true
+        vc?.propertiesToolbar.isHidden = true
     }
     
     // Deletes all selected nodes and their edges.
@@ -183,7 +224,7 @@ import UIKit
         }
         
         if selectedNodes.count == 0 {
-            propertiesToolbar?.isHidden = true
+            vc?.propertiesToolbar.isHidden = true
         }
     }
     
@@ -198,13 +239,18 @@ import UIKit
     func shortestPath() {
         guard selectedNodes.count == 2 else { return }
         
+        vc?.findShortestPathButton.isEnabled = false
+        
+        let originNode = selectedNodes.first!
+        let targetNode = selectedNodes.last!
+        
         deselectNodes()
         
-        let path = selectedNodes[0].shortestPath(to: selectedNodes[1])
+        let path = originNode.shortestPath(to: targetNode)
             
         if path == nil {
             // Create modal alert for no path found.
-            let message = "No path found from node \(selectedNodes[0].label.text!) to node \(selectedNodes[1].label.text!)."
+            let message = "No path found from node \(originNode.label.text!) to node \(targetNode.label.text!)."
             
             let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
             
@@ -228,23 +274,16 @@ import UIKit
     func editSelectedEdgeWeight() {
         guard selectedNodes.count == 2 else { return }
         
-        var editingEdge: Edge?
-        let originNode = selectedNodes[0]
-        let targetNode = selectedNodes[1]
-        
-        // Get the edge.
-        for edge in originNode.edges {
-            if edge.endNode == targetNode {
-                editingEdge = edge
-                break
+        if let editingEdge = getSelectedEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+            // TODO: Set weight from number chooser.
+            if editingEdge.weight < nodes.count {
+                editingEdge.weight += 1
+            } else {
+                editingEdge.weight = 0
             }
+            
+            vc?.edgeWeightButton.title = "Weight: \(editingEdge.weight)"
         }
-        
-        // If no edge was found between the nodes, skip assigning weight.
-        guard editingEdge != nil else { return }
-        
-        // TODO: Set weight from number chooser.
-        editingEdge?.weight = 1
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -276,6 +315,12 @@ import UIKit
             
             // Add new node to the view.
             addSubview(node)
+            
+            // TODO: Enable edges button if there are 2 or more nodes.
+            
+            // TODO: Enable renumber button if there are 2 or more nodes. ?? Only when node is deleted?
+            
+            // TODO: Enable shortest path button if there are 3 or more nodes.
             
             // Cycle through colors.
             if colorCycle < colors.count - 1 {

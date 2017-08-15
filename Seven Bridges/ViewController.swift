@@ -14,12 +14,30 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        graph.propertiesToolbar = propertiesToolbar
+        graph.assignViewController(self)
     }
+    
+    @IBOutlet weak var selectModeButton: UIBarButtonItem!
+    
+    @IBOutlet weak var nodesModeButton: UIBarButtonItem!
+    
+    @IBOutlet weak var edgesModeButton: UIBarButtonItem!
+    
+    @IBOutlet weak var renumberNodesButton: UIBarButtonItem!
+    
+    @IBOutlet weak var findShortestPathButton: UIBarButtonItem!
+    
+    @IBOutlet weak var mainToolbar: UIToolbar!
     
     @IBOutlet weak var propertiesToolbar: UIToolbar!
     
+    @IBOutlet weak var edgeWeightButton: UIBarButtonItem!
+    
     @IBOutlet var graph: Graph!
+    
+    @IBAction func editSelectedEdgeWeight(_ sender: UIBarButtonItem) {
+        graph.editSelectedEdgeWeight()
+    }
     
     @IBAction func deleteSelectedNodes(_ sender: UIBarButtonItem) {
         graph.deleteSelectedNodes()
@@ -31,6 +49,35 @@ class ViewController: UIViewController {
     
     @IBAction func renumberNodes(_ sender: UIBarButtonItem) {
         graph.renumberNodes()
+    }
+    
+    @IBAction func enterSelectMode(_ sender: UIBarButtonItem) {
+        if graph.mode != .select {
+            graph.mode = .select
+            
+            sender.title = "Done"
+            sender.style = .done
+            
+            // Disable all other buttons
+            for item in mainToolbar.items! {
+                if item != sender {
+                    item.isEnabled = false
+                }
+            }
+        } else {
+            graph.deselectNodes()
+            graph.mode = .nodes
+            
+            sender.title = "Select"
+            sender.style = .plain
+            
+            // Enable all the buttons
+            for item in mainToolbar.items! {
+                if item != sender {
+                    item.isEnabled = true
+                }
+            }
+        }
     }
     
     @IBAction func enterNodesMode(_ sender: UIBarButtonItem) {

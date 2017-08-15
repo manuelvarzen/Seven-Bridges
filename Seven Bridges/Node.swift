@@ -18,8 +18,8 @@ import UIKit
     // Edges connected to the node.
     var edges = [Edge]()
     
-    // All nodes that are adjacent.
-    var neighbors: [Node] {
+    // All nodes that are connected to this node.
+    var connections: [Node] {
         get {
             var results = [Node]()
             
@@ -142,13 +142,24 @@ import UIKit
         backgroundColor = UIColor.clear
     }
     
-    // Determines whether a given node is adjacent.
-    func isAdjacent(to node: Node) -> Bool {
-        if neighbors.contains(node) {
+    // Determines whether a given node is connected to this node.
+    func isConnected(to node: Node) -> Bool {
+        if connections.contains(node) {
             return true
         } else {
             return false
         }
+    }
+    
+    // Determines whether a given node is adjacent to this node.
+    func isAdjacent(to node: Node) -> Bool {
+        for edge in edges {
+            if edge.startNode! == node || edge.endNode! == node {
+                return true
+            }
+        }
+        
+        return false
     }
     
     // Determines the shortest path between this node and the given node. If the path doesn't exist or the target is the origin, the method returns an empty array.
@@ -218,7 +229,9 @@ import UIKit
             return
         }
         
-        graph.selectNode(self)
+        if graph.mode == .select {
+            graph.selectNode(self)
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {

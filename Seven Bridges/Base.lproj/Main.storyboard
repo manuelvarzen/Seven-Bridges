@@ -34,6 +34,12 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Dtm-PG-W3d"/>
+                                    <barButtonItem title="Select" id="Yun-qL-8ne">
+                                        <color key="tintColor" red="0.6308597252" green="0.2717201071" blue="0.84267706190000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <connections>
+                                            <action selector="enterSelectMode:" destination="BYZ-38-t0r" id="WcM-bq-z8n"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem title="Node" id="i5c-yZ-CMU">
                                         <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
@@ -64,13 +70,17 @@
                                 <rect key="frame" x="0.0" y="692" width="414" height="44"/>
                                 <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
                                 <items>
+                                    <barButtonItem id="akk-5O-cz9">
+                                        <connections>
+                                            <action selector="editSelectedEdgeWeight:" destination="BYZ-38-t0r" id="O87-lV-mjG"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
                                     <barButtonItem systemItem="trash" id="Ldv-SX-xIS">
                                         <connections>
                                             <action selector="deleteSelectedNodes:" destination="BYZ-38-t0r" id="Ddf-9i-I9u"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="JEN-q8-TaJ"/>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -90,8 +100,15 @@
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="edgeWeightButton" destination="akk-5O-cz9" id="aTS-2G-EPi"/>
+                        <outlet property="edgesModeButton" destination="So3-H1-JxB" id="SOV-sd-CwE"/>
+                        <outlet property="findShortestPathButton" destination="UB7-tk-Moz" id="9C7-uv-Bez"/>
                         <outlet property="graph" destination="cri-lb-Lak" id="F4g-Uv-Flw"/>
+                        <outlet property="mainToolbar" destination="L0O-dN-50g" id="3TX-R8-cAd"/>
+                        <outlet property="nodesModeButton" destination="i5c-yZ-CMU" id="oFM-8L-lnT"/>
                         <outlet property="propertiesToolbar" destination="edS-Wz-lfl" id="5GS-xq-2k2"/>
+                        <outlet property="renumberNodesButton" destination="Q8i-MP-B86" id="2Dy-2l-T2o"/>
+                        <outlet property="selectModeButton" destination="Yun-qL-8ne" id="xV9-QU-oIi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
