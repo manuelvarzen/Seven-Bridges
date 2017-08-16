@@ -282,9 +282,9 @@ import UIKit
         }
     }
     
-    func shortestPath() {
+    func findShortestPath() {
         
-        func shortestPath(from origin: Node, to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
+        func findShortestPath(from origin: Node, to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
             var path = shortestPath
             path.append(origin)
             
@@ -297,7 +297,8 @@ import UIKit
             
             for node in matrixForm[origin]! {
                 if !path.contains(node!) {
-                    let newPath = node?.shortestPath(to: target, shortestPath: path)
+                    //let newPath = node?.shortestPath(to: target, shortestPath: path)
+                    let newPath = findShortestPath(from: node!, to: target, shortestPath: path)
                     
                     // Calculate the aggregate weight of newPath.
                     var aggregateWeight = 0
@@ -311,11 +312,8 @@ import UIKit
                         }
                     }
                     
-                    // TEMP
-                    print("This path has weight: \(aggregateWeight)")
-                    
                     if newPath != nil {
-                        if shortest == nil || (newPath?.count)! * aggregateWeight < (shortest?.count)! * shortestAggregateWeight {
+                        if shortest == nil || (newPath?.count)! * (aggregateWeight + 1) < (shortest?.count)! * (shortestAggregateWeight + 1) {
                             shortest = newPath
                             shortestAggregateWeight = aggregateWeight
                         }
@@ -335,7 +333,7 @@ import UIKit
         
         deselectNodes()
         
-        let path = shortestPath(from: originNode, to: targetNode)
+        let path = findShortestPath(from: originNode, to: targetNode)
         
         if path == nil {
             // Create modal alert for no path found.
@@ -353,35 +351,6 @@ import UIKit
             }
         }
     }
-    
-    /*func shortestPath() {
-        guard selectedNodes.count == 2 else { return }
-        
-        vc?.findShortestPathButton.isEnabled = false
-        
-        let originNode = selectedNodes.first!
-        let targetNode = selectedNodes.last!
-        
-        deselectNodes()
-        
-        let path = originNode.shortestPath(to: targetNode)
-            
-        if path == nil {
-            // Create modal alert for no path found.
-            let message = "No path found from node \(originNode.label.text!) to node \(targetNode.label.text!)."
-            
-            let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            // Present alert.
-            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-        } else {
-            for (index, node) in path!.enumerated() {
-                node.highlight(delay: index, duration: path!.count)
-            }
-        }
-    }*/
     
     func editSelectedEdgeWeight() {
         guard selectedNodes.count == 2 else { return }

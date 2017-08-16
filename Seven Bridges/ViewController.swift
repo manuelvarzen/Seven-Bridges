@@ -50,7 +50,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func findShortestPath(_ sender: UIBarButtonItem) {
-        graph.shortestPath()
+        graph.findShortestPath()
     }
     
     @IBAction func renumberNodes(_ sender: UIBarButtonItem) {

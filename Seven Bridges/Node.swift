@@ -167,36 +167,6 @@ import UIKit
         return false
     }
     
-    // Determines the shortest path between this node and the given node. If the path doesn't exist or the target is the origin, the method returns an empty array.
-    func shortestPath(to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
-        var path = shortestPath
-        path.append(self)
-        
-        if target == self {
-            return path
-        }
-        
-        let graph = superview as! Graph
-        
-        var shortest: [Node]?
-        
-        for node in graph.matrixForm[self]! {
-            if !path.contains(node!) {
-                let newPath = node?.shortestPath(to: target, shortestPath: path)
-                
-                // TODO: Calculate the aggregate weight of newPath.
-                
-                if newPath != nil {
-                    if shortest == nil || (newPath?.count)! < (shortest?.count)! {
-                        shortest = newPath
-                    }
-                }
-            }
-        }
-        
-        return shortest
-    }
-    
     func highlight(delay: Int = 0, duration: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(delay), execute: {
             self.isHighlighted = true
