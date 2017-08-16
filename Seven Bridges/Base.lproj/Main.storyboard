@@ -41,7 +41,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Dtm-PG-W3d"/>
-                                    <barButtonItem title="Select" id="Yun-qL-8ne">
+                                    <barButtonItem enabled="NO" title="Select" id="Yun-qL-8ne">
                                         <color key="tintColor" red="0.6308597252" green="0.2717201071" blue="0.84267706190000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <action selector="enterSelectMode:" destination="BYZ-38-t0r" id="WcM-bq-z8n"/>
@@ -53,19 +53,19 @@
                                             <action selector="enterNodesMode:" destination="BYZ-38-t0r" id="7a3-TA-t4H"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Edge" id="So3-H1-JxB">
+                                    <barButtonItem enabled="NO" title="Edge" id="So3-H1-JxB">
                                         <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <action selector="enterEdgesMode:" destination="BYZ-38-t0r" id="lKi-wV-EUN"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Renumber" id="Q8i-MP-B86">
+                                    <barButtonItem enabled="NO" title="Renumber" id="Q8i-MP-B86">
                                         <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <action selector="renumberNodes:" destination="BYZ-38-t0r" id="pbb-VR-FJx"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Path" id="UB7-tk-Moz">
+                                    <barButtonItem enabled="NO" title="Path" id="UB7-tk-Moz">
                                         <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <action selector="findShortestPath:" destination="BYZ-38-t0r" id="eyv-qr-KZt"/>
@@ -80,6 +80,11 @@
                                     <barButtonItem id="akk-5O-cz9">
                                         <connections>
                                             <action selector="editSelectedEdgeWeight:" destination="BYZ-38-t0r" id="O87-lV-mjG"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem enabled="NO" id="pjb-zS-hWe">
+                                        <connections>
+                                            <action selector="removeSelectedEdge:" destination="BYZ-38-t0r" id="AOb-VN-eaO"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
@@ -114,6 +119,7 @@
                         <outlet property="mainToolbar" destination="L0O-dN-50g" id="3TX-R8-cAd"/>
                         <outlet property="nodesModeButton" destination="i5c-yZ-CMU" id="oFM-8L-lnT"/>
                         <outlet property="propertiesToolbar" destination="edS-Wz-lfl" id="5GS-xq-2k2"/>
+                        <outlet property="removeEdgeButton" destination="pjb-zS-hWe" id="zUA-Kc-amE"/>
                         <outlet property="renumberNodesButton" destination="Q8i-MP-B86" id="2Dy-2l-T2o"/>
                         <outlet property="selectModeButton" destination="Yun-qL-8ne" id="xV9-QU-oIi"/>
                     </connections>

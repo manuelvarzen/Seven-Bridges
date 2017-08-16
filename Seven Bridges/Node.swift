@@ -16,7 +16,7 @@ import UIKit
     static let radius: CGFloat = diameter / 2
     
     // Edges connected to the node.
-    var edges = [Edge]()
+    var edges = Set<Edge>()
     
     // All nodes that are connected to this node.
     var connections: [Node] {
@@ -38,14 +38,14 @@ import UIKit
     // Width of the node's border.
     var lineWidth: CGFloat = diameter / 6
     
-    var highlightColor = UIColor.black
+    private let highlightColor = UIColor.black
     
     var isHighlighted: Bool = false {
         didSet {
             if self.isHighlighted {
                 color = highlightColor
             } else {
-                color = previousFillColor
+                color = initialColor
             }
         }
     }
@@ -54,37 +54,26 @@ import UIKit
         didSet {
             if self.isSelected {
                 fillColor = UIColor.white
-                label.textColor = previousFillColor
+                label.textColor = initialColor
             } else {
-                fillColor = previousFillColor
+                fillColor = initialColor
                 label.textColor = UIColor.white
             }
         }
     }
     
-    // Previous color of the node's center.
-    var previousFillColor: UIColor!
+    // Color that the node is initialized with.
+    private let initialColor: UIColor
     
-    // Previous color of the node's border.
-    var previousStrokeColor: UIColor!
-    
-    // Color of the node's border. Changing its value saves the previous color.
+    // Color of the node's border stroke.
     var strokeColor: UIColor! {
-        willSet {
-            previousStrokeColor = self.strokeColor
-        }
-        
         didSet {
             setNeedsDisplay()
         }
     }
     
-    // Color of the node's center. Changing its value saves the previous color.
+    // Color of the node's center fill.
     var fillColor: UIColor! {
-        willSet {
-            previousFillColor = self.fillColor
-        }
-        
         didSet {
             setNeedsDisplay()
         }
@@ -95,8 +84,6 @@ import UIKit
         didSet {
             strokeColor = self.color
             fillColor = self.color
-            
-            setNeedsDisplay()
         }
     }
     
@@ -105,12 +92,26 @@ import UIKit
     
     private var isBeingDragged = false
     
+    override var description: String {
+        get {
+            if let number = label.text {
+                return number
+            } else {
+                return "Unknown Node"
+            }
+        }
+    }
+    
     init(color: UIColor = UIColor.lightGray, at location: CGPoint) {
+        initialColor = color
+        
         super.init(frame: CGRect(x: location.x - Node.radius, y: location.y - Node.radius, width: Node.diameter, height: Node.diameter))
         
         // Set the colors.
         self.color = color
+        
         strokeColor = self.color
+        
         fillColor = self.color
         
         // Set up the label.
@@ -126,16 +127,20 @@ import UIKit
         backgroundColor = UIColor.clear
     }
     
-    override init(frame: CGRect) {
+    /*override init(frame: CGRect) {
+        initialColor = UIColor.lightGray
+        
         super.init(frame: frame)
         
         self.frame.size = CGSize(width: Node.diameter, height: Node.diameter)
         
         isUserInteractionEnabled = true
         backgroundColor = UIColor.clear
-    }
+    }*/
     
     required init?(coder aDecoder: NSCoder) {
+        initialColor = UIColor.lightGray
+        
         super.init(coder: aDecoder)
         
         isUserInteractionEnabled = true
@@ -190,6 +195,16 @@ import UIKit
         }
         
         return shortest
+    }
+    
+    func highlight(delay: Int = 0, duration: Int) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(delay), execute: {
+            self.isHighlighted = true
+        })
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(duration), execute: {
+            self.isHighlighted = false
+        })
     }
     
     override func draw(_ rect: CGRect) {
@@ -251,5 +266,7 @@ import UIKit
             edge.followConnectedNodes()
         }
     }
+    
+    
  
 }

@@ -22,15 +22,24 @@ import UIKit
     private var endPoint: CGPoint?
     
     // Node at beginning of edge.
-    var startNode: Node?
+    var startNode: Node!
     
     // Node at end of edge.
-    var endNode: Node?
+    var endNode: Node!
     
     // Weight of the edge.
     var weight = 0 {
         didSet {
             setNeedsDisplay()
+        }
+    }
+    
+    override var description: String {
+        get {
+            let start = startNode.label.text!
+            let end = endNode.label.text!
+            
+            return "\(start) → \(end)"
         }
     }
     
@@ -41,8 +50,8 @@ import UIKit
         self.endNode = endNode
         
         // Register edge with nodes.
-        startNode.edges.append(self)
-        endNode.edges.append(self)
+        startNode.edges.insert(self)
+        endNode.edges.insert(self)
         
         updateSize()
         

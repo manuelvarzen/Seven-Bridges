@@ -33,10 +33,16 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var edgeWeightButton: UIBarButtonItem!
     
+    @IBOutlet weak var removeEdgeButton: UIBarButtonItem!
+    
     @IBOutlet var graph: Graph!
     
     @IBAction func editSelectedEdgeWeight(_ sender: UIBarButtonItem) {
         graph.editSelectedEdgeWeight()
+    }
+    
+    @IBAction func removeSelectedEdge(_ sender: UIBarButtonItem) {
+        graph.removeSelectedEdge()
     }
     
     @IBAction func deleteSelectedNodes(_ sender: UIBarButtonItem) {

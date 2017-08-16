@@ -166,7 +166,6 @@ import UIKit
     
     // Adds the given node to an array and updates the state of the node.
     func selectNode(_ node: Node) {
-        // Initialize the array if nil.
         if (selectedNodes.contains(node)) {
             node.isSelected = false
             
@@ -192,6 +191,9 @@ import UIKit
                 if let selectedEdge = getSelectedEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
                     vc?.edgeWeightButton.title = "Weight: \(selectedEdge.weight)"
                     vc?.edgeWeightButton.isEnabled = true
+                    
+                    vc?.removeEdgeButton.title = "Remove \(selectedEdge.description)"
+                    vc?.removeEdgeButton.isEnabled = true
                 }
                 
                 // Shortest path button.
@@ -199,6 +201,9 @@ import UIKit
             } else {
                 vc?.edgeWeightButton.title = ""
                 vc?.edgeWeightButton.isEnabled = false
+                
+                vc?.removeEdgeButton.title = ""
+                vc?.removeEdgeButton.isEnabled = false
                 
                 vc?.findShortestPathButton.isEnabled = false
             }
@@ -242,7 +247,7 @@ import UIKit
                 }
             }
             
-            selectedNodes.remove(at: selectedNodes.index(of: node)!)
+            selectedNodes.removeAll()
             
             nodes.remove(at: nodes.index(of: node)!)
             
@@ -251,8 +256,18 @@ import UIKit
             listForm.removeValue(forKey: node)
         }
         
-        if selectedNodes.count == 0 {
-            vc?.propertiesToolbar.isHidden = true
+        vc?.propertiesToolbar.isHidden = true
+    }
+    
+    // Removes the selected edge.
+    func removeSelectedEdge() {
+        if let selectedEdge = getSelectedEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+            selectedNodes.first!.edges.remove(selectedEdge)
+            selectedNodes.last!.edges.remove(selectedEdge)
+            
+            // TODO: Remove edge from matrix and list forms.
+            
+            selectedEdge.removeFromSuperview()
         }
     }
     
@@ -260,11 +275,86 @@ import UIKit
     func renumberNodes() {
         for (index, node) in nodes.enumerated() {
             node.label.text = String(index + 1)
+            
+            node.highlight(delay: index, duration: 1)
+            
             node.setNeedsDisplay()
         }
     }
     
     func shortestPath() {
+        
+        func shortestPath(from origin: Node, to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
+            var path = shortestPath
+            path.append(origin)
+            
+            if target == origin {
+                return path
+            }
+            
+            var shortest: [Node]?
+            var shortestAggregateWeight = 0
+            
+            for node in matrixForm[origin]! {
+                if !path.contains(node!) {
+                    let newPath = node?.shortestPath(to: target, shortestPath: path)
+                    
+                    // Calculate the aggregate weight of newPath.
+                    var aggregateWeight = 0
+                    for (index, node) in newPath!.enumerated() {
+                        for edge in node.edges {
+                            guard index != newPath!.count - 1 else { break }
+                            
+                            if edge.startNode == node && edge.endNode == newPath![index + 1] {
+                                aggregateWeight += edge.weight
+                            }
+                        }
+                    }
+                    
+                    // TEMP
+                    print("This path has weight: \(aggregateWeight)")
+                    
+                    if newPath != nil {
+                        if shortest == nil || (newPath?.count)! * aggregateWeight < (shortest?.count)! * shortestAggregateWeight {
+                            shortest = newPath
+                            shortestAggregateWeight = aggregateWeight
+                        }
+                    }
+                }
+            }
+            
+            return shortest
+        }
+        
+        guard selectedNodes.count == 2 else { return }
+        
+        vc?.findShortestPathButton.isEnabled = false
+        
+        let originNode = selectedNodes.first!
+        let targetNode = selectedNodes.last!
+        
+        deselectNodes()
+        
+        let path = shortestPath(from: originNode, to: targetNode)
+        
+        if path == nil {
+            // Create modal alert for no path found.
+            let message = "No path found from node \(originNode.label.text!) to node \(targetNode.label.text!)."
+            
+            let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            // Present alert.
+            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+        } else {
+            for (index, node) in path!.enumerated() {
+                node.highlight(delay: index, duration: path!.count)
+            }
+        }
+    }
+    
+    /*func shortestPath() {
         guard selectedNodes.count == 2 else { return }
         
         vc?.findShortestPathButton.isEnabled = false
@@ -288,16 +378,10 @@ import UIKit
             UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
         } else {
             for (index, node) in path!.enumerated() {
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(index), execute: {
-                    node.isHighlighted = true
-                })
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(path!.count), execute: {
-                    node.isHighlighted = false
-                })
+                node.highlight(delay: index, duration: path!.count)
             }
         }
-    }
+    }*/
     
     func editSelectedEdgeWeight() {
         guard selectedNodes.count == 2 else { return }
@@ -310,6 +394,7 @@ import UIKit
                 editingEdge.weight = 0
             }
             
+            // Update weight label.
             vc?.edgeWeightButton.title = "Weight: \(editingEdge.weight)"
         }
     }
@@ -344,11 +429,19 @@ import UIKit
             // Add new node to the view.
             addSubview(node)
             
-            // TODO: Enable edges button if there are 2 or more nodes.
+            // Enable select button if there are 1 or more nodes.
+            if nodes.count > 0 {
+                vc?.selectModeButton.isEnabled = true
+            }
             
-            // TODO: Enable renumber button if there are 2 or more nodes. ?? Only when node is deleted?
-            
-            // TODO: Enable shortest path button if there are 3 or more nodes.
+            // Enable edges, renumber, and shortest path buttons if there are 2 or more nodes.
+            if nodes.count > 1 {
+                vc?.edgesModeButton.isEnabled = true
+                
+                vc?.renumberNodesButton.isEnabled = true
+                
+                vc?.findShortestPathButton.isEnabled = true
+            }
             
             // Cycle through colors.
             if colorCycle < colors.count - 1 {
