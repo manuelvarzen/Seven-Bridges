@@ -54,7 +54,7 @@ import UIKit
     var nodes = [Node]()
     
     // Matrix representation of the graph.
-    var matrixForm = [Node: [Node?]]()
+    var matrixForm = [Node: Set<Node>]()
     
     // List representation of the graph.
     var listForm = [Node: Node?]()
@@ -137,7 +137,7 @@ import UIKit
             sendSubview(toBack: edge)
             
             // Add new edge to matrix representation
-            matrixForm[selectedNodeToMakeEdge!]?.append(endNode)
+            matrixForm[selectedNodeToMakeEdge!]?.insert(endNode)
             
             // Add new edge to list representation.
             listForm[selectedNodeToMakeEdge!] = endNode
@@ -265,7 +265,10 @@ import UIKit
             selectedNodes.first!.edges.remove(selectedEdge)
             selectedNodes.last!.edges.remove(selectedEdge)
             
-            // TODO: Remove edge from matrix and list forms.
+            // Remove edge from matrix and list forms.
+            matrixForm[selectedEdge.startNode]?.remove(selectedEdge.endNode)
+            
+            listForm[selectedEdge.startNode]? = nil
             
             selectedEdge.removeFromSuperview()
         }
@@ -296,9 +299,9 @@ import UIKit
             var shortestAggregateWeight = 0
             
             for node in matrixForm[origin]! {
-                if !path.contains(node!) {
+                if !path.contains(node) {
                     
-                    if let newPath = findShortestPath(from: node!, to: target, shortestPath: path) {
+                    if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
                         
                         // Calculate the aggregate weight of newPath.
                         var aggregateWeight = 0
@@ -390,7 +393,7 @@ import UIKit
             nodes.append(node)
             
             // Add node to matrix representation.
-            matrixForm[node] = []
+            matrixForm[node] = Set<Node>()
             
             // Add node to list representation.
             listForm[node] = nil
