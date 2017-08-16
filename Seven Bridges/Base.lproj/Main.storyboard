@@ -60,13 +60,13 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem enabled="NO" title="Renumber" id="Q8i-MP-B86">
-                                        <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="tintColor" red="0.6308597252" green="0.2717201071" blue="0.84267706190000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <action selector="renumberNodes:" destination="BYZ-38-t0r" id="pbb-VR-FJx"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem enabled="NO" title="Path" id="UB7-tk-Moz">
-                                        <color key="tintColor" red="0.63085972519523126" green="0.27172010713372169" blue="0.84267706193294623" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="tintColor" red="0.6308597252" green="0.2717201071" blue="0.84267706190000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <action selector="findShortestPath:" destination="BYZ-38-t0r" id="eyv-qr-KZt"/>
                                         </connections>

@@ -145,7 +145,7 @@ import UIKit
         // Stroke the line.
         path.stroke()
         
-        // TODO: Draw a label containing the weight of the edge.
+        // TODO: Draw a label containing the weight of the edge near the middle of rect.
         if weight > 0 {
             let weightLabel = UILabel()
             weightLabel.text = String(weight)

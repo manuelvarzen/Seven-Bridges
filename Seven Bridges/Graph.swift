@@ -297,23 +297,23 @@ import UIKit
             
             for node in matrixForm[origin]! {
                 if !path.contains(node!) {
-                    //let newPath = node?.shortestPath(to: target, shortestPath: path)
-                    let newPath = findShortestPath(from: node!, to: target, shortestPath: path)
                     
-                    // Calculate the aggregate weight of newPath.
-                    var aggregateWeight = 0
-                    for (index, node) in newPath!.enumerated() {
-                        for edge in node.edges {
-                            guard index != newPath!.count - 1 else { break }
-                            
-                            if edge.startNode == node && edge.endNode == newPath![index + 1] {
-                                aggregateWeight += edge.weight
+                    if let newPath = findShortestPath(from: node!, to: target, shortestPath: path) {
+                        
+                        // Calculate the aggregate weight of newPath.
+                        var aggregateWeight = 0
+                        for (index, node) in newPath.enumerated() {
+                            for edge in node.edges {
+                                guard index != newPath.count - 1 else { break }
+                                
+                                if edge.startNode == node && edge.endNode == newPath[index + 1] {
+                                    aggregateWeight += edge.weight
+                                }
                             }
                         }
-                    }
-                    
-                    if newPath != nil {
-                        if shortest == nil || (newPath?.count)! * (aggregateWeight + 1) < (shortest?.count)! * (shortestAggregateWeight + 1) {
+                        
+                        
+                        if shortest == nil || newPath.count * (aggregateWeight + 1) < (shortest?.count)! * (shortestAggregateWeight + 1) {
                             shortest = newPath
                             shortestAggregateWeight = aggregateWeight
                         }
