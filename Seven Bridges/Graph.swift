@@ -150,7 +150,7 @@ import UIKit
         selectedNodeToMakeEdge = nil
     }
     
-    func getSelectedEdge(from firstNode: Node, to secondNode: Node) -> Edge? {
+    func getEdge(from firstNode: Node, to secondNode: Node) -> Edge? {
         var selectedEdge: Edge?
         
         // Get the edge.
@@ -188,7 +188,7 @@ import UIKit
             // Update items in the toolbars based on selection.
             if selectedNodes.count == 2 {
                 // Edge weight button.
-                if let selectedEdge = getSelectedEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+                if let selectedEdge = getEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
                     vc?.edgeWeightButton.title = "Weight: \(selectedEdge.weight)"
                     vc?.edgeWeightButton.isEnabled = true
                     
@@ -261,7 +261,7 @@ import UIKit
     
     // Removes the selected edge.
     func removeSelectedEdge() {
-        if let selectedEdge = getSelectedEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+        if let selectedEdge = getEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
             selectedNodes.first!.edges.remove(selectedEdge)
             selectedNodes.last!.edges.remove(selectedEdge)
             
@@ -359,28 +359,12 @@ import UIKit
             // Present alert.
             UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
         }
-        
-        /*if path == nil {
-            // Create modal alert for no path found.
-            let message = "No path found from node \(originNode.label.text!) to node \(targetNode.label.text!)."
-            
-            let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            // Present alert.
-            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-        } else {
-            for (index, node) in path!.enumerated() {
-                node.highlight(delay: index, duration: path!.count)
-            }
-        }*/
     }
     
     func editSelectedEdgeWeight() {
         guard selectedNodes.count == 2 else { return }
         
-        if let editingEdge = getSelectedEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+        if let editingEdge = getEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
             // TODO: Set weight from number chooser.
             if editingEdge.weight < nodes.count {
                 editingEdge.weight += 1

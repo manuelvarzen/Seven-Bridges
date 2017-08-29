@@ -127,17 +127,6 @@ import UIKit
         backgroundColor = UIColor.clear
     }
     
-    /*override init(frame: CGRect) {
-        initialColor = UIColor.lightGray
-        
-        super.init(frame: frame)
-        
-        self.frame.size = CGSize(width: Node.diameter, height: Node.diameter)
-        
-        isUserInteractionEnabled = true
-        backgroundColor = UIColor.clear
-    }*/
-    
     required init?(coder aDecoder: NSCoder) {
         initialColor = UIColor.lightGray
         

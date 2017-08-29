@@ -146,7 +146,7 @@ import UIKit
         path.stroke()
         
         // TODO: Draw a label containing the weight of the edge near the middle of rect.
-        if weight > 0 {
+        if weight > 1 {
             let weightLabel = UILabel()
             weightLabel.text = String(weight)
             weightLabel.textColor = startNode?.strokeColor
