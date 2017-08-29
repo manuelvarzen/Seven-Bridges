@@ -28,7 +28,7 @@ import UIKit
     var endNode: Node!
     
     // Weight of the edge.
-    var weight = 0 {
+    var weight = 1 {
         didSet {
             setNeedsDisplay()
         }

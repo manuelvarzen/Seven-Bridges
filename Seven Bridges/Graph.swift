@@ -285,6 +285,24 @@ import UIKit
         }
     }
     
+    // Returns the aggregate weight of a given path.
+    func aggregateWeight(of path: [Node]) -> Int {
+        var weight = 0
+        
+        for (index, node) in path.enumerated() {
+            for edge in node.edges {
+                guard index != path.count - 1 else { break }
+                
+                if edge.startNode == node && edge.endNode == path[index + 1] {
+                    weight += edge.weight
+                }
+            }
+        }
+        
+        return weight
+    }
+    
+    // Calculates the shortest path based on two selected nodes.
     func findShortestPath() {
         
         func findShortestPath(from origin: Node, to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
@@ -304,19 +322,9 @@ import UIKit
                     if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
                         
                         // Calculate the aggregate weight of newPath.
-                        var aggregateWeight = 0
-                        for (index, node) in newPath.enumerated() {
-                            for edge in node.edges {
-                                guard index != newPath.count - 1 else { break }
-                                
-                                if edge.startNode == node && edge.endNode == newPath[index + 1] {
-                                    aggregateWeight += edge.weight
-                                }
-                            }
-                        }
+                        let aggregateWeight = self.aggregateWeight(of: newPath)
                         
-                        
-                        if shortest == nil || newPath.count * (aggregateWeight + 1) < (shortest?.count)! * (shortestAggregateWeight + 1) {
+                        if shortest == nil || aggregateWeight < shortestAggregateWeight {
                             shortest = newPath
                             shortestAggregateWeight = aggregateWeight
                         }
@@ -336,9 +344,23 @@ import UIKit
         
         deselectNodes()
         
-        let path = findShortestPath(from: originNode, to: targetNode)
+        if let path = findShortestPath(from: originNode, to: targetNode) {
+            for (index, node) in path.enumerated() {
+                node.highlight(delay: index, duration: path.count)
+            }
+        } else {
+            // Create modal alert for no path found.
+            let message = "No path found from node \(originNode.label.text!) to node \(targetNode.label.text!)."
+            
+            let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            // Present alert.
+            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+        }
         
-        if path == nil {
+        /*if path == nil {
             // Create modal alert for no path found.
             let message = "No path found from node \(originNode.label.text!) to node \(targetNode.label.text!)."
             
@@ -352,7 +374,7 @@ import UIKit
             for (index, node) in path!.enumerated() {
                 node.highlight(delay: index, duration: path!.count)
             }
-        }
+        }*/
     }
     
     func editSelectedEdgeWeight() {
@@ -363,7 +385,7 @@ import UIKit
             if editingEdge.weight < nodes.count {
                 editingEdge.weight += 1
             } else {
-                editingEdge.weight = 0
+                editingEdge.weight = 1
             }
             
             // Update weight label.
