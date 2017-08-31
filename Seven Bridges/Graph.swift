@@ -59,11 +59,8 @@ import UIKit
     // List representation of the graph.
     var listForm = [Node: Node?]()
     
-    // Selected node to be used as the start node for a new edge.
-    var selectedNodeToMakeEdge: Node?
-    
     // Nodes that have been selected.
-    private var selectedNodes = [Node]()
+    var selectedNodes = [Node]()
     
     // Current index in the colors array.
     private var colorCycle = 0
@@ -106,29 +103,26 @@ import UIKit
         // Reset color cycle.
         colorCycle = 0
         
-        // Deselect selected node.
-        selectedNodeToMakeEdge = nil
-        
         // Deselect all selected nodes.
         selectedNodes.removeAll()
     }
     
     // Selects a start node for making a new edge.
     func makeEdge(from startNode: Node) {
-        selectedNodeToMakeEdge = startNode
+        selectedNodes.append(startNode)
         
         startNode.isSelected = true
     }
     
     // Makes a new edge between the selected node and an end node.
     func makeEdge(to endNode: Node) {
-        guard selectedNodeToMakeEdge != nil else { return }
+        guard selectedNodes.count == 1 else { return }
         
         // Check if start node and end node are not the same.
         // If so, make an edge.
-        if endNode != selectedNodeToMakeEdge! && !endNode.isAdjacent(to: selectedNodeToMakeEdge!) {
+        if endNode != selectedNodes[0] && !endNode.isAdjacent(to: selectedNodes[0]) {
             // Create the edge.
-            let edge = Edge(from: selectedNodeToMakeEdge!, to: endNode)
+            let edge = Edge(from: selectedNodes[0], to: endNode)
             
             // Add the edge to the graph.
             addSubview(edge)
@@ -137,17 +131,17 @@ import UIKit
             sendSubview(toBack: edge)
             
             // Add new edge to matrix representation
-            matrixForm[selectedNodeToMakeEdge!]?.insert(endNode)
+            matrixForm[selectedNodes[0]]?.insert(endNode)
             
             // Add new edge to list representation.
-            listForm[selectedNodeToMakeEdge!] = endNode
+            listForm[selectedNodes[0]] = endNode
         }
         
         // Return selected node to original color config.
-        selectedNodeToMakeEdge!.isSelected = false
+        selectedNodes[0].isSelected = false
         
         // Clear the selected node.
-        selectedNodeToMakeEdge = nil
+        selectedNodes.removeAll()
     }
     
     func getEdge(from firstNode: Node, to secondNode: Node) -> Edge? {
@@ -247,14 +241,14 @@ import UIKit
                 }
             }
             
-            selectedNodes.removeAll()
-            
             nodes.remove(at: nodes.index(of: node)!)
             
             matrixForm.removeValue(forKey: node)
             
             listForm.removeValue(forKey: node)
         }
+        
+        selectedNodes.removeAll()
         
         vc?.propertiesToolbar.isHidden = true
     }
@@ -278,10 +272,7 @@ import UIKit
     func renumberNodes() {
         for (index, node) in nodes.enumerated() {
             node.label.text = String(index + 1)
-            
-            node.highlight(delay: index, duration: 1)
-            
-            node.setNeedsDisplay()
+            node.highlight(delay: index, duration: nodes.count)
         }
     }
     

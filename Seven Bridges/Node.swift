@@ -196,7 +196,7 @@ import UIKit
         
         if graph.mode == .edges {
             // Select this node as a start node for a new edge if the selected node is nil.
-            if graph.selectedNodeToMakeEdge == nil {
+            if graph.selectedNodes.isEmpty {
                 graph.makeEdge(from: self)
             } else {
                 graph.makeEdge(to: self)
