@@ -144,7 +144,7 @@ import UIKit
         selectedNodes.removeAll()
     }
     
-    func getEdge(from firstNode: Node, to secondNode: Node) -> Edge? {
+    func getEdge(between firstNode: Node, and secondNode: Node) -> Edge? {
         var selectedEdge: Edge?
         
         // Get the edge.
@@ -182,7 +182,7 @@ import UIKit
             // Update items in the toolbars based on selection.
             if selectedNodes.count == 2 {
                 // Edge weight button.
-                if let selectedEdge = getEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+                if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
                     vc?.edgeWeightButton.title = "Weight: \(selectedEdge.weight)"
                     vc?.edgeWeightButton.isEnabled = true
                     
@@ -255,7 +255,7 @@ import UIKit
     
     // Removes the selected edge.
     func removeSelectedEdge() {
-        if let selectedEdge = getEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+        if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
             selectedNodes.first!.edges.remove(selectedEdge)
             selectedNodes.last!.edges.remove(selectedEdge)
             
@@ -293,6 +293,12 @@ import UIKit
         return weight
     }
     
+    private func highlightPath(_ path: [Node]) {
+        for (index, node) in path.enumerated() {
+            node.highlight(delay: index, duration: path.count)
+        }
+    }
+    
     // Calculates the shortest path based on two selected nodes.
     func findShortestPath() {
         
@@ -309,6 +315,8 @@ import UIKit
             
             for node in matrixForm[origin]! {
                 if !path.contains(node) {
+                    
+                    //highlightPath(path) Wait until completed?
                     
                     if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
                         
@@ -336,9 +344,7 @@ import UIKit
         deselectNodes()
         
         if let path = findShortestPath(from: originNode, to: targetNode) {
-            for (index, node) in path.enumerated() {
-                node.highlight(delay: index, duration: path.count)
-            }
+            highlightPath(path)
         } else {
             // Create modal alert for no path found.
             let message = "No path found from node \(originNode.label.text!) to node \(targetNode.label.text!)."
@@ -355,7 +361,7 @@ import UIKit
     func editSelectedEdgeWeight() {
         guard selectedNodes.count == 2 else { return }
         
-        if let editingEdge = getEdge(from: selectedNodes.first!, to: selectedNodes.last!) {
+        if let editingEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
             // TODO: Set weight from number chooser.
             if editingEdge.weight < nodes.count {
                 editingEdge.weight += 1
