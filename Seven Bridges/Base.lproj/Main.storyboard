@@ -36,13 +36,12 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <items>
                                     <barButtonItem title="Clear" id="IIX-sD-YGu">
-                                        <color key="tintColor" red="0.88769484897555428" green="0.18209132433271616" blue="0.083815879389457129" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <action selector="clearGraphWithSender:" destination="BYZ-38-t0r" id="23w-2D-tf0"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Dtm-PG-W3d"/>
-                                    <barButtonItem enabled="NO" title="Select" id="Yun-qL-8ne">
+                                    <barButtonItem title="Select" id="Yun-qL-8ne">
                                         <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="enterSelectMode:" destination="BYZ-38-t0r" id="WcM-bq-z8n"/>
@@ -54,19 +53,19 @@
                                             <action selector="enterNodesMode:" destination="BYZ-38-t0r" id="7a3-TA-t4H"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem enabled="NO" title="Edge" id="So3-H1-JxB">
+                                    <barButtonItem title="Edge" id="So3-H1-JxB">
                                         <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="enterEdgesMode:" destination="BYZ-38-t0r" id="lKi-wV-EUN"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem enabled="NO" title="Renumber" id="Q8i-MP-B86">
+                                    <barButtonItem title="Renumber" id="Q8i-MP-B86">
                                         <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="renumberNodes:" destination="BYZ-38-t0r" id="pbb-VR-FJx"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem enabled="NO" title="Path" id="UB7-tk-Moz">
+                                    <barButtonItem title="Path" id="UB7-tk-Moz">
                                         <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="findShortestPath:" destination="BYZ-38-t0r" id="eyv-qr-KZt"/>

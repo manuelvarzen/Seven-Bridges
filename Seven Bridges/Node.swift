@@ -95,7 +95,7 @@ import UIKit
     override var description: String {
         get {
             if let number = label.text {
-                return number
+                return "Node \(number)"
             } else {
                 return "Unknown Node"
             }

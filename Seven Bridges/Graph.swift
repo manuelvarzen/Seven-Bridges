@@ -334,12 +334,18 @@ import UIKit
             return shortest
         }
         
-        guard selectedNodes.count == 2 else { return }
+        // TODO: View mode while algorithm is running?
         
-        vc?.findShortestPathButton.isEnabled = false
+        let originNode: Node
+        let targetNode: Node
         
-        let originNode = selectedNodes.first!
-        let targetNode = selectedNodes.last!
+        if mode == .select && selectedNodes.count == 2 {
+            originNode = selectedNodes.first!
+            targetNode = selectedNodes.last!
+        } else {
+            originNode = nodes.first!
+            targetNode = nodes.last!
+        }
         
         deselectNodes()
         
@@ -347,7 +353,7 @@ import UIKit
             highlightPath(path)
         } else {
             // Create modal alert for no path found.
-            let message = "No path found from node \(originNode.label.text!) to node \(targetNode.label.text!)."
+            let message = "No path found from \(originNode) to \(targetNode)."
             
             let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
             
@@ -403,20 +409,6 @@ import UIKit
             
             // Add new node to the view.
             addSubview(node)
-            
-            // Enable select button if there are 1 or more nodes.
-            if nodes.count > 0 {
-                vc?.selectModeButton.isEnabled = true
-            }
-            
-            // Enable edges, renumber, and shortest path buttons if there are 2 or more nodes.
-            if nodes.count > 1 {
-                vc?.edgesModeButton.isEnabled = true
-                
-                vc?.renumberNodesButton.isEnabled = true
-                
-                vc?.findShortestPathButton.isEnabled = true
-            }
             
             // Cycle through colors.
             if colorCycle < colors.count - 1 {
