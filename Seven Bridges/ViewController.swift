@@ -94,6 +94,16 @@ class ViewController: UIViewController {
         graph.mode = .edges
     }
     
+    @IBAction func openAlgorithmsPopover(_ sender: UIBarButtonItem) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let algorithmsVC = storyboard.instantiateViewController(withIdentifier: "algorithmsViewController")
+        algorithmsVC.modalPresentationStyle = .popover
+        algorithmsVC.popoverPresentationController?.barButtonItem = sender
+        
+        present(algorithmsVC, animated: true)
+    }
+    
     @IBAction func clearGraph(sender: UIBarButtonItem) {
         graph.clear()
     }
