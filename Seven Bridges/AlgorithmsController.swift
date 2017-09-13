@@ -10,6 +10,8 @@ import UIKit
 
 class AlgorithmsController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    weak var viewControllerDelegate: ViewController?
+    
     @IBOutlet weak var tableView: UITableView!
     
     private let algorithms = [
@@ -29,7 +31,11 @@ class AlgorithmsController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(algorithms[indexPath.row])
+        let algorithm = algorithms[indexPath.row]
+        
+        viewControllerDelegate?.didSelectAlgorithm(algorithm, from: self)
+        
+        dismiss(animated: true, completion: nil)
     }
     
 }

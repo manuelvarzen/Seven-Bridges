@@ -23,10 +23,6 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var edgesModeButton: UIBarButtonItem!
     
-    @IBOutlet weak var renumberNodesButton: UIBarButtonItem!
-    
-    @IBOutlet weak var findShortestPathButton: UIBarButtonItem!
-    
     @IBOutlet weak var mainToolbar: UIToolbar!
     
     @IBOutlet weak var propertiesToolbar: UIToolbar!
@@ -49,14 +45,6 @@ class ViewController: UIViewController {
         graph.deleteSelectedNodes()
     }
     
-    @IBAction func findShortestPath(_ sender: UIBarButtonItem) {
-        graph.findShortestPath()
-    }
-    
-    @IBAction func renumberNodes(_ sender: UIBarButtonItem) {
-        graph.renumberNodes()
-    }
-    
     @IBAction func enterSelectMode(_ sender: UIBarButtonItem) {
         if graph.mode != .select {
             graph.mode = .select
@@ -64,12 +52,8 @@ class ViewController: UIViewController {
             sender.title = "Done"
             sender.style = .done
             
-            // Disable all other buttons
-            for item in mainToolbar.items! {
-                if item != sender {
-                    item.isEnabled = false
-                }
-            }
+            nodesModeButton.isEnabled = false
+            edgesModeButton.isEnabled = false
         } else {
             graph.deselectNodes()
             graph.mode = .nodes
@@ -77,12 +61,8 @@ class ViewController: UIViewController {
             sender.title = "Select"
             sender.style = .plain
             
-            // Enable all the buttons
-            for item in mainToolbar.items! {
-                if item != sender {
-                    item.isEnabled = true
-                }
-            }
+            nodesModeButton.isEnabled = true
+            edgesModeButton.isEnabled = true
         }
     }
     
@@ -101,11 +81,26 @@ class ViewController: UIViewController {
         algorithmsVC.modalPresentationStyle = .popover
         algorithmsVC.popoverPresentationController?.barButtonItem = sender
         
+        (algorithmsVC as? AlgorithmsController)?.viewControllerDelegate = self
+        
         present(algorithmsVC, animated: true)
     }
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {
         graph.clear()
+    }
+    
+    func didSelectAlgorithm(_ algorithm: String, from viewController: UIViewController) {
+        viewController.dismiss(animated: false, completion: nil)
+        
+        switch algorithm {
+        case "Find Shortest Path (Dijkstra)":
+            graph.findShortestPath()
+        case "Renumber Nodes":
+            graph.renumberNodes()
+        default:
+            print("An unexpected error occurred.")
+        }
     }
     
 }

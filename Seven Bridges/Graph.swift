@@ -189,17 +189,12 @@ import UIKit
                     vc?.removeEdgeButton.title = "Remove \(selectedEdge.description)"
                     vc?.removeEdgeButton.isEnabled = true
                 }
-                
-                // Shortest path button.
-                vc?.findShortestPathButton.isEnabled = true
             } else {
                 vc?.edgeWeightButton.title = ""
                 vc?.edgeWeightButton.isEnabled = false
                 
                 vc?.removeEdgeButton.title = ""
                 vc?.removeEdgeButton.isEnabled = false
-                
-                vc?.findShortestPathButton.isEnabled = false
             }
         }
     }

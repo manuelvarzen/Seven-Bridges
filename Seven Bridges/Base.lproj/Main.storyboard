@@ -59,18 +59,6 @@
                                             <action selector="enterEdgesMode:" destination="BYZ-38-t0r" id="lKi-wV-EUN"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Renumber" id="Q8i-MP-B86">
-                                        <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <action selector="renumberNodes:" destination="BYZ-38-t0r" id="pbb-VR-FJx"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="Path" id="UB7-tk-Moz">
-                                        <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <action selector="findShortestPath:" destination="BYZ-38-t0r" id="eyv-qr-KZt"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem title="Algorithms" id="043-P4-I9w">
                                         <connections>
                                             <action selector="openAlgorithmsPopover:" destination="BYZ-38-t0r" id="K8V-pG-1jd"/>
@@ -119,13 +107,11 @@
                     <connections>
                         <outlet property="edgeWeightButton" destination="akk-5O-cz9" id="aTS-2G-EPi"/>
                         <outlet property="edgesModeButton" destination="So3-H1-JxB" id="SOV-sd-CwE"/>
-                        <outlet property="findShortestPathButton" destination="UB7-tk-Moz" id="9C7-uv-Bez"/>
                         <outlet property="graph" destination="cri-lb-Lak" id="F4g-Uv-Flw"/>
                         <outlet property="mainToolbar" destination="L0O-dN-50g" id="3TX-R8-cAd"/>
                         <outlet property="nodesModeButton" destination="i5c-yZ-CMU" id="oFM-8L-lnT"/>
                         <outlet property="propertiesToolbar" destination="edS-Wz-lfl" id="5GS-xq-2k2"/>
                         <outlet property="removeEdgeButton" destination="pjb-zS-hWe" id="zUA-Kc-amE"/>
-                        <outlet property="renumberNodesButton" destination="Q8i-MP-B86" id="2Dy-2l-T2o"/>
                         <outlet property="selectModeButton" destination="Yun-qL-8ne" id="xV9-QU-oIi"/>
                     </connections>
                 </viewController>
