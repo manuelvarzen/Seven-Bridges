@@ -67,15 +67,19 @@ import UIKit
     
     // Colors to cycle through when making a new node.
     private let colors = [
-        // Green
+        // green
         UIColor(red: 100/255, green: 210/255, blue: 185/255, alpha: 1.0),
-        // Pink
+        
+        // pink
         UIColor(red: 235/255, green: 120/255, blue: 180/255, alpha: 1.0),
-        // Blue
+        
+        // blue
         UIColor(red: 90/255, green: 160/255, blue: 235/255, alpha: 1.0),
-        // Yellow
+        
+        // yellow
         UIColor(red: 245/255, green: 200/255, blue: 90/255, alpha: 1.0),
-        // Purple
+        
+        // purple
         UIColor(red: 195/255, green: 155/255, blue: 245/255, alpha: 1.0)
     ]
     
@@ -91,19 +95,19 @@ import UIKit
             subview.removeFromSuperview()
         }
         
-        // Delete all nodes.
+        // delete all nodes
         nodes.removeAll()
         
-        // Reset matrix form.
+        // reset matrix form
         matrixForm.removeAll()
         
-        // Reset list form.
+        // reset list form
         listForm.removeAll()
         
-        // Reset color cycle.
+        // reset color cycle
         colorCycle = 0
         
-        // Deselect all selected nodes.
+        // deselect all selected nodes
         selectedNodes.removeAll()
     }
     
@@ -118,36 +122,36 @@ import UIKit
     func makeEdge(to endNode: Node) {
         guard selectedNodes.count == 1 else { return }
         
-        // Check if start node and end node are not the same.
-        // If so, make an edge.
+        // check if start node and end node are not the same
+        // if so, make an edge
         if endNode != selectedNodes[0] && !endNode.isAdjacent(to: selectedNodes[0]) {
-            // Create the edge.
+            // create the edge
             let edge = Edge(from: selectedNodes[0], to: endNode)
             
-            // Add the edge to the graph.
+            // add the edge to the graph
             addSubview(edge)
             
-            // Send edge to the back.
+            // aend edge to the back
             sendSubview(toBack: edge)
             
-            // Add new edge to matrix representation
+            // add new edge to matrix representation
             matrixForm[selectedNodes[0]]?.insert(endNode)
             
-            // Add new edge to list representation.
+            // add new edge to list representation
             listForm[selectedNodes[0]] = endNode
         }
         
-        // Return selected node to original color config.
+        // return selected node to original color config
         selectedNodes[0].isSelected = false
         
-        // Clear the selected node.
+        // clear the selected node
         selectedNodes.removeAll()
     }
     
     func getEdge(between firstNode: Node, and secondNode: Node) -> Edge? {
         var selectedEdge: Edge?
         
-        // Get the edge.
+        // get the edge
         for edge in firstNode.edges {
             if edge.endNode == secondNode || edge.startNode == secondNode {
                 selectedEdge = edge
@@ -165,23 +169,22 @@ import UIKit
             
             selectedNodes.remove(at: selectedNodes.index(of: node)!)
             
-            // Hide properties toolbar if no nodes are selected.
+            // hide properties toolbar if no nodes are selected
             if selectedNodes.count == 0 {
                 vc?.propertiesToolbar.isHidden = true
             }
         } else {
-            // Update state of node.
+            // update state of node
             node.isSelected = true
             
-            // Add node to array.
+            // add node to array
             selectedNodes.append(node)
             
-            // Show properties toolbar.
+            // show properties toolbar
             vc?.propertiesToolbar.isHidden = false
             
-            // Update items in the toolbars based on selection.
+            // update items in the toolbars based on selection
             if selectedNodes.count == 2 {
-                // Edge weight button.
                 if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
                     vc?.edgeWeightButton.title = "Weight: \(selectedEdge.weight)"
                     vc?.edgeWeightButton.isEnabled = true
@@ -203,17 +206,20 @@ import UIKit
     func deselectNodes() {
         guard selectedNodes.count != 0 else { return }
         
-        // Return all nodes in array to original state.
+        // return all nodes in selected nodes array to original state
         for node in selectedNodes {
-            if node.isSelected {
-                node.isSelected = false
-            }
+            node.isSelected = false
         }
         
-        // Remove nodes from selected array.
+        // unhighlight all nodes
+        for node in nodes {
+            node.isHighlighted = false
+        }
+        
+        // remove nodes from selected array
         selectedNodes.removeAll()
         
-        // Hide properties toolbar.
+        // hide properties toolbar
         vc?.propertiesToolbar.isHidden = true
     }
     
@@ -254,7 +260,7 @@ import UIKit
             selectedNodes.first!.edges.remove(selectedEdge)
             selectedNodes.last!.edges.remove(selectedEdge)
             
-            // Remove edge from matrix and list forms.
+            // remove edge from matrix and list forms
             matrixForm[selectedEdge.startNode]?.remove(selectedEdge.endNode)
             
             listForm[selectedEdge.startNode]? = nil
@@ -297,9 +303,13 @@ import UIKit
     // Calculates the shortest path based on two selected nodes.
     func findShortestPath() {
         
+        var traversal = [Node]()
+        
         func findShortestPath(from origin: Node, to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
             var path = shortestPath
             path.append(origin)
+            
+            traversal.append(origin)
             
             if target == origin {
                 return path
@@ -311,11 +321,10 @@ import UIKit
             for node in matrixForm[origin]! {
                 if !path.contains(node) {
                     
-                    //highlightPath(path) Wait until completed?
+                    traversal.append(node)
                     
                     if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
-                        
-                        // Calculate the aggregate weight of newPath.
+                        // calculate the aggregate weight of newPath
                         let aggregateWeight = self.aggregateWeight(of: newPath)
                         
                         if shortest == nil || aggregateWeight < shortestAggregateWeight {
@@ -328,8 +337,6 @@ import UIKit
             
             return shortest
         }
-        
-        // TODO: View mode while algorithm is running?
         
         let originNode: Node
         let targetNode: Node
@@ -345,16 +352,17 @@ import UIKit
         deselectNodes()
         
         if let path = findShortestPath(from: originNode, to: targetNode) {
+            highlightPath(traversal)
             highlightPath(path)
         } else {
-            // Create modal alert for no path found.
+            // create modal alert for no path found
             let message = "No path found from \(originNode) to \(targetNode)."
             
             let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
             
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             
-            // Present alert.
+            // present alert
             UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
         }
     }
@@ -363,49 +371,49 @@ import UIKit
         guard selectedNodes.count == 2 else { return }
         
         if let editingEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
-            // TODO: Set weight from number chooser.
+            // TODO: set weight from number chooser
             if editingEdge.weight < nodes.count {
                 editingEdge.weight += 1
             } else {
                 editingEdge.weight = 1
             }
             
-            // Update weight label.
+            // update weight label
             vc?.edgeWeightButton.title = "Weight: \(editingEdge.weight)"
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // Continue if graph is in nodes mode.
+        // continue if graph is in nodes mode
         guard mode == .nodes else { return }
         
-        // Make new node where the graph view was touched.
+        // make new node where the graph view was touched
         makeNode(with: touches)
     }
     
     // Makes a new node at the location of the touch.
     private func makeNode(with touches: Set<UITouch>) {
         for touch in touches {
-            // Get location of the touch.
+            // get location of the touch
             let location = touch.location(in: self)
             
-            // Create new node at location of touch.
+            // areate new node at location of touch
             let node = Node(color: colors[colorCycle], at: location)
             node.label.text = String(nodes.count + 1)
             
-            // Add node to nodes array.
+            // add node to nodes array
             nodes.append(node)
             
-            // Add node to matrix representation.
+            // add node to matrix representation
             matrixForm[node] = Set<Node>()
             
-            // Add node to list representation.
+            // add node to list representation
             listForm[node] = nil
             
-            // Add new node to the view.
+            // add new node to the view
             addSubview(node)
             
-            // Cycle through colors.
+            // cycle through colors
             if colorCycle < colors.count - 1 {
                 colorCycle += 1
             } else {

@@ -107,23 +107,21 @@ import UIKit
         
         super.init(frame: CGRect(x: location.x - Node.radius, y: location.y - Node.radius, width: Node.diameter, height: Node.diameter))
         
-        // Set the colors.
+        // set the colors
         self.color = color
-        
         strokeColor = self.color
-        
         fillColor = self.color
         
-        // Set up the label.
+        // set up the label
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = UIColor.white
         label.adjustsFontSizeToFitWidth = true
         label.textAlignment = NSTextAlignment.center
         
-        // Enable user interaction.
+        // enable user interaction
         isUserInteractionEnabled = true
         
-        // Set background color to clear.
+        // set background color to clear
         backgroundColor = UIColor.clear
     }
     
@@ -180,9 +178,9 @@ import UIKit
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // TODO: Bring connected edges to front (of edges).
+        // TODO: bring connected edges to front (of edges)
         
-        // Bring touched node to front.
+        // bring touched node to front
         superview?.bringSubview(toFront: self)
     }
     
@@ -195,7 +193,7 @@ import UIKit
         let graph = superview as! Graph
         
         if graph.mode == .edges {
-            // Select this node as a start node for a new edge if the selected node is nil.
+            // select this node as a start node for a new edge if the selected node is nil
             if graph.selectedNodes.isEmpty {
                 graph.makeEdge(from: self)
             } else {
@@ -220,7 +218,7 @@ import UIKit
             frame = frame.offsetBy(dx: (location.x - previousLocation.x), dy: (location.y - previousLocation.y))
         }
         
-        // Update size and origin of connected edges to move with node.
+        // update size and origin of connected edges to move with node
         for edge in edges {
             edge.followConnectedNodes()
         }

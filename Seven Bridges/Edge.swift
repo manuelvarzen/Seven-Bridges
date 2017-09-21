@@ -152,7 +152,7 @@ import UIKit
             weightLabel.textColor = startNode?.strokeColor
             weightLabel.font = UIFont.boldSystemFont(ofSize: 18)
             
-            weightLabel.drawText(in: rect.insetBy(dx: rect.width / 2 - 32, dy: rect.height / 2 - 32))
+            weightLabel.drawText(in: rect.insetBy(dx: rect.width / 2, dy: rect.height / 2 - 40))
         }
     }
     
