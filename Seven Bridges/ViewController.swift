@@ -55,7 +55,7 @@ class ViewController: UIViewController {
             nodesModeButton.isEnabled = false
             edgesModeButton.isEnabled = false
         } else {
-            graph.deselectNodes()
+            graph.deselectNodes(unhighlight: true)
             graph.mode = .nodes
             
             sender.title = "Select"

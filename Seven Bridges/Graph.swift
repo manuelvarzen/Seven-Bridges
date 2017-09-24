@@ -203,17 +203,21 @@ import UIKit
     }
     
     // Clears the selected nodes array and returns the nodes to their original state.
-    func deselectNodes() {
-        guard selectedNodes.count != 0 else { return }
-        
+    func deselectNodes(unhighlight: Bool = false) {
         // return all nodes in selected nodes array to original state
         for node in selectedNodes {
             node.isSelected = false
         }
         
         // unhighlight all nodes
-        for node in nodes {
-            node.isHighlighted = false
+        if unhighlight {
+            for node in nodes {
+                node.isHighlighted = false
+                
+                for edge in node.edges {
+                    edge.isHighlighted = false
+                }
+            }
         }
         
         // remove nodes from selected array
@@ -294,22 +298,48 @@ import UIKit
         return weight
     }
     
+    // Highlights each node in the given path with a delay.
     private func highlightPath(_ path: [Node]) {
         for (index, node) in path.enumerated() {
             node.highlight(delay: index, duration: path.count)
         }
     }
     
+    // Outlines each path in an array of paths.
+    private func outlineTraverals(_ traversals: [[Node]]) {
+        for path in traversals {
+            outlinePath(path)
+        }
+    }
+    
+    // Outlines a given path, including nodes and edges.
+    private func outlinePath(_ path: [Node], duration: Int? = nil) {
+        for (index, node) in path.enumerated() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(index), execute: {
+                node.isHighlighted = true
+            })
+            
+            if index != path.count - 1 {
+                for edge in node.edges {
+                    if edge.startNode == node && edge.endNode == path[index + 1] {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(index + 1), execute: {
+                            edge.isHighlighted = true
+                        })
+                    }
+                }
+            }
+        }
+    }
+    
     // Calculates the shortest path based on two selected nodes.
     func findShortestPath() {
+        guard mode == .select && selectedNodes.count == 2 else { return }
         
-        var traversal = [Node]()
+        var traversals = [[Node]]()
         
         func findShortestPath(from origin: Node, to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
             var path = shortestPath
             path.append(origin)
-            
-            traversal.append(origin)
             
             if target == origin {
                 return path
@@ -320,10 +350,10 @@ import UIKit
             
             for node in matrixForm[origin]! {
                 if !path.contains(node) {
-                    
-                    traversal.append(node)
-                    
                     if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
+                        
+                        traversals.append(newPath)
+                        
                         // calculate the aggregate weight of newPath
                         let aggregateWeight = self.aggregateWeight(of: newPath)
                         
@@ -338,22 +368,14 @@ import UIKit
             return shortest
         }
         
-        let originNode: Node
-        let targetNode: Node
-        
-        if mode == .select && selectedNodes.count == 2 {
-            originNode = selectedNodes.first!
-            targetNode = selectedNodes.last!
-        } else {
-            originNode = nodes.first!
-            targetNode = nodes.last!
-        }
+        let originNode = selectedNodes.first!
+        let targetNode = selectedNodes.last!
         
         deselectNodes()
         
         if let path = findShortestPath(from: originNode, to: targetNode) {
-            highlightPath(traversal)
-            highlightPath(path)
+            //outlineTraverals(traversals)
+            outlinePath(path)
         } else {
             // create modal alert for no path found
             let message = "No path found from \(originNode) to \(targetNode)."
@@ -397,7 +419,7 @@ import UIKit
             // get location of the touch
             let location = touch.location(in: self)
             
-            // areate new node at location of touch
+            // create new node at location of touch
             let node = Node(color: colors[colorCycle], at: location)
             node.label.text = String(nodes.count + 1)
             
