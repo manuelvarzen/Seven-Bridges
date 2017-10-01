@@ -156,14 +156,14 @@ import UIKit
         // stroke the line
         path.stroke()
         
-        // TODO: sraw a label containing the weight of the edge near the middle of rect
+        // FIX: draw a label containing the weight of the edge near the middle of rect
         if weight > 1 {
             let weightLabel = UILabel()
             weightLabel.text = String(weight)
-            weightLabel.textColor = startNode?.strokeColor
+            weightLabel.textColor = UIColor.black
             weightLabel.font = UIFont.boldSystemFont(ofSize: 18)
             
-            weightLabel.drawText(in: rect.insetBy(dx: rect.width / 2, dy: rect.height / 2 - 40))
+            weightLabel.drawText(in: rect.insetBy(dx: rect.width / 2, dy: rect.height / 2))
         }
     }
     

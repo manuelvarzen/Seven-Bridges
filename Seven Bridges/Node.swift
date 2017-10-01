@@ -36,7 +36,7 @@ import UIKit
     }
     
     // Width of the node's border.
-    var lineWidth: CGFloat = diameter / 6
+    static var lineWidth: CGFloat = diameter / 6
     
     private let highlightColor = UIColor.black
     
@@ -154,19 +154,9 @@ import UIKit
         return false
     }
     
-    func highlight(delay: Int = 0, duration: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(delay), execute: {
-            self.isHighlighted = true
-        })
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(duration), execute: {
-            self.isHighlighted = false
-        })
-    }
-    
     override func draw(_ rect: CGRect) {
-        let path = UIBezierPath(ovalIn: rect.insetBy(dx: lineWidth/2, dy: lineWidth/2))
-        path.lineWidth = lineWidth
+        let path = UIBezierPath(ovalIn: rect.insetBy(dx: Node.lineWidth / 2, dy: Node.lineWidth / 2))
+        path.lineWidth = Node.lineWidth
         
         fillColor.setFill()
         path.fill()

@@ -227,30 +227,34 @@ import UIKit
         vc?.propertiesToolbar.isHidden = true
     }
     
+    // Deletes a given node and its edges.
+    func deleteNode(_ node: Node) {
+        node.removeFromSuperview()
+        
+        for edge in node.edges {
+            edge.removeFromSuperview()
+            
+            if let index = edge.startNode?.edges.index(of: edge) {
+                edge.startNode?.edges.remove(at: index)
+            }
+            
+            if let index = edge.endNode?.edges.index(of: edge) {
+                edge.endNode?.edges.remove(at: index)
+            }
+        }
+        
+        nodes.remove(at: nodes.index(of: node)!)
+        
+        matrixForm.removeValue(forKey: node)
+        listForm.removeValue(forKey: node)
+    }
+    
     // Deletes all selected nodes and their edges.
     func deleteSelectedNodes() {
         guard selectedNodes.count != 0 else { return }
         
         for node in selectedNodes {
-            node.removeFromSuperview()
-            
-            for edge in node.edges {
-                edge.removeFromSuperview()
-                
-                if let index = edge.startNode?.edges.index(of: edge) {
-                    edge.startNode?.edges.remove(at: index)
-                }
-                
-                if let index = edge.endNode?.edges.index(of: edge) {
-                    edge.endNode?.edges.remove(at: index)
-                }
-            }
-            
-            nodes.remove(at: nodes.index(of: node)!)
-            
-            matrixForm.removeValue(forKey: node)
-            
-            listForm.removeValue(forKey: node)
+            deleteNode(node)
         }
         
         selectedNodes.removeAll()
@@ -275,9 +279,10 @@ import UIKit
     
     // Renumbers all nodes by the order that they were added to the graph.
     func renumberNodes() {
+        outlinePath(nodes, duration: nodes.count, delay: 1)
+        
         for (index, node) in nodes.enumerated() {
             node.label.text = String(index + 1)
-            node.highlight(delay: index, duration: nodes.count)
         }
     }
     
@@ -298,33 +303,48 @@ import UIKit
         return weight
     }
     
-    // Highlights each node in the given path with a delay.
-    private func highlightPath(_ path: [Node]) {
-        for (index, node) in path.enumerated() {
-            node.highlight(delay: index, duration: path.count)
-        }
-    }
-    
     // Outlines each path in an array of paths.
-    private func outlineTraverals(_ traversals: [[Node]]) {
-        for path in traversals {
-            outlinePath(path)
+    private func outlineTraversals(_ traversals: [[Node]]) {
+        for (index, path) in traversals.enumerated() {
+            outlinePath(path, duration: path.count, delay: index * path.count)
         }
     }
     
     // Outlines a given path, including nodes and edges.
-    private func outlinePath(_ path: [Node], duration: Int? = nil) {
+    private func outlinePath(_ path: [Node], duration: Int? = nil, delay: Int = 0) {
         for (index, node) in path.enumerated() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(index), execute: {
+            var deadline = delay + index
+            
+            // highlight node after 'index' seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
                 node.isHighlighted = true
             })
+            
+            // unhighlight node after set duration
+            if duration != nil {
+                let runtime = delay + duration!
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(runtime), execute: {
+                    node.isHighlighted = false
+                })
+            }
             
             if index != path.count - 1 {
                 for edge in node.edges {
                     if edge.startNode == node && edge.endNode == path[index + 1] {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(index + 1), execute: {
+                        deadline += 1
+                        
+                        // highlight edge after 'index + 1' seconds
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
                             edge.isHighlighted = true
                         })
+                        
+                        // unhighlight edge after set duration
+                        if duration != nil {
+                            let runtime = delay + duration!
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(runtime), execute: {
+                                edge.isHighlighted = false
+                            })
+                        }
                     }
                 }
             }
@@ -336,6 +356,7 @@ import UIKit
         guard mode == .select && selectedNodes.count == 2 else { return }
         
         var traversals = [[Node]]()
+        var steps = 0
         
         func findShortestPath(from origin: Node, to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
             var path = shortestPath
@@ -352,7 +373,11 @@ import UIKit
                 if !path.contains(node) {
                     if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
                         
+                        // add the new path to the history of traversals
                         traversals.append(newPath)
+                        
+                        // add the count of the nodes to the steps???
+                        steps += newPath.count
                         
                         // calculate the aggregate weight of newPath
                         let aggregateWeight = self.aggregateWeight(of: newPath)
@@ -374,8 +399,14 @@ import UIKit
         deselectNodes()
         
         if let path = findShortestPath(from: originNode, to: targetNode) {
-            //outlineTraverals(traversals)
-            outlinePath(path)
+            // remove the shortest path from the traversal history
+            traversals.removeLast()
+            
+            // outline the traversals
+            outlineTraversals(traversals)
+            
+            // outline the shortest path
+            outlinePath(path, delay: steps)
         } else {
             // create modal alert for no path found
             let message = "No path found from \(originNode) to \(targetNode)."
