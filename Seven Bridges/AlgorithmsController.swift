@@ -16,7 +16,8 @@ class AlgorithmsController: UIViewController, UITableViewDataSource, UITableView
     
     private let algorithms = [
         "Renumber Nodes",
-        "Find Shortest Path (Dijkstra)"
+        "Find Shortest Path (Dijkstra)",
+        "Minimum Spanning Tree (Prim)"
     ]
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

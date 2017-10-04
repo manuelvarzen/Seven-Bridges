@@ -328,8 +328,10 @@ import UIKit
                 })
             }
             
-            if index != path.count - 1 {
+            // only iterate over edges if this is not the last node in the path
+            if index < path.count - 1 {
                 for edge in node.edges {
+                    // directed
                     if edge.startNode == node && edge.endNode == path[index + 1] {
                         deadline += 1
                         
@@ -367,7 +369,7 @@ import UIKit
             }
             
             var shortest: [Node]?
-            var shortestAggregateWeight = 0
+            var shortestAggregateWeight = 0 // equals 0 when shortest is nil
             
             for node in matrixForm[origin]! {
                 if !path.contains(node) {
@@ -419,6 +421,9 @@ import UIKit
             UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
         }
     }
+    
+    // Reduces the graph to form a minimum spanning tree using Prim's Algorithm.
+    func reduce() {}
     
     func editSelectedEdgeWeight() {
         guard selectedNodes.count == 2 else { return }
