@@ -199,6 +199,8 @@ import UIKit
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard (superview as! Graph).mode != .view else { return } // if in view mode, do not allow dragging
+        
         for touch in touches {
             let location = touch.location(in: self)
             let previousLocation = touch.previousLocation(in: self)

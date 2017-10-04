@@ -40,6 +40,7 @@ import UIKit
     // Mode defining the action performed by user interaction.
     enum Mode {
         case select
+        case view
         case nodes
         case edges
     }
@@ -356,6 +357,8 @@ import UIKit
     // Calculates the shortest path based on two selected nodes.
     func findShortestPath() {
         guard mode == .select && selectedNodes.count == 2 else { return }
+        
+        mode = .view // make the graph view-only during execution (e.g. no dragging)
         
         var traversals = [[Node]]()
         var steps = 0
