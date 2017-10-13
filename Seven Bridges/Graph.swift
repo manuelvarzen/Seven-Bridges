@@ -9,6 +9,7 @@ import UIKit
 
 @IBDesignable class Graph: UIScrollView {
     
+    /// Border color of the Graph.
     @IBInspectable var borderColor: UIColor? {
         get {
             if let color = layer.borderColor {
@@ -37,7 +38,7 @@ import UIKit
         }
     }
     
-    // Mode defining the action performed by user interaction.
+    /// Mode defining the action performed by user interaction.
     enum Mode {
         case select
         case view
@@ -45,28 +46,32 @@ import UIKit
         case edges
     }
     
-    // Determines what objects are being made or manipulated by user interaction.
+    /// Determines the interactive behavior of the Graph.
     var mode = Mode.nodes
     
-    // Determines whether the graph draws directed edges.
+    /// Determines whether the graph draws directed or undirected edges.
     var isDirected = true
     
-    // All nodes in the graph.
+    /// The root node of the graph; mostly used for tree algorithms.
+    /// By default, the root is the first node added to the Graph.
+    var root: Node!
+    
+    /// All nodes in the graph.
     var nodes = [Node]()
     
-    // Matrix representation of the graph.
+    /// Matrix representation of the graph.
     var matrixForm = [Node: Set<Node>]()
     
-    // List representation of the graph.
+    /// List representation of the graph.
     var listForm = [Node: Node?]()
     
-    // Nodes that have been selected.
+    /// Nodes that have been selected.
     var selectedNodes = [Node]()
     
-    // Current index in the colors array.
+    /// Current index in the colors array for cycling through.
     private var colorCycle = 0
     
-    // Colors to cycle through when making a new node.
+    /// Colors to cycle through when making a new node.
     private let colors = [
         // green
         UIColor(red: 100/255, green: 210/255, blue: 185/255, alpha: 1.0),
@@ -228,7 +233,9 @@ import UIKit
         vc?.propertiesToolbar.isHidden = true
     }
     
-    // Deletes a given node and its edges.
+    /// Deletes a given node and its edges.
+    ///
+    /// - parameter _: The node to be deleted.
     func deleteNode(_ node: Node) {
         node.removeFromSuperview()
         
@@ -250,7 +257,7 @@ import UIKit
         listForm.removeValue(forKey: node)
     }
     
-    // Deletes all selected nodes and their edges.
+    /// Deletes all selected nodes and their edges.
     func deleteSelectedNodes() {
         guard selectedNodes.count != 0 else { return }
         
@@ -263,7 +270,7 @@ import UIKit
         vc?.propertiesToolbar.isHidden = true
     }
     
-    // Removes the selected edge.
+    /// Removes the selected edge from the Graph.
     func removeSelectedEdge() {
         if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
             selectedNodes.first!.edges.remove(selectedEdge)
@@ -278,8 +285,10 @@ import UIKit
         }
     }
     
-    // Renumbers all nodes by the order that they were added to the graph.
+    /// Renumbers all nodes by the order that they were added to the graph.
     func renumberNodes() {
+        guard !nodes.isEmpty else { return }
+        
         outlinePath(nodes, duration: nodes.count, delay: 1)
         
         for (index, node) in nodes.enumerated() {
@@ -354,7 +363,9 @@ import UIKit
         }
     }
     
-    // Calculates the shortest path based on two selected nodes.
+    /**
+     *  Finds and identifies the shortest path between two selected nodes.
+     */
     func findShortestPath() {
         guard mode == .select && selectedNodes.count == 2 else { return }
         
@@ -425,8 +436,72 @@ import UIKit
         }
     }
     
-    // Reduces the graph to form a minimum spanning tree using Prim's Algorithm.
-    func reduce() {}
+    /// Reduces the graph to find a minimum spanning tree using Prim's Algorithm.
+    func findMinimumSpanningTree() {
+        guard mode == .select && selectedNodes.count == 1 else { return }
+        
+        mode = .view
+        
+        var pool = Set<Node>(nodes) // all nodes
+        var distance = [Node: Int]() // distance from a node to the root
+        var parent = [Node: Node?]()
+        var children = [Node: [Node]]()
+        
+        // finds the node with the minimum distance from a dictionary
+        func getMin(from d: [Node: Int]) -> Node {
+            var shortest: Node?
+            
+            for (node, distance) in d {
+                if shortest == nil || distance < d[shortest!]! {
+                    shortest = node
+                }
+            }
+            
+            return shortest!
+        }
+        
+        // "initialize" all nodes
+        for node in pool {
+            distance[node] = Int.max // distance is "infinity"
+            parent[node] = nil
+            children[node] = [Node]()
+        }
+        
+        root = selectedNodes.first!
+        distance[root] = 0 // distance from root to itself is 0
+        
+        while !pool.isEmpty {
+            let currentNode = getMin(from: distance)
+            pool.remove(currentNode)
+            
+            for nextNode in currentNode.adjacentNodes {
+                if let edge = currentNode.getEdge(to: nextNode) {
+                    let newDistance = edge.weight
+                    
+                    if pool.contains(nextNode) && newDistance < distance[nextNode]! {
+                        parent[nextNode] = currentNode
+                        children[currentNode]!.append(nextNode)
+                        distance[nextNode] = newDistance
+                    }
+                }
+            }
+        }
+        
+        // build the path from the children dictionary
+        var path = [Node]()
+        path.append(root)
+        
+        func buildPath(c: [Node]) {
+            for child in c {
+                path.append(child)
+                buildPath(c: children[child]!)
+            }
+        }
+        
+        buildPath(c: children[root]!)
+        
+        outlinePath(path)
+    }
     
     func editSelectedEdgeWeight() {
         guard selectedNodes.count == 2 else { return }
@@ -461,6 +536,10 @@ import UIKit
             // create new node at location of touch
             let node = Node(color: colors[colorCycle], at: location)
             node.label.text = String(nodes.count + 1)
+            
+            if root == nil {
+                root = node
+            }
             
             // add node to nodes array
             nodes.append(node)

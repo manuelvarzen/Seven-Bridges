@@ -9,25 +9,25 @@ import UIKit
 
 @IBDesignable class Node: UIView {
     
-    // Diameter of the node.
+    /// Diameter of the node.
     static let diameter: CGFloat = 48
     
-    // Radius of the node, computed as half the diameter.
+    /// Radius of the node, computed as half the diameter.
     static let radius: CGFloat = diameter / 2
     
-    // Edges connected to the node.
+    /// Edges connected to the node.
     var edges = Set<Edge>()
     
-    // All nodes that are connected to this node.
-    var connections: [Node] {
+    /// All nodes that are connected to this node.
+    var adjacentNodes: Set<Node> {
         get {
-            var results = [Node]()
+            var results = Set<Node>()
             
             for edge in edges {
                 if edge.startNode! != self {
-                    results.append(edge.startNode!)
+                    results.insert(edge.startNode!)
                 } else if edge.endNode! != self {
-                    results.append(edge.endNode!)
+                    results.insert(edge.endNode!)
                 }
             }
             
@@ -134,24 +134,50 @@ import UIKit
         backgroundColor = UIColor.clear
     }
     
-    // Determines whether a given node is connected to this node.
-    func isConnected(to node: Node) -> Bool {
-        if connections.contains(node) {
+    /// Determines whether a given node is adjacent to this node.
+    ///
+    /// - parameter to: The node to test whether it is adjacent.
+    func isAdjacent(to node: Node) -> Bool {
+        if adjacentNodes.contains(node) {
             return true
         } else {
             return false
         }
     }
     
-    // Determines whether a given node is adjacent to this node.
-    func isAdjacent(to node: Node) -> Bool {
+    /// Returns an edge connecting this node to a given node.
+    ///
+    /// - parameter node: An adjacent node.
+    func getEdge(to node: Node) -> Edge? {
         for edge in edges {
-            if edge.startNode! == node || edge.endNode! == node {
-                return true
+            if edge.startNode! == self && edge.endNode! == node {
+                return edge
             }
         }
         
-        return false
+        return nil
+    }
+    
+    /// Finds the edge with the lowest weight connected to the node.
+    ///
+    /// - parameter directed: Whether finding the cheapest edge should account for a directed graph.
+    func cheapestEdge(directed: Bool = false) -> Edge? {
+        if edges.isEmpty {
+            return nil
+        }
+        
+        var cheapest: Edge? = edges.first
+        for edge in edges {
+            if directed && edge.endNode == self {
+                continue
+            }
+            
+            if edge.weight < cheapest!.weight {
+                cheapest = edge
+            }
+        }
+        
+        return cheapest
     }
     
     override func draw(_ rect: CGRect) {
