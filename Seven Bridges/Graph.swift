@@ -320,7 +320,11 @@ import UIKit
         }
     }
     
-    // Outlines a given path, including nodes and edges.
+    /// Outlines a given path, including nodes and edges.
+    ///
+    /// - parameter _: An array of nodes.
+    /// - parameter duration: The total duration of the outlining.
+    /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
     private func outlinePath(_ path: [Node], duration: Int? = nil, delay: Int = 0) {
         for (index, node) in path.enumerated() {
             var deadline = delay + index
@@ -363,9 +367,40 @@ import UIKit
         }
     }
     
-    /**
-     *  Finds and identifies the shortest path between two selected nodes.
-     */
+    /// Outlines a given path, including nodes and edges.
+    ///
+    /// - parameter _: An array of edges.
+    /// - parameter duration: The total duration of the outlining.
+    /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
+    private func outlinePath(_ path: [Edge], duration: Int? = nil, delay: Int = 0) {
+        for (index, edge) in path.enumerated() {
+            let deadline = delay + index
+            
+            let startNode = edge.startNode
+            let endNode = edge.endNode
+            
+            // highlight nodes after 'index' seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
+                startNode?.isHighlighted = true
+                endNode?.isHighlighted = true
+                
+                edge.isHighlighted = true
+            })
+            
+            // unhighlight node after set duration
+            if duration != nil {
+                let runtime = delay + duration!
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(runtime), execute: {
+                    startNode?.isHighlighted = false
+                    endNode?.isHighlighted = false
+                    
+                    edge.isHighlighted = false
+                })
+            }
+        }
+    }
+    
+    /// Finds and identifies the shortest path between two selected nodes.
     func findShortestPath() {
         guard mode == .select && selectedNodes.count == 2 else { return }
         
@@ -472,6 +507,7 @@ import UIKit
         
         while !pool.isEmpty {
             let currentNode = getMin(from: distance)
+            distance.removeValue(forKey: currentNode)
             pool.remove(currentNode)
             
             for nextNode in currentNode.adjacentNodes {
@@ -487,18 +523,20 @@ import UIKit
             }
         }
         
-        // build the path from the children dictionary
-        var path = [Node]()
-        path.append(root)
+        // tree as path of edges
+        var path = [Edge]()
         
-        func buildPath(c: [Node]) {
-            for child in c {
-                path.append(child)
-                buildPath(c: children[child]!)
+        // recurses through the children dictionary to build a path of edges
+        func buildPath(from parent: Node) {
+            for child in children[parent]! {
+                if let edge = parent.getEdge(to: child) {
+                    path.append(edge)
+                    buildPath(from: child)
+                }
             }
         }
         
-        buildPath(c: children[root]!)
+        buildPath(from: root)
         
         outlinePath(path)
     }
@@ -536,10 +574,6 @@ import UIKit
             // create new node at location of touch
             let node = Node(color: colors[colorCycle], at: location)
             node.label.text = String(nodes.count + 1)
-            
-            if root == nil {
-                root = node
-            }
             
             // add node to nodes array
             nodes.append(node)

@@ -148,9 +148,13 @@ import UIKit
     /// Returns an edge connecting this node to a given node.
     ///
     /// - parameter node: An adjacent node.
-    func getEdge(to node: Node) -> Edge? {
+    func getEdge(to node: Node, directed: Bool = false) -> Edge? {
         for edge in edges {
             if edge.startNode! == self && edge.endNode! == node {
+                return edge
+            }
+            
+            if !directed && edge.endNode! == self && edge.startNode! == node {
                 return edge
             }
         }
