@@ -59,6 +59,8 @@ import UIKit
     /// All nodes in the graph.
     var nodes = [Node]()
     
+    var edges = Set<Edge>()
+    
     /// Matrix representation of the graph.
     var matrixForm = [Node: Set<Node>]()
     
@@ -137,8 +139,10 @@ import UIKit
             // add the edge to the graph
             addSubview(edge)
             
-            // aend edge to the back
+            // send edge to the back
             sendSubview(toBack: edge)
+            
+            edges.insert(edge)
             
             // add new edge to matrix representation
             matrixForm[selectedNodes[0]]?.insert(endNode)
@@ -275,6 +279,8 @@ import UIKit
         if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
             selectedNodes.first!.edges.remove(selectedEdge)
             selectedNodes.last!.edges.remove(selectedEdge)
+            
+            edges.remove(selectedEdge)
             
             // remove edge from matrix and list forms
             matrixForm[selectedEdge.startNode]?.remove(selectedEdge.endNode)
@@ -472,7 +478,7 @@ import UIKit
     }
     
     /// Reduces the graph to find a minimum spanning tree using Prim's Algorithm.
-    func findMinimumSpanningTree() {
+    func prim() {
         guard mode == .select && selectedNodes.count == 1 else { return }
         
         mode = .view
@@ -541,6 +547,54 @@ import UIKit
         outlinePath(path)
     }
     
+    /// Kruskal's Algorithm
+    func kruskal() {
+        var s = [Edge](edges) // all edges in the graph
+        var f = Set<Set<Node>>() // forest of trees
+        var e = [Edge]() // edges in the final tree
+        
+        // sort edges by weight
+        s = s.sorted(by: {
+            $0.weight < $1.weight
+        })
+        
+        // create tree in forest for each node
+        for node in nodes {
+            var tree = Set<Node>()
+            tree.insert(node)
+            
+            f.insert(tree)
+        }
+        
+        // loop through edges
+        for (i, edge) in s.enumerated() {
+            print(i)
+            // tree containing start node of edge
+            let u = f.first(where: { set in
+                set.contains(edge.startNode!)
+            })
+            
+            // tree containing end node of edge
+            let y = f.first(where: { set in
+                set.contains(edge.endNode!)
+            })
+            
+            if u != y {
+                // union u and y, add to f, and delete u and y
+                let uy = u?.union(y!)
+                f.remove(u!)
+                f.remove(y!)
+                f.insert(uy!)
+                
+                e.append(edge)
+            }
+        }
+        
+        print(e)
+        
+        outlinePath(e)
+    }
+    
     func editSelectedEdgeWeight() {
         guard selectedNodes.count == 2 else { return }
         
@@ -565,7 +619,7 @@ import UIKit
         makeNode(with: touches)
     }
     
-    // Makes a new node at the location of the touch.
+    /// Makes a new node at the location of the touch(es) given.
     private func makeNode(with touches: Set<UITouch>) {
         for touch in touches {
             // get location of the touch

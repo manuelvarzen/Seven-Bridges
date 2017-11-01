@@ -94,8 +94,10 @@ class ViewController: UIViewController {
         viewController.dismiss(animated: false, completion: nil)
         
         switch algorithm {
+        case "Minimum Spanning Tree (Kruskal)":
+            graph.kruskal()
         case "Minimum Spanning Tree (Prim)":
-            graph.findMinimumSpanningTree()
+            graph.prim()
         case "Find Shortest Path (Dijkstra)":
             graph.findShortestPath()
         case "Renumber Nodes":
