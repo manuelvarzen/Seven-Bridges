@@ -567,8 +567,7 @@ import UIKit
         }
         
         // loop through edges
-        for (i, edge) in s.enumerated() {
-            print(i)
+        for edge in s {
             // tree containing start node of edge
             let u = f.first(where: { set in
                 set.contains(edge.startNode!)
@@ -589,8 +588,6 @@ import UIKit
                 e.append(edge)
             }
         }
-        
-        print(e)
         
         outlinePath(e)
     }
