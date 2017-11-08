@@ -81,7 +81,7 @@ class ViewController: UIViewController {
         algorithmsVC.modalPresentationStyle = .popover
         algorithmsVC.popoverPresentationController?.barButtonItem = sender
         
-        (algorithmsVC as? AlgorithmsController)?.viewControllerDelegate = self
+        (algorithmsVC as? ActionsController)?.viewControllerDelegate = self
         
         present(algorithmsVC, animated: true)
     }
@@ -90,10 +90,12 @@ class ViewController: UIViewController {
         graph.clear()
     }
     
-    func didSelectAlgorithm(_ algorithm: String, from viewController: UIViewController) {
+    func didSelectAction(_ algorithm: String, from viewController: UIViewController) {
         viewController.dismiss(animated: false, completion: nil)
         
         switch algorithm {
+        case "Toggle Direction":
+            graph.isDirected = !graph.isDirected
         case "Minimum Spanning Tree (Kruskal)":
             graph.kruskal()
         case "Minimum Spanning Tree (Prim)":

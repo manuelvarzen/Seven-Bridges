@@ -8,13 +8,14 @@
 
 import UIKit
 
-class AlgorithmsController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ActionsController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     weak var viewControllerDelegate: ViewController?
     
     @IBOutlet weak var tableView: UITableView!
     
-    private let algorithms = [
+    private let actions = [
+        "Toggle Direction",
         "Renumber Nodes",
         "Find Shortest Path (Dijkstra)",
         "Minimum Spanning Tree (Prim)",
@@ -22,20 +23,20 @@ class AlgorithmsController: UIViewController, UITableViewDataSource, UITableView
     ]
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return algorithms.count
+        return actions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
-        cell.textLabel?.text = algorithms[indexPath.row]
+        cell.textLabel?.text = actions[indexPath.row]
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let algorithm = algorithms[indexPath.row]
+        let algorithm = actions[indexPath.row]
         
-        viewControllerDelegate?.didSelectAlgorithm(algorithm, from: self)
+        viewControllerDelegate?.didSelectAction(algorithm, from: self)
         
         dismiss(animated: true, completion: nil)
     }

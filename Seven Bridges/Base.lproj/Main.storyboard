@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -59,7 +59,7 @@
                                             <action selector="enterEdgesMode:" destination="BYZ-38-t0r" id="lKi-wV-EUN"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Algorithms" id="043-P4-I9w">
+                                    <barButtonItem title="Actions" id="043-P4-I9w">
                                         <connections>
                                             <action selector="openAlgorithmsPopover:" destination="BYZ-38-t0r" id="K8V-pG-1jd"/>
                                         </connections>
@@ -122,12 +122,12 @@
         <!--Algorithms-->
         <scene sceneID="rd5-J8-NME">
             <objects>
-                <viewController storyboardIdentifier="algorithmsViewController" title="Algorithms" id="fYk-Sh-XFh" customClass="AlgorithmsController" customModule="Seven_Bridges" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="algorithmsViewController" title="Algorithms" id="fYk-Sh-XFh" customClass="ActionsController" customModule="Seven_Bridges" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WHr-2q-bxT"/>
                         <viewControllerLayoutGuide type="bottom" id="frV-uk-Isf"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" id="zad-oU-6bJ">
+                    <view key="view" contentMode="scaleToFill" id="zad-oU-6bJ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>

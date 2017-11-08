@@ -15,7 +15,7 @@
 		51839D201EFD95EC003B7B40 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51839D1F1EFD95EC003B7B40 /* Node.swift */; };
 		51839D221EFDABAB003B7B40 /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51839D211EFDABAB003B7B40 /* Edge.swift */; };
 		51B24C471EFDC9DF00AE209F /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B24C461EFDC9DF00AE209F /* Graph.swift */; };
-		51CA75C01F687776003D7F2D /* AlgorithmsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CA75BF1F687776003D7F2D /* AlgorithmsController.swift */; };
+		51CA75C01F687776003D7F2D /* ActionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CA75BF1F687776003D7F2D /* ActionsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +29,7 @@
 		51839D1F1EFD95EC003B7B40 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		51839D211EFDABAB003B7B40 /* Edge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
 		51B24C461EFDC9DF00AE209F /* Graph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
-		51CA75BF1F687776003D7F2D /* AlgorithmsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmsController.swift; sourceTree = "<group>"; };
+		51CA75BF1F687776003D7F2D /* ActionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +64,7 @@
 			children = (
 				51839D0D1EFD9240003B7B40 /* AppDelegate.swift */,
 				51839D0F1EFD9240003B7B40 /* ViewController.swift */,
-				51CA75BF1F687776003D7F2D /* AlgorithmsController.swift */,
+				51CA75BF1F687776003D7F2D /* ActionsController.swift */,
 				51B24C461EFDC9DF00AE209F /* Graph.swift */,
 				51839D1F1EFD95EC003B7B40 /* Node.swift */,
 				51839D211EFDABAB003B7B40 /* Edge.swift */,
@@ -151,7 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				51B24C471EFDC9DF00AE209F /* Graph.swift in Sources */,
-				51CA75C01F687776003D7F2D /* AlgorithmsController.swift in Sources */,
+				51CA75C01F687776003D7F2D /* ActionsController.swift in Sources */,
 				51839D101EFD9240003B7B40 /* ViewController.swift in Sources */,
 				51839D221EFDABAB003B7B40 /* Edge.swift in Sources */,
 				51839D0E1EFD9240003B7B40 /* AppDelegate.swift in Sources */,

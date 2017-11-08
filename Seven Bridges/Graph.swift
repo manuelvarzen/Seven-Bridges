@@ -50,7 +50,13 @@ import UIKit
     var mode = Mode.nodes
     
     /// Determines whether the graph draws directed or undirected edges.
-    var isDirected = true
+    var isDirected: Bool = true {
+        didSet {
+            for edge in edges {
+                edge.setNeedsDisplay()
+            }
+        }
+    }
     
     /// The root node of the graph; mostly used for tree algorithms.
     /// By default, the root is the first node added to the Graph.
@@ -59,6 +65,7 @@ import UIKit
     /// All nodes in the graph.
     var nodes = [Node]()
     
+    /// All edges in the graph.
     var edges = Set<Edge>()
     
     /// Matrix representation of the graph.
@@ -97,7 +104,7 @@ import UIKit
         self.vc = vc
     }
     
-    // Clears the graph of all nodes and edges.
+    /// Clears the graph of all nodes and edges.
     func clear() {
         for subview in subviews {
             subview.removeFromSuperview()
@@ -105,6 +112,9 @@ import UIKit
         
         // delete all nodes
         nodes.removeAll()
+        
+        // delete all edges
+        edges.removeAll()
         
         // reset matrix form
         matrixForm.removeAll()

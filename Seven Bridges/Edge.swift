@@ -137,17 +137,17 @@ import UIKit
     override func draw(_ rect: CGRect) {
         updatePath()
         
-        // set color of line to stroke color of start node if graph is directed
-        // otherwise, stroke color is gray
-        if (superview as! Graph).isDirected {
-            startNode?.strokeColor.setStroke()
-        } else {
-            UIColor.lightGray.setStroke()
-        }
-        
         // if the edge is highlighted, stroke in black
         if isHighlighted {
             UIColor.black.setStroke()
+        } else {
+            // set color of line to stroke color of start node if graph is directed
+            // otherwise, stroke color is gray
+            if (superview as! Graph).isDirected {
+                startNode?.strokeColor.setStroke()
+            } else {
+                UIColor.lightGray.setStroke()
+            }
         }
         
         // set thickness of the line
@@ -156,7 +156,7 @@ import UIKit
         // stroke the line
         path.stroke()
         
-        // FIX: draw a label containing the weight of the edge near the middle of rect
+        // draw a label containing the weight of the edge near the middle of rect
         if weight > 1 {
             let weightLabel = UILabel()
             weightLabel.text = String(weight)
