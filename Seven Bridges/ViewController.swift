@@ -46,7 +46,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func enterSelectMode(_ sender: UIBarButtonItem) {
-        if graph.mode != .select {
+        if graph.mode != .select && graph.mode != .viewOnly {
+            // tapping "Select"
             graph.mode = .select
             
             sender.title = "Done"
@@ -55,6 +56,7 @@ class ViewController: UIViewController {
             nodesModeButton.isEnabled = false
             edgesModeButton.isEnabled = false
         } else {
+            // tapping "Done"
             graph.deselectNodes(unhighlight: true)
             graph.mode = .nodes
             
