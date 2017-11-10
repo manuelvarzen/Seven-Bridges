@@ -76,26 +76,26 @@ class ViewController: UIViewController {
         graph.mode = .edges
     }
     
-    @IBAction func openAlgorithmsPopover(_ sender: UIBarButtonItem) {
+    @IBAction func openActionsPopover(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        let algorithmsVC = storyboard.instantiateViewController(withIdentifier: "algorithmsViewController")
-        algorithmsVC.modalPresentationStyle = .popover
-        algorithmsVC.popoverPresentationController?.barButtonItem = sender
+        let actionsVC = storyboard.instantiateViewController(withIdentifier: "actionsViewController")
+        actionsVC.modalPresentationStyle = .popover
+        actionsVC.popoverPresentationController?.barButtonItem = sender
         
-        (algorithmsVC as? ActionsController)?.viewControllerDelegate = self
+        (actionsVC as? ActionsController)?.viewControllerDelegate = self
         
-        present(algorithmsVC, animated: true)
+        present(actionsVC, animated: true)
     }
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {
         graph.clear()
     }
     
-    func didSelectAction(_ algorithm: String, from viewController: UIViewController) {
+    func didSelectAction(_ action: String, from viewController: UIViewController) {
         viewController.dismiss(animated: false, completion: nil)
         
-        switch algorithm {
+        switch action {
         case "Toggle Direction":
             graph.isDirected = !graph.isDirected
         case "Minimum Spanning Tree (Kruskal)":

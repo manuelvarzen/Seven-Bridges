@@ -1,5 +1,5 @@
 //
-//  AlgorithmsController.swift
+//  ActionsController.swift
 //  Seven Bridges
 //
 //  Created by Dillon Fagan on 9/12/17.
@@ -34,9 +34,9 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let algorithm = actions[indexPath.row]
+        let action = actions[indexPath.row]
         
-        viewControllerDelegate?.didSelectAction(algorithm, from: self)
+        viewControllerDelegate?.didSelectAction(action, from: self)
         
         dismiss(animated: true, completion: nil)
     }

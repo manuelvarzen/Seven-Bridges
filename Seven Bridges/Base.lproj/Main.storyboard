@@ -61,7 +61,7 @@
                                     </barButtonItem>
                                     <barButtonItem title="Actions" id="043-P4-I9w">
                                         <connections>
-                                            <action selector="openAlgorithmsPopover:" destination="BYZ-38-t0r" id="K8V-pG-1jd"/>
+                                            <action selector="openActionsPopover:" destination="BYZ-38-t0r" id="K8V-pG-1jd"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
