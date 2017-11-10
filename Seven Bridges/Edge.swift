@@ -9,25 +9,25 @@ import UIKit
 
 @IBDesignable class Edge: UIView {
     
-    // Thickness of the line.
+    /// Thickness of the line.
     private let lineWidth: CGFloat = 4
     
-    // Path of the line.
+    /// Path of the line.
     private var path = UIBezierPath()
     
-    // Start point of the line.
+    /// Start point of the line.
     private var startPoint: CGPoint?
     
-    // End point of the line.
+    /// End point of the line.
     private var endPoint: CGPoint?
     
-    // Node at beginning of edge.
+    /// Node at beginning of edge.
     var startNode: Node!
     
-    // Node at end of edge.
+    /// Node at end of edge.
     var endNode: Node!
     
-    // Weight of the edge.
+    /// Weight of the edge.
     var weight = 1 {
         didSet {
             setNeedsDisplay()

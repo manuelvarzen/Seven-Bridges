@@ -41,7 +41,7 @@ import UIKit
     /// Mode defining the action performed by user interaction.
     enum Mode {
         case select
-        case view
+        case viewOnly
         case nodes
         case edges
     }
@@ -417,10 +417,10 @@ import UIKit
     }
     
     /// Finds and identifies the shortest path between two selected nodes.
-    func findShortestPath() {
+    func shortestPath() {
         guard mode == .select && selectedNodes.count == 2 else { return }
         
-        mode = .view // make the graph view-only during execution (e.g. no dragging)
+        mode = .viewOnly // make the graph view-only during execution (e.g. no dragging)
         
         var traversals = [[Node]]()
         var steps = 0
@@ -488,10 +488,10 @@ import UIKit
     }
     
     /// Reduces the graph to find a minimum spanning tree using Prim's Algorithm.
-    func prim() {
+    func primMinimumSpanningTree() {
         guard mode == .select && selectedNodes.count == 1 else { return }
         
-        mode = .view
+        mode = .viewOnly // make graph view-only
         
         var pool = Set<Node>(nodes) // all nodes
         var distance = [Node: Int]() // distance from a node to the root
@@ -539,6 +539,8 @@ import UIKit
             }
         }
         
+        deselectNodes()
+        
         // tree as path of edges
         var path = [Edge]()
         
@@ -558,7 +560,9 @@ import UIKit
     }
     
     /// Kruskal's Algorithm
-    func kruskal() {
+    func kruskalMinimumSpanningTree() {
+        mode = .viewOnly
+        
         var s = [Edge](edges) // all edges in the graph
         var f = Set<Set<Node>>() // forest of trees
         var e = [Edge]() // edges in the final tree
@@ -598,6 +602,8 @@ import UIKit
                 e.append(edge)
             }
         }
+        
+        deselectNodes()
         
         outlinePath(e)
     }

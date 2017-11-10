@@ -198,8 +198,6 @@ import UIKit
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // TODO: bring connected edges to front (of edges)
-        
         // bring touched node to front
         superview?.bringSubview(toFront: self)
     }
@@ -229,7 +227,7 @@ import UIKit
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard (superview as! Graph).mode != .view else { return } // if in view mode, do not allow dragging
+        guard (superview as! Graph).mode != .viewOnly else { return } // if in view mode, do not allow dragging
         
         for touch in touches {
             let location = touch.location(in: self)

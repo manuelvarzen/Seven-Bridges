@@ -97,11 +97,11 @@ class ViewController: UIViewController {
         case "Toggle Direction":
             graph.isDirected = !graph.isDirected
         case "Minimum Spanning Tree (Kruskal)":
-            graph.kruskal()
+            graph.kruskalMinimumSpanningTree()
         case "Minimum Spanning Tree (Prim)":
-            graph.prim()
+            graph.primMinimumSpanningTree()
         case "Find Shortest Path (Dijkstra)":
-            graph.findShortestPath()
+            graph.shortestPath()
         case "Renumber Nodes":
             graph.renumberNodes()
         default:
