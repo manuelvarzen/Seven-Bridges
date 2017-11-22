@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		511031E11FC50CCB0062F026 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511031E01FC50CCB0062F026 /* Path.swift */; };
 		51839D0E1EFD9240003B7B40 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51839D0D1EFD9240003B7B40 /* AppDelegate.swift */; };
 		51839D101EFD9240003B7B40 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51839D0F1EFD9240003B7B40 /* ViewController.swift */; };
 		51839D131EFD9240003B7B40 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51839D111EFD9240003B7B40 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		511031E01FC50CCB0062F026 /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
 		51839D0A1EFD9240003B7B40 /* Seven Bridges.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seven Bridges.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		51839D0D1EFD9240003B7B40 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		51839D0F1EFD9240003B7B40 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 				51839D0F1EFD9240003B7B40 /* ViewController.swift */,
 				51CA75BF1F687776003D7F2D /* ActionsController.swift */,
 				51B24C461EFDC9DF00AE209F /* Graph.swift */,
+				511031E01FC50CCB0062F026 /* Path.swift */,
 				51839D1F1EFD95EC003B7B40 /* Node.swift */,
 				51839D211EFDABAB003B7B40 /* Edge.swift */,
 				51839D111EFD9240003B7B40 /* Main.storyboard */,
@@ -151,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				51B24C471EFDC9DF00AE209F /* Graph.swift in Sources */,
+				511031E11FC50CCB0062F026 /* Path.swift in Sources */,
 				51CA75C01F687776003D7F2D /* ActionsController.swift in Sources */,
 				51839D101EFD9240003B7B40 /* ViewController.swift in Sources */,
 				51839D221EFDABAB003B7B40 /* Edge.swift in Sources */,
