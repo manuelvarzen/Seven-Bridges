@@ -27,14 +27,22 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var propertiesToolbar: UIToolbar!
     
-    @IBOutlet weak var edgeWeightButton: UIBarButtonItem!
+    @IBOutlet weak var edgeWeightPlusButton: UIBarButtonItem!
+    
+    @IBOutlet weak var edgeWeightMinusButton: UIBarButtonItem!
+    
+    @IBOutlet weak var edgeWeightIndicator: UIBarButtonItem!
     
     @IBOutlet weak var removeEdgeButton: UIBarButtonItem!
     
     @IBOutlet var graph: Graph!
     
-    @IBAction func editSelectedEdgeWeight(_ sender: UIBarButtonItem) {
-        graph.editSelectedEdgeWeight()
+    @IBAction func increaseSelectedEdgeWeight(_ sender: UIBarButtonItem) {
+        graph.shiftSelectedEdgeWeight(by: 1)
+    }
+    
+    @IBAction func decreaseSelectedEdgeWeight(_ sender: UIBarButtonItem) {
+        graph.shiftSelectedEdgeWeight(by: -1)
     }
     
     @IBAction func removeSelectedEdge(_ sender: UIBarButtonItem) {

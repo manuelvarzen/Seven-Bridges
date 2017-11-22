@@ -70,11 +70,18 @@
                                 <rect key="frame" x="0.0" y="692" width="414" height="44"/>
                                 <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
                                 <items>
-                                    <barButtonItem id="akk-5O-cz9">
+                                    <barButtonItem id="rQw-gE-GQy" userLabel="Decrease Edge Weight Button">
                                         <connections>
-                                            <action selector="editSelectedEdgeWeight:" destination="BYZ-38-t0r" id="O87-lV-mjG"/>
+                                            <action selector="decreaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="NRV-id-sal"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem width="48" id="r8F-wu-KsD" userLabel="Edge Weight Indicator"/>
+                                    <barButtonItem id="akk-5O-cz9" userLabel="Increase Edge Weight Button">
+                                        <connections>
+                                            <action selector="increaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="bBn-jZ-ZH2"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="tDz-dT-hxy"/>
                                     <barButtonItem enabled="NO" id="pjb-zS-hWe">
                                         <connections>
                                             <action selector="removeSelectedEdge:" destination="BYZ-38-t0r" id="AOb-VN-eaO"/>
@@ -105,7 +112,9 @@
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
-                        <outlet property="edgeWeightButton" destination="akk-5O-cz9" id="aTS-2G-EPi"/>
+                        <outlet property="edgeWeightIndicator" destination="r8F-wu-KsD" id="cxQ-t3-xMq"/>
+                        <outlet property="edgeWeightMinusButton" destination="rQw-gE-GQy" id="4VQ-8f-xAd"/>
+                        <outlet property="edgeWeightPlusButton" destination="akk-5O-cz9" id="xJs-Za-1Nv"/>
                         <outlet property="edgesModeButton" destination="So3-H1-JxB" id="SOV-sd-CwE"/>
                         <outlet property="graph" destination="cri-lb-Lak" id="F4g-Uv-Flw"/>
                         <outlet property="mainToolbar" destination="L0O-dN-50g" id="3TX-R8-cAd"/>

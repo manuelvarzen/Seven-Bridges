@@ -28,6 +28,7 @@ import UIKit
         }
     }
     
+    /// Border width of the Graph.
     @IBInspectable var borderWidth: CGFloat {
         get {
             return layer.borderWidth
@@ -206,15 +207,26 @@ import UIKit
             // update items in the toolbars based on selection
             if selectedNodes.count == 2 {
                 if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
-                    vc?.edgeWeightButton.title = "Weight: \(selectedEdge.weight)"
-                    vc?.edgeWeightButton.isEnabled = true
+                    vc?.edgeWeightIndicator.title = String(selectedEdge.weight)
+                    
+                    vc?.edgeWeightMinusButton.title = "-"
+                    vc?.edgeWeightMinusButton.isEnabled = true
+                    
+                    vc?.edgeWeightPlusButton.title = "+"
+                    vc?.edgeWeightPlusButton.isEnabled = true
                     
                     vc?.removeEdgeButton.title = "Remove \(selectedEdge.description)"
                     vc?.removeEdgeButton.isEnabled = true
                 }
             } else {
-                vc?.edgeWeightButton.title = ""
-                vc?.edgeWeightButton.isEnabled = false
+                vc?.edgeWeightIndicator.title = ""
+                vc?.edgeWeightIndicator.isEnabled = false
+                
+                vc?.edgeWeightMinusButton.title = ""
+                vc?.edgeWeightMinusButton.isEnabled = false
+                
+                vc?.edgeWeightPlusButton.title = ""
+                vc?.edgeWeightPlusButton.isEnabled = false
                 
                 vc?.removeEdgeButton.title = ""
                 vc?.removeEdgeButton.isEnabled = false
@@ -608,19 +620,14 @@ import UIKit
         outlinePath(e)
     }
     
-    func editSelectedEdgeWeight() {
+    func shiftSelectedEdgeWeight(by change: Int) {
         guard selectedNodes.count == 2 else { return }
         
-        if let editingEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
-            // TODO: set weight from number chooser
-            if editingEdge.weight < nodes.count {
-                editingEdge.weight += 1
-            } else {
-                editingEdge.weight = 1
-            }
+        if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
+            selectedEdge.weight += change
             
             // update weight label
-            vc?.edgeWeightButton.title = "Weight: \(editingEdge.weight)"
+            vc?.edgeWeightIndicator.title = String(selectedEdge.weight)
         }
     }
     
