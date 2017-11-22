@@ -9,7 +9,7 @@ import Foundation
 
 class Path {
     
-    var edges = Array<Edge>()
+    var edges = [Edge]()
     
     var origin: Node? {
         return edges.first?.startNode
@@ -24,19 +24,13 @@ class Path {
     }
     
     var weight: Int {
-        get {
-            var w = 0
-            
-            for edge in edges {
-                w += edge.weight
-            }
-            
-            self.weight = w
-            
-            return w
+        var w = 0
+        
+        for edge in edges {
+            w += edge.weight
         }
         
-        set {}
+        return w
     }
     
     init(_ array: [Edge]) {

@@ -128,10 +128,10 @@
             </objects>
             <point key="canvasLocation" x="31.884057971014496" y="36.684782608695656"/>
         </scene>
-        <!--Algorithms-->
+        <!--Actions-->
         <scene sceneID="rd5-J8-NME">
             <objects>
-                <viewController storyboardIdentifier="algorithmsViewController" title="Algorithms" id="fYk-Sh-XFh" customClass="ActionsController" customModule="Seven_Bridges" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="actionsViewController" title="Actions" id="fYk-Sh-XFh" customClass="ActionsController" customModule="Seven_Bridges" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WHr-2q-bxT"/>
                         <viewControllerLayoutGuide type="bottom" id="frV-uk-Isf"/>
