@@ -169,10 +169,29 @@ import UIKit
         selectedNodes.removeAll()
     }
     
+    // FIXME: replace with selectedEdge computed property
     func getEdge(between firstNode: Node, and secondNode: Node) -> Edge? {
         var selectedEdge: Edge?
         
         // get the edge
+        for edge in firstNode.edges {
+            if edge.endNode == secondNode || edge.startNode == secondNode {
+                selectedEdge = edge
+                break
+            }
+        }
+        
+        return selectedEdge
+    }
+    
+    /// Returns the selected edge when exactly two connected nodes are selected. Otherwise, returns nil.
+    var selectedEdge: Edge? {
+        guard selectedNodes.count == 2 else { return nil }
+        
+        var selectedEdge: Edge?
+        let firstNode = selectedNodes.first!
+        let secondNode = selectedNodes.last!
+        
         for edge in firstNode.edges {
             if edge.endNode == secondNode || edge.startNode == secondNode {
                 selectedEdge = edge
@@ -193,6 +212,8 @@ import UIKit
             // hide properties toolbar if no nodes are selected
             if selectedNodes.count == 0 {
                 vc?.propertiesToolbar.isHidden = true
+            } else {
+                updatePropertiesToolbar()
             }
         } else {
             // update state of node
@@ -205,32 +226,34 @@ import UIKit
             vc?.propertiesToolbar.isHidden = false
             
             // update items in the toolbars based on selection
-            if selectedNodes.count == 2 {
-                if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
-                    vc?.edgeWeightIndicator.title = String(selectedEdge.weight)
-                    
-                    vc?.edgeWeightMinusButton.title = "-"
-                    vc?.edgeWeightMinusButton.isEnabled = true
-                    
-                    vc?.edgeWeightPlusButton.title = "+"
-                    vc?.edgeWeightPlusButton.isEnabled = true
-                    
-                    vc?.removeEdgeButton.title = "Remove \(selectedEdge.description)"
-                    vc?.removeEdgeButton.isEnabled = true
-                }
-            } else {
-                vc?.edgeWeightIndicator.title = ""
-                vc?.edgeWeightIndicator.isEnabled = false
-                
-                vc?.edgeWeightMinusButton.title = ""
-                vc?.edgeWeightMinusButton.isEnabled = false
-                
-                vc?.edgeWeightPlusButton.title = ""
-                vc?.edgeWeightPlusButton.isEnabled = false
-                
-                vc?.removeEdgeButton.title = ""
-                vc?.removeEdgeButton.isEnabled = false
-            }
+            updatePropertiesToolbar()
+        }
+    }
+    
+    private func updatePropertiesToolbar() {
+        if let edge = selectedEdge {
+            vc?.edgeWeightIndicator.title = String(edge.weight)
+            
+            vc?.edgeWeightMinusButton.title = "-"
+            vc?.edgeWeightMinusButton.isEnabled = true
+            
+            vc?.edgeWeightPlusButton.title = "+"
+            vc?.edgeWeightPlusButton.isEnabled = true
+            
+            vc?.removeEdgeButton.title = "Remove \(edge.description)"
+            vc?.removeEdgeButton.isEnabled = true
+        } else {
+            vc?.edgeWeightIndicator.title = ""
+            vc?.edgeWeightIndicator.isEnabled = false
+            
+            vc?.edgeWeightMinusButton.title = ""
+            vc?.edgeWeightMinusButton.isEnabled = false
+            
+            vc?.edgeWeightPlusButton.title = ""
+            vc?.edgeWeightPlusButton.isEnabled = false
+            
+            vc?.removeEdgeButton.title = ""
+            vc?.removeEdgeButton.isEnabled = false
         }
     }
     
@@ -262,6 +285,7 @@ import UIKit
     /// Deletes a given node and its edges.
     ///
     /// - parameter _: The node to be deleted.
+    ///
     func deleteNode(_ node: Node) {
         node.removeFromSuperview()
         
@@ -298,18 +322,20 @@ import UIKit
     
     /// Removes the selected edge from the Graph.
     func removeSelectedEdge() {
-        if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
-            selectedNodes.first!.edges.remove(selectedEdge)
-            selectedNodes.last!.edges.remove(selectedEdge)
+        if let edge = selectedEdge {
+            selectedNodes.first!.edges.remove(edge)
+            selectedNodes.last!.edges.remove(edge)
             
-            edges.remove(selectedEdge)
+            edges.remove(edge)
             
             // remove edge from matrix and list forms
-            matrixForm[selectedEdge.startNode]?.remove(selectedEdge.endNode)
+            matrixForm[edge.startNode]?.remove(edge.endNode)
             
-            listForm[selectedEdge.startNode]? = nil
+            listForm[edge.startNode]? = nil
             
-            selectedEdge.removeFromSuperview()
+            edge.removeFromSuperview()
+            
+            updatePropertiesToolbar()
         }
     }
     
@@ -353,6 +379,7 @@ import UIKit
     /// - parameter _: An array of nodes.
     /// - parameter duration: The total duration of the outlining.
     /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
+    ///
     private func outlinePath(_ path: [Node], duration: Int? = nil, delay: Int = 0) {
         for (index, node) in path.enumerated() {
             var deadline = delay + index
@@ -400,6 +427,7 @@ import UIKit
     /// - parameter _: An array of edges.
     /// - parameter duration: The total duration of the outlining.
     /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
+    ///
     private func outlinePath(_ path: [Edge], duration: Int? = nil, delay: Int = 0) {
         for (index, edge) in path.enumerated() {
             let deadline = delay + index
@@ -621,13 +649,11 @@ import UIKit
     }
     
     func shiftSelectedEdgeWeight(by change: Int) {
-        guard selectedNodes.count == 2 else { return }
-        
-        if let selectedEdge = getEdge(between: selectedNodes.first!, and: selectedNodes.last!) {
-            selectedEdge.weight += change
+        if let edge = selectedEdge {
+            edge.weight += change
             
             // update weight label
-            vc?.edgeWeightIndicator.title = String(selectedEdge.weight)
+            vc?.edgeWeightIndicator.title = String(edge.weight)
         }
     }
     
