@@ -78,6 +78,24 @@ import UIKit
     /// Nodes that have been selected.
     var selectedNodes = [Node]()
     
+    /// Returns the selected edge when exactly two connected nodes are selected. Otherwise, returns nil.
+    var selectedEdge: Edge? {
+        guard selectedNodes.count == 2 else { return nil }
+        
+        var selectedEdge: Edge?
+        let firstNode = selectedNodes.first!
+        let secondNode = selectedNodes.last!
+        
+        for edge in firstNode.edges {
+            if edge.endNode == secondNode || edge.startNode == secondNode {
+                selectedEdge = edge
+                break
+            }
+        }
+        
+        return selectedEdge
+    }
+    
     /// Current index in the colors array for cycling through.
     private var colorCycle = 0
     
@@ -133,7 +151,6 @@ import UIKit
     // Selects a start node for making a new edge.
     func makeEdge(from startNode: Node) {
         selectedNodes.append(startNode)
-        
         startNode.isSelected = true
     }
     
@@ -167,39 +184,6 @@ import UIKit
         
         // clear the selected node
         selectedNodes.removeAll()
-    }
-    
-    // FIXME: replace with selectedEdge computed property
-    func getEdge(between firstNode: Node, and secondNode: Node) -> Edge? {
-        var selectedEdge: Edge?
-        
-        // get the edge
-        for edge in firstNode.edges {
-            if edge.endNode == secondNode || edge.startNode == secondNode {
-                selectedEdge = edge
-                break
-            }
-        }
-        
-        return selectedEdge
-    }
-    
-    /// Returns the selected edge when exactly two connected nodes are selected. Otherwise, returns nil.
-    var selectedEdge: Edge? {
-        guard selectedNodes.count == 2 else { return nil }
-        
-        var selectedEdge: Edge?
-        let firstNode = selectedNodes.first!
-        let secondNode = selectedNodes.last!
-        
-        for edge in firstNode.edges {
-            if edge.endNode == secondNode || edge.startNode == secondNode {
-                selectedEdge = edge
-                break
-            }
-        }
-        
-        return selectedEdge
     }
     
     // Adds the given node to an array and updates the state of the node.
@@ -537,6 +521,8 @@ import UIKit
         
         mode = .viewOnly // make graph view-only
         
+        isDirected = false // FIXME: add pop-up to notify user of the change
+        
         var pool = Set<Node>(nodes) // all nodes
         var distance = [Node: Int]() // distance from a node to the root
         var parent = [Node: Node?]()
@@ -606,6 +592,8 @@ import UIKit
     /// Kruskal's Algorithm
     func kruskalMinimumSpanningTree() {
         mode = .viewOnly
+        
+        isDirected = false
         
         var s = [Edge](edges) // all edges in the graph
         var f = Set<Set<Node>>() // forest of trees
