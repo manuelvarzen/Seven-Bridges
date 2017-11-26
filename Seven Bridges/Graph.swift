@@ -586,7 +586,7 @@ import UIKit
         deselectNodes()
         
         // tree as path of edges
-        var path = [Edge]()
+        var path = Path()
         
         // recurses through the children dictionary to build a path of edges
         func buildPath(from parent: Node) {
@@ -600,7 +600,7 @@ import UIKit
         
         buildPath(from: root)
         
-        outlinePath(path)
+        path.outline()
     }
     
     /// Kruskal's Algorithm
