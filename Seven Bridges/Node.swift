@@ -20,19 +20,17 @@ import UIKit
     
     /// All nodes that are connected to this node.
     var adjacentNodes: Set<Node> {
-        get {
-            var results = Set<Node>()
-            
-            for edge in edges {
-                if edge.startNode! != self {
-                    results.insert(edge.startNode!)
-                } else if edge.endNode! != self {
-                    results.insert(edge.endNode!)
-                }
+        var results = Set<Node>()
+        
+        for edge in edges {
+            if edge.startNode! != self {
+                results.insert(edge.startNode!)
+            } else if edge.endNode! != self {
+                results.insert(edge.endNode!)
             }
-            
-            return results
         }
+        
+        return results
     }
     
     // Width of the node's border.
@@ -93,12 +91,10 @@ import UIKit
     private var isBeingDragged = false
     
     override var description: String {
-        get {
-            if let number = label.text {
-                return "Node \(number)"
-            } else {
-                return "Unknown Node"
-            }
+        if let number = label.text {
+            return "Node \(number)"
+        } else {
+            return "Unknown Node"
         }
     }
     
@@ -148,6 +144,7 @@ import UIKit
     /// Returns an edge connecting this node to a given node.
     ///
     /// - parameter node: An adjacent node.
+    ///
     func getEdge(to node: Node, directed: Bool = false) -> Edge? {
         for edge in edges {
             if edge.startNode! == self && edge.endNode! == node {
@@ -165,6 +162,7 @@ import UIKit
     /// Finds the edge with the lowest weight connected to the node.
     ///
     /// - parameter directed: Whether finding the cheapest edge should account for a directed graph.
+    ///
     func cheapestEdge(directed: Bool = false) -> Edge? {
         if edges.isEmpty {
             return nil

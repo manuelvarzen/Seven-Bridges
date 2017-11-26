@@ -38,6 +38,14 @@ class Path {
         return w
     }
     
+    var isLoop: Bool {
+        if first == last {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     init(_ edges: [Edge] = [Edge]()) {
         self.edges = edges
     }
