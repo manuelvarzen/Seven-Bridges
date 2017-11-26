@@ -33,8 +33,24 @@ class Path {
         return w
     }
     
-    init(_ array: [Edge] = [Edge]()) {
-        self.edges = array
+    init(_ edges: [Edge] = [Edge]()) {
+        self.edges = edges
+    }
+    
+    init(_ nodes: [Node]) {
+        var edges = [Edge]()
+        
+        for (i, _) in nodes.enumerated() {
+            if i < nodes.count - 1 {
+                let commonEdge = nodes[i].edges.union(nodes[i + 1].edges).first
+                
+                if commonEdge != nil {
+                    edges.append(commonEdge!)
+                }
+            }
+        }
+        
+        self.edges = edges
     }
     
     func append(_ edge: Edge) {

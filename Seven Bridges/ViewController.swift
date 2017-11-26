@@ -114,6 +114,10 @@ class ViewController: UIViewController {
             graph.shortestPath()
         case "Renumber Nodes":
             graph.renumberNodes()
+        case "Reset Edge Weights":
+            graph.resetAllEdgeWeights()
+        case "Remove All Edges":
+            graph.removeAllEdges()
         default:
             print("An unexpected error occurred.")
         }

@@ -327,6 +327,29 @@ import UIKit
         }
     }
     
+    /// Removes all edges from the graph.
+    func removeAllEdges() {
+        for node in nodes {
+            node.edges.removeAll()
+            
+            listForm[node] = nil
+            matrixForm[node]?.removeAll()
+        }
+        
+        for edge in edges {
+            edge.removeFromSuperview()
+        }
+        
+        edges.removeAll()
+    }
+    
+    /// Changes all edge weights to the given weight or resets them all to the default value of 1.
+    func resetAllEdgeWeights(to weight: Int = 1) {
+        for edge in edges {
+            edge.weight = weight
+        }
+    }
+    
     /// Renumbers all nodes by the order that they were added to the graph.
     func renumberNodes() {
         guard !nodes.isEmpty else { return }

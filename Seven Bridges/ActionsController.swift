@@ -3,7 +3,6 @@
 //  Seven Bridges
 //
 //  Created by Dillon Fagan on 9/12/17.
-//  Copyright © 2017 Dillon Fagan. All rights reserved.
 //
 
 import UIKit
@@ -17,6 +16,8 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
     private let actions = [
         "Toggle Direction",
         "Renumber Nodes",
+        "Reset Edge Weights",
+        "Remove All Edges",
         "Find Shortest Path (Dijkstra)",
         "Minimum Spanning Tree (Prim)",
         "Minimum Spanning Tree (Kruskal)"
