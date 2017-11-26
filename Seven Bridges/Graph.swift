@@ -354,8 +354,6 @@ import UIKit
     func renumberNodes() {
         guard !nodes.isEmpty else { return }
         
-        outlinePath(nodes, duration: nodes.count, delay: 1)
-        
         for (index, node) in nodes.enumerated() {
             node.label.text = String(index + 1)
         }
@@ -387,7 +385,7 @@ import UIKit
     
     /// Outlines a given path, including nodes and edges.
     ///
-    /// - parameter _: An array of nodes.
+    /// - parameter path: An array of nodes.
     /// - parameter duration: The total duration of the outlining.
     /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
     ///
@@ -429,40 +427,6 @@ import UIKit
                         }
                     }
                 }
-            }
-        }
-    }
-    
-    /// Outlines a given path, including nodes and edges.
-    ///
-    /// - parameter _: An array of edges.
-    /// - parameter duration: The total duration of the outlining.
-    /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
-    ///
-    private func outlinePath(_ path: [Edge], duration: Int? = nil, delay: Int = 0) {
-        for (index, edge) in path.enumerated() {
-            let deadline = delay + index
-            
-            let startNode = edge.startNode
-            let endNode = edge.endNode
-            
-            // highlight nodes after 'index' seconds
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
-                startNode?.isHighlighted = true
-                endNode?.isHighlighted = true
-                
-                edge.isHighlighted = true
-            })
-            
-            // unhighlight node after set duration
-            if duration != nil {
-                let runtime = delay + duration!
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(runtime), execute: {
-                    startNode?.isHighlighted = false
-                    endNode?.isHighlighted = false
-                    
-                    edge.isHighlighted = false
-                })
             }
         }
     }

@@ -9,20 +9,25 @@ import Foundation
 
 class Path {
     
+    /// All edges that make up the path.
     var edges: [Edge]!
     
-    var origin: Node? {
+    /// First node in the path.
+    var first: Node? {
         return edges.first?.startNode
     }
     
-    var target: Node? {
+    /// Last node in the path.
+    var last: Node? {
         return edges.last?.endNode
     }
     
+    /// Number of nodes in the path (number of edges + 1).
     var length: Int {
         return edges.count + 1
     }
     
+    /// Aggregate weight of all edges in the path.
     var weight: Int {
         var w = 0
         
@@ -53,10 +58,32 @@ class Path {
         self.edges = edges
     }
     
+    /// Appends a new edge to the path.
+    ///
+    /// - parameter edge: The edge to be appended.
+    ///
     func append(_ edge: Edge) {
         edges.append(edge)
     }
     
+    /// Appends a new edge to the path, given two nodes.
+    ///
+    /// - parameter from: A node at one end of the edge.
+    /// - parameter to: Another node at the other end of the edge.
+    ///
+    func append(from startNode: Node, to endNode: Node) {
+        let commonEdge = startNode.edges.union(endNode.edges).first
+        
+        if commonEdge != nil {
+            edges.append(commonEdge!)
+        }
+    }
+    
+    /// Outlines the path, including nodes and edges.
+    ///
+    /// - parameter duration: The total duration of the outlining.
+    /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
+    ///
     func outline(duration: Int? = nil, delay: Int = 0) {
         for (index, edge) in edges.enumerated() {
             let deadline = delay + index
