@@ -33,8 +33,14 @@ class Path {
         return w
     }
     
+    init() {}
+    
     init(_ array: [Edge]) {
         self.edges = array
+    }
+    
+    func append(_ edge: Edge) {
+        edges.append(edge)
     }
     
     func outline(duration: Int? = nil, delay: Int = 0) {

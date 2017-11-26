@@ -231,6 +231,11 @@ import UIKit
     }
     
     private func updatePropertiesToolbar() {
+        if selectedNodes.count == 0 {
+            vc?.propertiesToolbar.isHidden = true
+            return
+        }
+        
         if let edge = selectedEdge {
             vc?.edgeWeightIndicator.title = String(edge.weight)
             
@@ -278,8 +283,7 @@ import UIKit
         // remove nodes from selected array
         selectedNodes.removeAll()
         
-        // hide properties toolbar
-        vc?.propertiesToolbar.isHidden = true
+        updatePropertiesToolbar()
     }
     
     /// Deletes a given node and its edges.
@@ -309,7 +313,7 @@ import UIKit
     
     /// Deletes all selected nodes and their edges.
     func deleteSelectedNodes() {
-        guard selectedNodes.count != 0 else { return }
+        guard selectedNodes.count > 0 else { return }
         
         for node in selectedNodes {
             deleteNode(node)
@@ -317,7 +321,7 @@ import UIKit
         
         selectedNodes.removeAll()
         
-        vc?.propertiesToolbar.isHidden = true
+        updatePropertiesToolbar()
     }
     
     /// Removes the selected edge from the Graph.
@@ -605,7 +609,8 @@ import UIKit
         
         var s = [Edge](edges) // all edges in the graph
         var f = Set<Set<Node>>() // forest of trees
-        var e = [Edge]() // edges in the final tree
+        
+        let e = Path() // edges in the final tree
         
         // sort edges by weight
         s = s.sorted(by: {
@@ -645,7 +650,7 @@ import UIKit
         
         deselectNodes()
         
-        outlinePath(e)
+        e.outline()
     }
     
     func shiftSelectedEdgeWeight(by change: Int) {
