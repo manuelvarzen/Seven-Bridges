@@ -9,7 +9,7 @@ import Foundation
 
 class Path {
     
-    var edges = [Edge]()
+    var edges: [Edge]!
     
     var origin: Node? {
         return edges.first?.startNode
@@ -33,9 +33,7 @@ class Path {
         return w
     }
     
-    init() {}
-    
-    init(_ array: [Edge]) {
+    init(_ array: [Edge] = [Edge]()) {
         self.edges = array
     }
     
