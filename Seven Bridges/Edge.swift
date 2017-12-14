@@ -41,12 +41,10 @@ import UIKit
     }
     
     override var description: String {
-        get {
-            let start = startNode.label.text!
-            let end = endNode.label.text!
-            
-            return "\(start) → \(end)"
-        }
+        let start = startNode.label.text!
+        let end = endNode.label.text!
+        
+        return "\(start) → \(end)"
     }
     
     init(from startNode: Node, to endNode: Node) {
@@ -107,11 +105,16 @@ import UIKit
         let upperRight = CGPoint(x: frame.size.width - Node.radius, y: Node.radius)
         let lowerRight = CGPoint(x: frame.size.width - Node.radius, y: frame.size.height - Node.radius)
         
+        // arrow direction defaulted to upper left
+        var arrowDirection: (CGFloat, CGFloat) = (1, 1)
+        
         // locate nodes within frame and set start and end points of line
         if startNode!.frame.origin.y > frame.origin.y {
             if startNode!.frame.origin.x <= frame.origin.x {
                 startPoint = lowerLeft
                 endPoint = upperRight
+                
+                arrowDirection.0 = -1
             } else {
                 startPoint = lowerRight
                 endPoint = upperLeft
@@ -120,9 +123,14 @@ import UIKit
             if startNode!.frame.origin.x <= frame.origin.x {
                 startPoint = upperLeft
                 endPoint = lowerRight
+                
+                arrowDirection.0 = -1
+                arrowDirection.1 = -1
             } else {
                 startPoint = upperRight
                 endPoint = lowerLeft
+                
+                arrowDirection.1 = -1
             }
         }
         
@@ -130,7 +138,28 @@ import UIKit
         path.move(to: startPoint!)
         path.addLine(to: endPoint!)
         
-        // TODO: add arrow for directed graph
+        // FIXME: add arrow for directed graph
+        if (superview as! Graph).isDirected {
+            let slope = frame.height / frame.width
+            let perpendicular = -1 / slope
+            
+            let arrowPoint = CGPoint(x: frame.width / 2, y: frame.height / 2)
+            
+            let headWidth: CGFloat = 16.0
+            
+            let b = sqrt(pow(headWidth, 2)/(pow(perpendicular, 2) + 1))
+            let a = perpendicular * b
+            
+            let firstEndPoint = CGPoint(x: arrowPoint.x - b * arrowDirection.0, y: arrowPoint.y - a * arrowDirection.1)
+            
+            let secondEndPoint = CGPoint(x: arrowPoint.x + b * arrowDirection.0, y: arrowPoint.y + a * arrowDirection.1)
+            
+            path.move(to: arrowPoint)
+            path.addLine(to: firstEndPoint)
+            
+            path.move(to: arrowPoint)
+            path.addLine(to: secondEndPoint)
+        }
     }
     
     // Draws a line from the start node to the end node.
