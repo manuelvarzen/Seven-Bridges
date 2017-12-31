@@ -106,7 +106,8 @@ import UIKit
         let lowerRight = CGPoint(x: frame.size.width - Node.radius, y: frame.size.height - Node.radius)
         
         // arrow direction defaulted to upper left
-        var arrowDirection: (CGFloat, CGFloat) = (1, 1)
+        var alphaDirection: (a: CGFloat, b: CGFloat) = (1, 1)
+        var betaDirection: (a: CGFloat, b: CGFloat) = (1, 1)
         
         // locate nodes within frame and set start and end points of line
         if startNode!.frame.origin.y > frame.origin.y {
@@ -114,23 +115,30 @@ import UIKit
                 startPoint = lowerLeft
                 endPoint = upperRight
                 
-                arrowDirection.0 = -1
+                alphaDirection.a = -1
+                alphaDirection.b = -1
             } else {
                 startPoint = lowerRight
                 endPoint = upperLeft
+                
+                alphaDirection.b = -1
+                
+                betaDirection.a = -1
             }
         } else if startNode!.frame.origin.y <= frame.origin.y {
             if startNode!.frame.origin.x <= frame.origin.x {
                 startPoint = upperLeft
                 endPoint = lowerRight
                 
-                arrowDirection.0 = -1
-                arrowDirection.1 = -1
+                alphaDirection.a = -1
+                
+                betaDirection.b = -1
             } else {
                 startPoint = upperRight
                 endPoint = lowerLeft
                 
-                arrowDirection.1 = -1
+                betaDirection.a = -1
+                betaDirection.b = -1
             }
         }
         
@@ -143,22 +151,35 @@ import UIKit
             let slope = frame.height / frame.width
             let perpendicular = -1 / slope
             
+            // point at end of the arrowhead
             let arrowPoint = CGPoint(x: frame.width / 2, y: frame.height / 2)
             
-            let headWidth: CGFloat = 16.0
+            // width of the arrowhead
+            let headWidth: CGFloat = Node.radius / 2
             
+            let t = (headWidth * 3) / sqrt(pow(frame.width, 2) + pow(frame.height, 2))
+            
+            // rise of the line
             let b = sqrt(pow(headWidth, 2)/(pow(perpendicular, 2) + 1))
+            
+            // run of the line
             let a = perpendicular * b
             
-            let firstEndPoint = CGPoint(x: arrowPoint.x - b * arrowDirection.0, y: arrowPoint.y - a * arrowDirection.1)
+            // point between endpoints (alpha and beta)
+            let midPoint = CGPoint(x: (1 - t) * arrowPoint.x + t * startPoint!.x, y: (1 - t) * arrowPoint.y + t * startPoint!.y)
             
-            let secondEndPoint = CGPoint(x: arrowPoint.x + b * arrowDirection.0, y: arrowPoint.y + a * arrowDirection.1)
+            let alphaPoint = CGPoint(x: midPoint.x + b * alphaDirection.b, y: midPoint.y + a * alphaDirection.a)
+            
+            let betaPoint = CGPoint(x: midPoint.x + b * betaDirection.b, y: midPoint.y + a * betaDirection.a)
             
             path.move(to: arrowPoint)
-            path.addLine(to: firstEndPoint)
+            path.addLine(to: alphaPoint)
             
             path.move(to: arrowPoint)
-            path.addLine(to: secondEndPoint)
+            path.addLine(to: betaPoint)
+            
+            print("Arrow Point: \(arrowPoint)")
+            print("Midpoint: \(midPoint)")
         }
     }
     
