@@ -34,10 +34,10 @@ extension UIBezierPath {
         path.addLines(between: points, transform: transform)
         
         path.move(to: points[2], transform: transform)
-        path.addLine(to: p(tailLength, headWidth / 2), transform: transform)
+        path.addLine(to: p(tailLength, headWidth / 1.2), transform: transform)
         
         path.move(to: points[2], transform: transform)
-        path.addLine(to: p(tailLength, -headWidth / 2), transform: transform)
+        path.addLine(to: p(tailLength, -headWidth / 1.2), transform: transform)
         
         path.closeSubpath()
         
