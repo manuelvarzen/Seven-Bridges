@@ -124,17 +124,37 @@ import UIKit
             }
         }
         
-        // define the line
-        path.move(to: startPoint!)
-        path.addLine(to: endPoint!)
+        let headWidth = Node.radius / 2.2
+        let headLength = headWidth
         
-        // FIXME: add arrow for directed graph
+        let length = hypot(endPoint!.x - startPoint!.x, endPoint!.y - startPoint!.y)
+        let tailLength = length - Node.radius - headLength
+        
+        let points: [CGPoint] = [
+            CGPoint(x: 0, y: 0),
+            CGPoint(x: length, y: 0),
+        ]
+        
+        let cosine = (endPoint!.x - startPoint!.x) / length
+        let sine = (endPoint!.y - startPoint!.y) / length
+        let transform = CGAffineTransform(a: cosine, b: sine, c: -sine, d: cosine, tx: startPoint!.x, ty: startPoint!.y)
+        
+        let linePath = CGMutablePath()
+        linePath.addLines(between: points, transform: transform)
+        
+        // add arrow for directed graph
         if (superview as! Graph).isDirected {
-            //let arrowEndPoint = CGPoint(x: frame.width/2, y: frame.height/2)
-            let arrow = UIBezierPath.arrow(from: startPoint!, to: endPoint!, tailWidth: 0, headWidth: Node.radius/2.2, headLength: Node.radius/2.2)
+            let tipPoint = CGPoint(x: length - Node.radius, y: 0)
             
-            path.append(arrow)
+            linePath.move(to: tipPoint, transform: transform)
+            linePath.addLine(to: CGPoint(x: tailLength, y: headWidth / 1.2), transform: transform)
+            
+            linePath.move(to: tipPoint, transform: transform)
+            linePath.addLine(to: CGPoint(x: tailLength, y: -headWidth / 1.2), transform: transform)
         }
+        
+        linePath.closeSubpath()
+        path.append(UIBezierPath(cgPath: linePath))
     }
     
     // Draws a line from the start node to the end node.
