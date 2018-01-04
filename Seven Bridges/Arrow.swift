@@ -13,15 +13,13 @@ extension UIBezierPath {
     
     class func arrow(from start: CGPoint, to end: CGPoint, tailWidth: CGFloat, headWidth: CGFloat, headLength: CGFloat) -> Self {
         let length = hypot(end.x - start.x, end.y - start.y)
-        let tailLength = length - headLength
+        let tailLength = length - Node.radius - headLength
         
         func p(_ x: CGFloat, _ y: CGFloat) -> CGPoint { return CGPoint(x: x, y: y) }
         let points: [CGPoint] = [
             p(0, tailWidth / 2),
             p(tailLength, tailWidth / 2),
-            //p(tailLength, headWidth / 2),
             p(length, 0),
-            //p(tailLength, -headWidth / 2),
             p(tailLength, -tailWidth / 2),
             p(0, -tailWidth / 2)
         ]
@@ -33,10 +31,13 @@ extension UIBezierPath {
         let path = CGMutablePath()
         path.addLines(between: points, transform: transform)
         
-        path.move(to: points[2], transform: transform)
+        // arrow tips
+        let tipPoint = CGPoint(x: length - Node.radius, y: 0)
+        
+        path.move(to: tipPoint, transform: transform)
         path.addLine(to: p(tailLength, headWidth / 1.2), transform: transform)
         
-        path.move(to: points[2], transform: transform)
+        path.move(to: tipPoint, transform: transform)
         path.addLine(to: p(tailLength, -headWidth / 1.2), transform: transform)
         
         path.closeSubpath()

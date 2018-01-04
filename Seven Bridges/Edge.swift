@@ -105,15 +105,11 @@ import UIKit
         let upperRight = CGPoint(x: frame.size.width - Node.radius, y: Node.radius)
         let lowerRight = CGPoint(x: frame.size.width - Node.radius, y: frame.size.height - Node.radius)
         
-        var direction: (x: CGFloat, y: CGFloat) = (1, 1)
-        
         // locate nodes within frame and set start and end points of line
         if startNode!.frame.origin.y > frame.origin.y {
             if startNode!.frame.origin.x <= frame.origin.x {
                 startPoint = lowerLeft
                 endPoint = upperRight
-                
-                direction.x = -1
             } else {
                 startPoint = lowerRight
                 endPoint = upperLeft
@@ -122,14 +118,9 @@ import UIKit
             if startNode!.frame.origin.x <= frame.origin.x {
                 startPoint = upperLeft
                 endPoint = lowerRight
-                
-                direction.x = -1
-                direction.y = -1
             } else {
                 startPoint = upperRight
                 endPoint = lowerLeft
-                
-                direction.y = -1
             }
         }
         
@@ -139,8 +130,8 @@ import UIKit
         
         // FIXME: add arrow for directed graph
         if (superview as! Graph).isDirected {
-            let arrowEndPoint = CGPoint(x: frame.width/2, y: frame.height/2)
-            let arrow = UIBezierPath.arrow(from: startPoint!, to: arrowEndPoint, tailWidth: 0, headWidth: Node.radius/2, headLength: Node.radius/2)
+            //let arrowEndPoint = CGPoint(x: frame.width/2, y: frame.height/2)
+            let arrow = UIBezierPath.arrow(from: startPoint!, to: endPoint!, tailWidth: 0, headWidth: Node.radius/2.2, headLength: Node.radius/2.2)
             
             path.append(arrow)
         }
