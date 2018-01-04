@@ -105,9 +105,7 @@ import UIKit
         let upperRight = CGPoint(x: frame.size.width - Node.radius, y: Node.radius)
         let lowerRight = CGPoint(x: frame.size.width - Node.radius, y: frame.size.height - Node.radius)
         
-        // arrow direction defaulted to upper left
-        var alphaDirection: (a: CGFloat, b: CGFloat) = (1, 1)
-        var betaDirection: (a: CGFloat, b: CGFloat) = (1, 1)
+        var direction: (x: CGFloat, y: CGFloat) = (1, 1)
         
         // locate nodes within frame and set start and end points of line
         if startNode!.frame.origin.y > frame.origin.y {
@@ -115,30 +113,23 @@ import UIKit
                 startPoint = lowerLeft
                 endPoint = upperRight
                 
-                alphaDirection.a = -1
-                alphaDirection.b = -1
+                direction.x = -1
             } else {
                 startPoint = lowerRight
                 endPoint = upperLeft
-                
-                alphaDirection.b = -1
-                
-                betaDirection.a = -1
             }
         } else if startNode!.frame.origin.y <= frame.origin.y {
             if startNode!.frame.origin.x <= frame.origin.x {
                 startPoint = upperLeft
                 endPoint = lowerRight
                 
-                alphaDirection.a = -1
-                
-                betaDirection.b = -1
+                direction.x = -1
+                direction.y = -1
             } else {
                 startPoint = upperRight
                 endPoint = lowerLeft
                 
-                betaDirection.a = -1
-                betaDirection.b = -1
+                direction.y = -1
             }
         }
         
@@ -148,38 +139,14 @@ import UIKit
         
         // FIXME: add arrow for directed graph
         if (superview as! Graph).isDirected {
-            let slope = frame.height / frame.width
-            let perpendicular = -1 / slope
-            
-            // point at end of the arrowhead
-            let arrowPoint = CGPoint(x: frame.width / 2, y: frame.height / 2)
-            
             // width of the arrowhead
             let headWidth: CGFloat = Node.radius / 2
             
-            let t = (headWidth * 3) / sqrt(pow(frame.width, 2) + pow(frame.height, 2))
+            let arrowEndPoint = CGPoint(x: frame.width/2, y: frame.height/2)
             
-            // rise of the line
-            let b = sqrt(pow(headWidth, 2)/(pow(perpendicular, 2) + 1))
+            let arrow = UIBezierPath.arrow(from: startPoint!, to: arrowEndPoint, tailWidth: 0, headWidth: headWidth, headLength: headWidth)
             
-            // run of the line
-            let a = perpendicular * b
-            
-            // point between endpoints (alpha and beta)
-            let midPoint = CGPoint(x: (1 - t) * arrowPoint.x + t * startPoint!.x, y: (1 - t) * arrowPoint.y + t * startPoint!.y)
-            
-            let alphaPoint = CGPoint(x: midPoint.x + b * alphaDirection.b, y: midPoint.y + a * alphaDirection.a)
-            
-            let betaPoint = CGPoint(x: midPoint.x + b * betaDirection.b, y: midPoint.y + a * betaDirection.a)
-            
-            path.move(to: arrowPoint)
-            path.addLine(to: alphaPoint)
-            
-            path.move(to: arrowPoint)
-            path.addLine(to: betaPoint)
-            
-            print("Arrow Point: \(arrowPoint)")
-            print("Midpoint: \(midPoint)")
+            path.append(arrow)
         }
     }
     
