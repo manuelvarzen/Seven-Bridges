@@ -3,7 +3,7 @@
 //  Seven Bridges
 //
 //  Created by Rob Mayoff, obtained from GitHub.
-//  Updated to Swift 4 by Dillon Fagan.
+//  Updated to Swift 4 and modified by Dillon Fagan.
 //  https://gist.github.com/mayoff/4146780
 //
 
@@ -19,9 +19,9 @@ extension UIBezierPath {
         let points: [CGPoint] = [
             p(0, tailWidth / 2),
             p(tailLength, tailWidth / 2),
-            p(tailLength, headWidth / 2),
+            //p(tailLength, headWidth / 2),
             p(length, 0),
-            p(tailLength, -headWidth / 2),
+            //p(tailLength, -headWidth / 2),
             p(tailLength, -tailWidth / 2),
             p(0, -tailWidth / 2)
         ]
@@ -32,6 +32,13 @@ extension UIBezierPath {
         
         let path = CGMutablePath()
         path.addLines(between: points, transform: transform)
+        
+        path.move(to: points[2], transform: transform)
+        path.addLine(to: p(tailLength, headWidth / 2), transform: transform)
+        
+        path.move(to: points[2], transform: transform)
+        path.addLine(to: p(tailLength, -headWidth / 2), transform: transform)
+        
         path.closeSubpath()
         
         return self.init(cgPath: path)

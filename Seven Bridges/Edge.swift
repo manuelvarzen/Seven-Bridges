@@ -139,12 +139,8 @@ import UIKit
         
         // FIXME: add arrow for directed graph
         if (superview as! Graph).isDirected {
-            // width of the arrowhead
-            let headWidth: CGFloat = Node.radius / 2
-            
             let arrowEndPoint = CGPoint(x: frame.width/2, y: frame.height/2)
-            
-            let arrow = UIBezierPath.arrow(from: startPoint!, to: arrowEndPoint, tailWidth: 0, headWidth: headWidth, headLength: headWidth)
+            let arrow = UIBezierPath.arrow(from: startPoint!, to: arrowEndPoint, tailWidth: 0, headWidth: Node.radius/2, headLength: Node.radius/2)
             
             path.append(arrow)
         }
