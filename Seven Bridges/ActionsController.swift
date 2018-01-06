@@ -18,9 +18,10 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         "Renumber Nodes",
         "Reset Edge Weights",
         "Remove All Edges",
-        "Find Shortest Path (Dijkstra)",
+        "Find Shortest Path",
         "Minimum Spanning Tree (Prim)",
-        "Minimum Spanning Tree (Kruskal)"
+        "Minimum Spanning Tree (Kruskal)",
+        "Find Max Flow (Ford-Fulkerson)"
     ]
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

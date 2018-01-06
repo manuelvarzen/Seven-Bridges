@@ -106,6 +106,8 @@ class ViewController: UIViewController {
         switch action {
         case "Toggle Direction":
             graph.isDirected = !graph.isDirected
+        case "Find Max Flow (Ford-Fulkerson)":
+            graph.fordFulkersonMaxFlow()
         case "Minimum Spanning Tree (Kruskal)":
             graph.kruskalMinimumSpanningTree()
         case "Minimum Spanning Tree (Prim)":

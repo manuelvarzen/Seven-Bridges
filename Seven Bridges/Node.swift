@@ -1,5 +1,5 @@
 //
-//  NodeView.swift
+//  Node.swift
 //  Seven Bridges
 //
 //  Created by Dillon Fagan on 6/23/17.

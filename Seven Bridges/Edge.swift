@@ -1,5 +1,5 @@
 //
-//  EdgeView.swift
+//  Edge.swift
 //  Seven Bridges
 //
 //  Created by Dillon Fagan on 6/23/17.
@@ -34,6 +34,14 @@ import UIKit
         }
     }
     
+    /// Flow of the edge being used.
+    var flow: Int? {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    /// Whether the edge appears highlighted.
     var isHighlighted: Bool = false {
         didSet {
             setNeedsDisplay()
@@ -182,12 +190,18 @@ import UIKit
         
         // draw a label containing the weight of the edge near the middle of rect
         if weight > 1 {
-            let weightLabel = UILabel()
-            weightLabel.text = String(weight)
-            weightLabel.textColor = UIColor.black
-            weightLabel.font = UIFont.boldSystemFont(ofSize: 18)
+            let infoLabel = UILabel()
             
-            weightLabel.drawText(in: rect.insetBy(dx: rect.width / 2, dy: rect.height / 2))
+            if flow != nil {
+                infoLabel.text = "\(flow!) / \(weight)"
+            } else {
+                infoLabel.text = String(weight)
+            }
+            
+            infoLabel.textColor = UIColor.black
+            infoLabel.font = UIFont.boldSystemFont(ofSize: 18)
+            
+            infoLabel.drawText(in: rect.insetBy(dx: rect.width / 2, dy: rect.height / 2))
         }
     }
     

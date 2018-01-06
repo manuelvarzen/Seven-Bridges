@@ -1,5 +1,5 @@
 //
-//  GraphView.swift
+//  Graph.swift
 //  Seven Bridges
 //
 //  Created by Dillon Fagan on 6/23/17.
@@ -247,10 +247,16 @@ import UIKit
     }
     
     // Clears the selected nodes array and returns the nodes to their original state.
-    func deselectNodes(unhighlight: Bool = false) {
+    func deselectNodes(unhighlight: Bool = false, resetEdgeProperties: Bool = true) {
         // return all nodes in selected nodes array to original state
         for node in selectedNodes {
             node.isSelected = false
+        }
+        
+        if resetEdgeProperties {
+            for edge in edges {
+                edge.flow = nil
+            }
         }
         
         // unhighlight all nodes
@@ -628,9 +634,19 @@ import UIKit
         e.outline()
     }
     
-    func shiftSelectedEdgeWeight(by change: Int) {
+    func fordFulkersonMaxFlow() {
+        mode = .viewOnly
+        
+        for edge in edges {
+            edge.flow = 0
+        }
+        
+        deselectNodes(resetEdgeProperties: false)
+    }
+    
+    func shiftSelectedEdgeWeight(by shift: Int) {
         if let edge = selectedEdge {
-            edge.weight += change
+            edge.weight += shift
             
             // update weight label
             vc?.edgeWeightIndicator.title = String(edge.weight)
