@@ -66,6 +66,22 @@ class Path {
         self.edges = edges
     }
     
+    /// Appends a new edge to the path, given a node.
+    ///
+    /// - parameter node: A node adjacent to the last node in the path.
+    ///
+    func append(_ node: Node) {
+        if let lastNode = last {
+            let commonEdges = lastNode.edges.union(node.edges)
+            for edge in commonEdges {
+                if edge.startNode == lastNode && edge.endNode == node {
+                    append(edge)
+                    break
+                }
+            }
+        }
+    }
+    
     /// Appends a new edge to the path.
     ///
     /// - parameter edge: The edge to be appended.
@@ -83,8 +99,18 @@ class Path {
         let commonEdge = startNode.edges.union(endNode.edges).first
         
         if commonEdge != nil {
-            edges.append(commonEdge!)
+            append(commonEdge!)
         }
+    }
+    
+    func contains(_ node: Node) -> Bool {
+        for edge in edges {
+            if edge.startNode == node || edge.endNode == node {
+                return true
+            }
+        }
+        
+        return false
     }
     
     /// Outlines the path, including nodes and edges.

@@ -247,7 +247,7 @@ import UIKit
     }
     
     // Clears the selected nodes array and returns the nodes to their original state.
-    func deselectNodes(unhighlight: Bool = false, resetEdgeProperties: Bool = true) {
+    func deselectNodes(unhighlight: Bool = false, resetEdgeProperties: Bool = false) {
         // return all nodes in selected nodes array to original state
         for node in selectedNodes {
             node.isSelected = false
@@ -365,75 +365,10 @@ import UIKit
         }
     }
     
-    // Returns the aggregate weight of a given path.
-    func aggregateWeight(of path: [Node]) -> Int {
-        var weight = 0
-        
-        for (index, node) in path.enumerated() {
-            for edge in node.edges {
-                guard index != path.count - 1 else { break }
-                
-                if edge.startNode == node && edge.endNode == path[index + 1] {
-                    weight += edge.weight
-                }
-            }
-        }
-        
-        return weight
-    }
-    
-    // Outlines each path in an array of paths.
-    private func outlineTraversals(_ traversals: [[Node]]) {
+    /// Outlines each path in an array of paths.
+    private func outlineTraversals(_ traversals: [Path]) {
         for (index, path) in traversals.enumerated() {
-            outlinePath(path, duration: path.count, delay: index * path.count)
-        }
-    }
-    
-    /// Outlines a given path, including nodes and edges.
-    ///
-    /// - parameter path: An array of nodes.
-    /// - parameter duration: The total duration of the outlining.
-    /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
-    ///
-    private func outlinePath(_ path: [Node], duration: Int? = nil, delay: Int = 0) {
-        for (index, node) in path.enumerated() {
-            var deadline = delay + index
-            
-            // highlight node after 'index' seconds
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
-                node.isHighlighted = true
-            })
-            
-            // unhighlight node after set duration
-            if duration != nil {
-                let runtime = delay + duration!
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(runtime), execute: {
-                    node.isHighlighted = false
-                })
-            }
-            
-            // only iterate over edges if this is not the last node in the path
-            if index < path.count - 1 {
-                for edge in node.edges {
-                    // directed
-                    if edge.startNode == node && edge.endNode == path[index + 1] {
-                        deadline += 1
-                        
-                        // highlight edge after 'index + 1' seconds
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
-                            edge.isHighlighted = true
-                        })
-                        
-                        // unhighlight edge after set duration
-                        if duration != nil {
-                            let runtime = delay + duration!
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(runtime), execute: {
-                                edge.isHighlighted = false
-                            })
-                        }
-                    }
-                }
-            }
+            path.outline(duration: path.length, delay: index * path.length)
         }
     }
     
@@ -441,20 +376,20 @@ import UIKit
     func shortestPath() {
         guard mode == .select && selectedNodes.count == 2 else { return }
         
-        mode = .viewOnly // make the graph view-only during execution (e.g. no dragging)
+        mode = .viewOnly // do not allow the graph to be altered during execution
         
-        var traversals = [[Node]]()
+        var traversals = [Path]()
         var steps = 0
         
-        func findShortestPath(from origin: Node, to target: Node, shortestPath: [Node] = [Node]()) -> [Node]? {
-            var path = shortestPath
+        func findShortestPath(from origin: Node, to target: Node, shortestPath: Path = Path()) -> Path? {
+            let path = shortestPath
             path.append(origin)
             
             if target == origin {
                 return path
             }
             
-            var shortest: [Node]?
+            var shortest: Path?
             var shortestAggregateWeight = 0 // equals 0 when shortest is nil
             
             for node in matrixForm[origin]! {
@@ -465,10 +400,10 @@ import UIKit
                         traversals.append(newPath)
                         
                         // add the count of the nodes to the steps???
-                        steps += newPath.count
+                        steps += newPath.length
                         
                         // calculate the aggregate weight of newPath
-                        let aggregateWeight = self.aggregateWeight(of: newPath)
+                        let aggregateWeight = newPath.weight
                         
                         if shortest == nil || aggregateWeight < shortestAggregateWeight {
                             shortest = newPath
@@ -494,7 +429,7 @@ import UIKit
             outlineTraversals(traversals)
             
             // outline the shortest path
-            outlinePath(path, delay: steps)
+            path.outline(delay: steps)
         } else {
             // create modal alert for no path found
             let message = "No path found from \(originNode) to \(targetNode)."
@@ -634,16 +569,19 @@ import UIKit
         e.outline()
     }
     
+    /// Ford-Fulkerson Algorithm
     func fordFulkersonMaxFlow() {
         mode = .viewOnly
         
+        // initialize all edges to flow of zero
         for edge in edges {
             edge.flow = 0
         }
         
-        deselectNodes(resetEdgeProperties: false)
+        deselectNodes()
     }
     
+    /// Shifts a selected edge's weight by a given integer value.
     func shiftSelectedEdgeWeight(by shift: Int) {
         if let edge = selectedEdge {
             edge.weight += shift

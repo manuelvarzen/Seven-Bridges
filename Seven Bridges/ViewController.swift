@@ -65,7 +65,7 @@ class ViewController: UIViewController {
             edgesModeButton.isEnabled = false
         } else {
             // tapping "Done"
-            graph.deselectNodes(unhighlight: true)
+            graph.deselectNodes(unhighlight: true, resetEdgeProperties: true)
             graph.mode = .nodes
             
             sender.title = "Select"
@@ -112,7 +112,7 @@ class ViewController: UIViewController {
             graph.kruskalMinimumSpanningTree()
         case "Minimum Spanning Tree (Prim)":
             graph.primMinimumSpanningTree()
-        case "Find Shortest Path (Dijkstra)":
+        case "Find Shortest Path":
             graph.shortestPath()
         case "Renumber Nodes":
             graph.renumberNodes()
