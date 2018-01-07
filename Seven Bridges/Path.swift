@@ -9,22 +9,25 @@ import Foundation
 
 class Path {
     
+    /// All nodes that make up the path.
+    var nodes: [Node]!
+    
     /// All edges that make up the path.
     var edges: [Edge]!
     
     /// First node in the path.
     var first: Node? {
-        return edges.first?.startNode
+        return nodes.first
     }
     
     /// Last node in the path.
     var last: Node? {
-        return edges.last?.endNode
+        return nodes.last
     }
     
     /// Number of nodes in the path (number of edges + 1).
     var length: Int {
-        return edges.count + 1
+        return nodes.count
     }
     
     /// Aggregate weight of all edges in the path.
@@ -38,6 +41,7 @@ class Path {
         return w
     }
     
+    /// Whether the path is a loop (starting node is the same as the last).
     var isLoop: Bool {
         if first == last {
             return true
@@ -48,6 +52,16 @@ class Path {
     
     init(_ edges: [Edge] = [Edge]()) {
         self.edges = edges
+        
+        nodes = [Node]()
+        
+        for edge in edges {
+            nodes.append(edge.startNode)
+            
+            if edge == edges.last {
+                nodes.append(edge.endNode)
+            }
+        }
     }
     
     init(_ nodes: [Node]) {
@@ -63,6 +77,7 @@ class Path {
             }
         }
         
+        self.nodes = nodes
         self.edges = edges
     }
     
@@ -71,11 +86,15 @@ class Path {
     /// - parameter node: A node adjacent to the last node in the path.
     ///
     func append(_ node: Node) {
-        if let lastNode = last {
-            let commonEdges = lastNode.edges.union(node.edges)
+        nodes.append(node)
+        
+        if nodes.count > 1 {
+            let secondLastNode = nodes[nodes.count - 2]
+            let commonEdges = secondLastNode.edges.union(node.edges)
+            
             for edge in commonEdges {
-                if edge.startNode == lastNode && edge.endNode == node {
-                    append(edge)
+                if edge.startNode == secondLastNode && edge.endNode == node {
+                    edges.append(edge)
                     break
                 }
             }
@@ -88,6 +107,12 @@ class Path {
     ///
     func append(_ edge: Edge) {
         edges.append(edge)
+        
+        if edge.startNode != nodes.last {
+            nodes.append(edge.startNode)
+        }
+        
+        nodes.append(edge.endNode)
     }
     
     /// Appends a new edge to the path, given two nodes.
@@ -103,6 +128,10 @@ class Path {
         }
     }
     
+    /// Determines whether a node is in the path.
+    ///
+    /// - parameter node: The node being searched for in the path.
+    ///
     func contains(_ node: Node) -> Bool {
         for edge in edges {
             if edge.startNode == node || edge.endNode == node {
