@@ -41,6 +41,15 @@ import UIKit
         }
     }
     
+    /// Remaining capacity of the edge (weight - flow).
+    var residualCapacity: Int? {
+        if let f = flow {
+            return weight - f
+        } else {
+            return nil
+        }
+    }
+    
     /// Whether the edge appears highlighted.
     var isHighlighted: Bool = false {
         didSet {
@@ -97,16 +106,14 @@ import UIKit
         frame.size = size
     }
     
-    // Updates origin of the frame based on the leftmost node.
+    /// Updates origin of the frame based on the leftmost node.
     private func updateOrigin() {
         // set location of frame around nodes
         frame.origin = CGPoint(x: min(startNode!.frame.origin.x, endNode!.frame.origin.x), y: min(startNode!.frame.origin.y, endNode!.frame.origin.y))
     }
     
-    // Updates the line based on the positions of the start node and end node.
-    private func updatePath() {
-        path = UIBezierPath()
-        
+    /// Determines the corner points of the start node and end node.
+    private func locatePointsInFrame() {
         // predefined coordinates of nodes relative to frame
         let upperLeft = CGPoint(x: Node.radius, y: Node.radius)
         let lowerLeft = CGPoint(x: Node.radius, y: frame.size.height - Node.radius)
@@ -131,6 +138,13 @@ import UIKit
                 endPoint = lowerLeft
             }
         }
+    }
+    
+    /// Updates the line based on the positions of the start node and end node.
+    private func updatePath() {
+        path = UIBezierPath()
+        
+        locatePointsInFrame()
         
         let headWidth = Node.radius / 2.2
         let headLength = headWidth
@@ -165,7 +179,7 @@ import UIKit
         path.append(UIBezierPath(cgPath: linePath))
     }
     
-    // Draws a line from the start node to the end node.
+    /// Draws a line from the start node to the end node.
     override func draw(_ rect: CGRect) {
         updatePath()
         

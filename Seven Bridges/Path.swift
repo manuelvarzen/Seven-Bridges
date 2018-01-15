@@ -41,6 +41,24 @@ class Path {
         return w
     }
     
+    /// Capacity of the path (the minimum edge flow in the path).
+    var capacity: Int? {
+        var minimumFlow = edges.first!.flow!
+        
+        for edge in edges {
+            if let flow = edge.flow {
+                if flow < minimumFlow {
+                    minimumFlow = flow
+                }
+            } else {
+                // not all edges have an initialized flow
+                return nil
+            }
+        }
+        
+        return minimumFlow
+    }
+    
     /// Whether the path is a loop (starting node is the same as the last).
     var isLoop: Bool {
         if first == last {

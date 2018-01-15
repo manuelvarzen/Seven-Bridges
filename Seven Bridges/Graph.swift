@@ -443,6 +443,33 @@ import UIKit
         }
     }
     
+    private func findShortestPath(from origin: Node, to target: Node, shortestPath: Path = Path()) -> Path? {
+        let path = shortestPath
+        path.append(origin)
+        
+        if target == origin {
+            return path
+        }
+        
+        var shortest: Path?
+        var shortestAggregateWeight = 0 // equals 0 when shortest is nil
+        
+        for node in matrixForm[origin]! {
+            if !path.contains(node) {
+                if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
+                    let aggregateWeight = newPath.weight
+                    
+                    if shortest == nil || aggregateWeight < shortestAggregateWeight {
+                        shortest = newPath
+                        shortestAggregateWeight = aggregateWeight
+                    }
+                }
+            }
+        }
+        
+        return shortest
+    }
+    
     /// Reduces the graph to find a minimum spanning tree using Prim's Algorithm.
     func primMinimumSpanningTree() {
         guard mode == .select && selectedNodes.count == 1 else { return }
@@ -571,14 +598,53 @@ import UIKit
     
     /// Ford-Fulkerson Algorithm
     func fordFulkersonMaxFlow() {
+        guard mode == .select && selectedNodes.count == 2 else { return }
+        
         mode = .viewOnly
         
-        // initialize all edges to flow of zero
+        var reverseEdges = Set<Edge>()
+        
+        // initialize all edges to flow of zero and create reverse edges
         for edge in edges {
             edge.flow = 0
+            
+            let reverseEdge = edge
+            reverseEdge.startNode = edge.endNode
+            reverseEdge.endNode = edge.startNode
+            reverseEdges.insert(reverseEdge)
+        }
+        
+        var path = augmentingPath(from: selectedNodes.first!, to: selectedNodes.last!)
+        
+        while path != nil {
+            let maxFlow = path!.capacity
+            
+            for edge in path!.edges {
+                edge.flow! += maxFlow!
+            }
+            
+            path = augmentingPath(from: selectedNodes.first!, to: selectedNodes.last!)
         }
         
         deselectNodes()
+    }
+    
+    func augmentingPath(from origin: Node, to target: Node, path: Path = Path()) -> Path? {
+        if origin == target {
+            return path
+        }
+        
+        for edge in origin.edges {
+            if !path.edges.contains(edge) && edge.residualCapacity! > 0 {
+                let newPath = path
+                newPath.append(edge)
+                
+                return augmentingPath(from: edge.endNode, to: target, path: newPath)
+            }
+        }
+        
+        // if there is no possible path
+        return nil
     }
     
     /// Shifts a selected edge's weight by a given integer value.
