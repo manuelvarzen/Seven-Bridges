@@ -87,7 +87,7 @@ import UIKit
         super.init(coder: aDecoder)
     }
     
-    // Updates size, origin, and path of line relative to the start node and end node.
+    /// Updates size, origin, and path of line relative to the start node and end node.
     func followConnectedNodes() {
         updateSize()
         updateOrigin()
@@ -95,7 +95,7 @@ import UIKit
         setNeedsDisplay()
     }
     
-    // Updates size of the frame based on the distance between the start node and end node.
+    /// Updates size of the frame based on the distance between the start node and end node.
     private func updateSize() {
         // determine size of frame
         let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + Node.diameter
@@ -203,7 +203,7 @@ import UIKit
         path.stroke()
         
         // draw a label containing the weight of the edge near the middle of rect
-        if weight > 1 {
+        if weight > 1 || flow != nil {
             let infoLabel = UILabel()
             
             if flow != nil {
