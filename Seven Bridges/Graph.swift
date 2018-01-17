@@ -432,14 +432,7 @@ import UIKit
             path.outline(delay: steps)
         } else {
             // create modal alert for no path found
-            let message = "No path found from \(originNode) to \(targetNode)."
-            
-            let alert = UIAlertController(title: "Shortest Path", message: message, preferredStyle: UIAlertControllerStyle.alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            // present alert
-            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+            Announcement.new(title: "Shortest Path", message: "No path found from \(originNode) to \(targetNode).")
         }
     }
     
@@ -602,49 +595,52 @@ import UIKit
         
         mode = .viewOnly
         
-        var reverseEdges = Set<Edge>()
+        var reverseFlow = [Edge: Int]()
         
-        // initialize all edges to flow of zero and create reverse edges
+        // initialize all edges to flow of zero
         for edge in edges {
             edge.flow = 0
-            
-            let reverseEdge = edge
-            reverseEdge.startNode = edge.endNode
-            reverseEdge.endNode = edge.startNode
-            reverseEdges.insert(reverseEdge)
+            reverseFlow[edge] = 0
         }
         
-        var path = augmentingPath(from: selectedNodes.first!, to: selectedNodes.last!)
+        // returns a path from origin to target
+        func validPath(from origin: Node, to target: Node, path: Path = Path()) -> Path? {
+            if origin == target {
+                return path
+            }
+            
+            for edge in origin.edges {
+                if edge.residualCapacity! > 0 && !path.edges.contains(edge) {
+                    let newPath = path
+                    newPath.append(edge)
+                    
+                    if let result = validPath(from: edge.endNode!, to: target, path: newPath) {
+                        return result
+                    }
+                }
+            }
+            
+            return nil
+        }
         
+        var path = validPath(from: selectedNodes.first!, to: selectedNodes.last!)
+        
+        // while there is a path from s to t where all edges have capacity > 0...
         while path != nil {
-            let maxFlow = path!.capacity
+            let flow = path!.capacity!
             
             for edge in path!.edges {
-                edge.flow! += maxFlow!
+                edge.flow! += flow
+                reverseFlow[edge]! -= flow
             }
             
-            path = augmentingPath(from: selectedNodes.first!, to: selectedNodes.last!)
+            path = validPath(from: selectedNodes.first!, to: selectedNodes.last!)
         }
+        
+        // announce the max flow
+        Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is FLOW.")
         
         deselectNodes()
-    }
-    
-    func augmentingPath(from origin: Node, to target: Node, path: Path = Path()) -> Path? {
-        if origin == target {
-            return path
-        }
-        
-        for edge in origin.edges {
-            if !path.edges.contains(edge) && edge.residualCapacity! > 0 {
-                let newPath = path
-                newPath.append(edge)
-                
-                return augmentingPath(from: edge.endNode, to: target, path: newPath)
-            }
-        }
-        
-        // if there is no possible path
-        return nil
     }
     
     /// Shifts a selected edge's weight by a given integer value.
