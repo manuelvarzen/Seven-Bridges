@@ -87,42 +87,17 @@ class ViewController: UIViewController {
     @IBAction func openActionsPopover(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        let actionsVC = storyboard.instantiateViewController(withIdentifier: "actionsViewController")
+        let actionsVC = storyboard.instantiateViewController(withIdentifier: "actionsViewController") as! ActionsController
         actionsVC.modalPresentationStyle = .popover
         actionsVC.popoverPresentationController?.barButtonItem = sender
-        
-        (actionsVC as? ActionsController)?.viewControllerDelegate = self
+        actionsVC.graph = graph
+        actionsVC.viewControllerDelegate = self
         
         present(actionsVC, animated: true)
     }
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {
         graph.clear()
-    }
-    
-    func didSelectAction(_ action: String, from viewController: UIViewController) {
-        viewController.dismiss(animated: false, completion: nil)
-        
-        switch action {
-        case "Toggle Direction":
-            graph.isDirected = !graph.isDirected
-        case "Find Max Flow (Ford-Fulkerson)":
-            graph.fordFulkersonMaxFlow()
-        case "Minimum Spanning Tree (Kruskal)":
-            graph.kruskalMinimumSpanningTree()
-        case "Minimum Spanning Tree (Prim)":
-            graph.primMinimumSpanningTree()
-        case "Find Shortest Path":
-            graph.shortestPath()
-        case "Renumber Nodes":
-            graph.renumberNodes()
-        case "Reset Edge Weights":
-            graph.resetAllEdgeWeights()
-        case "Remove All Edges":
-            graph.removeAllEdges()
-        default:
-            print("An unexpected error occurred.")
-        }
     }
     
 }

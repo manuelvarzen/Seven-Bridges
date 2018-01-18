@@ -11,6 +11,8 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
     
     weak var viewControllerDelegate: ViewController?
     
+    weak var graph: Graph?
+    
     @IBOutlet weak var tableView: UITableView!
     
     private let actions = [
@@ -37,10 +39,32 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let action = actions[indexPath.row]
-        
-        viewControllerDelegate?.didSelectAction(action, from: self)
-        
+        didSelectAction(action)
+    }
+    
+    private func didSelectAction(_ action: String) {
         dismiss(animated: true, completion: nil)
+        
+        switch action {
+        case "Toggle Direction":
+            graph?.isDirected = !(graph?.isDirected)!
+        case "Find Max Flow (Ford-Fulkerson)":
+            graph?.fordFulkersonMaxFlow()
+        case "Minimum Spanning Tree (Kruskal)":
+            graph?.kruskalMinimumSpanningTree()
+        case "Minimum Spanning Tree (Prim)":
+            graph?.primMinimumSpanningTree()
+        case "Find Shortest Path":
+            graph?.shortestPath()
+        case "Renumber Nodes":
+            graph?.renumberNodes()
+        case "Reset Edge Weights":
+            graph?.resetAllEdgeWeights()
+        case "Remove All Edges":
+            graph?.removeAllEdges()
+        default:
+            print("An action with that name could not be found.")
+        }
     }
     
 }
