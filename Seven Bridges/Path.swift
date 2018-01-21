@@ -68,6 +68,20 @@ class Path {
         }
     }
     
+    var description: String {
+        var string = ""
+        
+        for node in nodes {
+            string += node.description
+            
+            if node != nodes.last! {
+                string += " → "
+            }
+        }
+        
+        return string
+    }
+    
     init(_ edges: [Edge] = [Edge]()) {
         self.edges = edges
         
