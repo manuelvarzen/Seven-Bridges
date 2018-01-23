@@ -4,4 +4,5 @@
 Some helpful algorithms included are:
 - Minimum Spanning Tree
 - Shortest Path
+- Max Flow
 - ...and more to come.
