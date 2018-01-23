@@ -589,6 +589,58 @@ import UIKit
         e.outline()
     }
     
+    /// Bellman-Ford Algorithm
+    func bellmanFordShortestPath() {
+        guard mode == .select && selectedNodes.count == 2 else { return }
+        
+        var distance = [Node: Int]()
+        var predecessor = [Node: Node?]()
+        
+        for node in nodes {
+            distance[node] = 1024 // set all vertices to "infinite" distance
+            predecessor[node] = nil
+        }
+        
+        distance[selectedNodes.first!] = 0 // origin has no distance from itself
+        
+        for _ in 1..<edges.count {
+            for edge in edges {
+                let u = edge.startNode!
+                let v = edge.endNode!
+                
+                if distance[u]! + edge.weight < distance[v]! {
+                    distance[v] = distance[u]! + edge.weight
+                    predecessor[v] = u
+                }
+            }
+        }
+        
+        for edge in edges {
+            if distance[edge.startNode]! + edge.weight < distance[edge.endNode]! {
+                Announcement.new(title: "Bellman-Ford Shortest Path", message: "ERROR: Graph contains a negative-weight cycle.")
+            }
+        }
+        
+        // build a path (in reverse)
+        let path = Path()
+        var next = selectedNodes.last!
+        
+        repeat {
+            path.append(predecessor[next]!!)
+            next = predecessor[next]!!
+        } while next != selectedNodes.first!
+        
+        // reverse the path into correct order
+        path.nodes = path.nodes.reversed()
+        path.edges = path.edges.reversed()
+        
+        deselectNodes()
+        
+        path.outline(delay: path.nodes.count)
+        
+        print(path.description)
+    }
+    
     /// Ford-Fulkerson Algorithm
     func fordFulkersonMaxFlow() {
         guard mode == .select && selectedNodes.count == 2 else { return }

@@ -20,10 +20,11 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         "Renumber Nodes",
         "Reset Edge Weights",
         "Remove All Edges",
-        "Find Shortest Path",
+        "Shortest Path (Dijkstra)",
+        "Shortest Path (Bellman-Ford)",
         "Minimum Spanning Tree (Prim)",
         "Minimum Spanning Tree (Kruskal)",
-        "Find Max Flow (Ford-Fulkerson)"
+        "Max Flow (Ford-Fulkerson)"
     ]
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -48,14 +49,16 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         switch action {
         case "Toggle Direction":
             graph?.isDirected = !(graph?.isDirected)!
-        case "Find Max Flow (Ford-Fulkerson)":
+        case "Max Flow (Ford-Fulkerson)":
             graph?.fordFulkersonMaxFlow()
         case "Minimum Spanning Tree (Kruskal)":
             graph?.kruskalMinimumSpanningTree()
         case "Minimum Spanning Tree (Prim)":
             graph?.primMinimumSpanningTree()
-        case "Find Shortest Path":
+        case "Shortest Path (Dijkstra)":
             graph?.shortestPath()
+        case "Shortest Path (Bellman-Ford)":
+            graph?.bellmanFordShortestPath()
         case "Renumber Nodes":
             graph?.renumberNodes()
         case "Reset Edge Weights":
