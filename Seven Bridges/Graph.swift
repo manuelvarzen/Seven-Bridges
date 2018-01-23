@@ -358,7 +358,10 @@ import UIKit
     
     /// Renumbers all nodes by the order that they were added to the graph.
     func renumberNodes() {
-        guard !nodes.isEmpty else { return }
+        guard !nodes.isEmpty else {
+            Announcement.new(title: "Renumber Nodes", message: "There are no nodes to renumber.")
+            return
+        }
         
         for (index, node) in nodes.enumerated() {
             node.label.text = String(index + 1)
@@ -374,7 +377,10 @@ import UIKit
     
     /// Finds and identifies the shortest path between two selected nodes.
     func shortestPath() {
-        guard mode == .select && selectedNodes.count == 2 else { return }
+        guard mode == .select && selectedNodes.count == 2 else {
+            Announcement.new(title: "Shortest Path", message: "Please select an origin node and a target node before using the Shortest Path algorithm.")
+            return
+        }
         
         mode = .viewOnly // do not allow the graph to be altered during execution
         
@@ -465,7 +471,10 @@ import UIKit
     
     /// Reduces the graph to find a minimum spanning tree using Prim's Algorithm.
     func primMinimumSpanningTree() {
-        guard mode == .select && selectedNodes.count == 1 else { return }
+        guard mode == .select && selectedNodes.count == 1 else {
+            Announcement.new(title: "Minimum Spanning Tree", message: "Please select a root node before running Prim's Minimum Spanning Tree algorithm.")
+            return
+        }
         
         mode = .viewOnly // make graph view-only
         
@@ -591,7 +600,10 @@ import UIKit
     
     /// Bellman-Ford Algorithm
     func bellmanFordShortestPath() {
-        guard mode == .select && selectedNodes.count == 2 else { return }
+        guard mode == .select && selectedNodes.count == 2 else {
+            Announcement.new(title: "Bellman-Ford", message: "Please select an origin node and a target node before running the Bellman-Ford Shortest Path algorithm.")
+            return
+        }
         
         var distance = [Node: Int]()
         var predecessor = [Node: Node?]()
@@ -643,7 +655,10 @@ import UIKit
     
     /// Ford-Fulkerson Algorithm
     func fordFulkersonMaxFlow() {
-        guard mode == .select && selectedNodes.count == 2 else { return }
+        guard mode == .select && selectedNodes.count == 2 else {
+            Announcement.new(title: "Ford-Fulkerson", message: "Please select two nodes for calculating max flow before running the Ford-Fulkerson algorithm.")
+            return
+        }
         
         mode = .viewOnly
         
