@@ -27,17 +27,29 @@ import UIKit
     /// Node at end of edge.
     var endNode: Node!
     
+    var reversed: Edge {
+        let reversedEdge = self.copy() as! Edge
+        reversedEdge.startNode = self.endNode
+        reversedEdge.endNode = self.startNode
+        
+        return reversedEdge
+    }
+    
     /// Weight of the edge.
     var weight = 1 {
         didSet {
-            setNeedsDisplay()
+            if self.isVisible {
+                setNeedsDisplay()
+            }
         }
     }
     
     /// Flow of the edge being used.
     var flow: Int? {
         didSet {
-            setNeedsDisplay()
+            if self.isVisible {
+                setNeedsDisplay()
+            }
         }
     }
     
@@ -57,6 +69,14 @@ import UIKit
         }
     }
     
+    var isVisible: Bool {
+        didSet {
+            if self.isVisible {
+                setNeedsDisplay()
+            }
+        }
+    }
+    
     override var description: String {
         let start = startNode.label.text!
         let end = endNode.label.text!
@@ -64,26 +84,30 @@ import UIKit
         return "\(start) → \(end)"
     }
     
-    init(from startNode: Node, to endNode: Node) {
-        super.init(frame: CGRect())
-        
+    init(from startNode: Node, to endNode: Node, isVisible: Bool = true) {
         self.startNode = startNode
         self.endNode = endNode
+        self.isVisible = isVisible
+        
+        super.init(frame: CGRect())
         
         // register edge with nodes
         startNode.edges.insert(self)
         endNode.edges.insert(self)
         
-        updateSize()
-        
-        updateOrigin()
-        
-        backgroundColor = UIColor.clear
-        
-        clearsContextBeforeDrawing = true
+        if isVisible {
+            updateSize()
+            
+            updateOrigin()
+            
+            backgroundColor = UIColor.clear
+            
+            clearsContextBeforeDrawing = true
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
+        self.isVisible = true
         super.init(coder: aDecoder)
     }
     
@@ -181,6 +205,8 @@ import UIKit
     
     /// Draws a line from the start node to the end node.
     override func draw(_ rect: CGRect) {
+        guard isVisible else { return }
+        
         updatePath()
         
         // if the edge is highlighted, stroke in black
