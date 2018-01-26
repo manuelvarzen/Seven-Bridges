@@ -10,10 +10,12 @@ import Foundation
 class Path {
     
     /// All nodes that make up the path.
-    var nodes: [Node]!
+    var nodes = [Node]()
     
     /// All edges that make up the path.
-    var edges: [Edge]!
+    var edges = [Edge]()
+    
+    var reversedEdges: [Edge]!
     
     /// First node in the path.
     var first: Node? {
@@ -30,6 +32,16 @@ class Path {
         return nodes.count
     }
     
+    var usesFlow: Bool {
+        didSet {
+            if self.usesFlow {
+                reversedEdges = [Edge]()
+            } else {
+                reversedEdges = nil
+            }
+        }
+    }
+    
     /// Aggregate weight of all edges in the path.
     var weight: Int {
         var w = 0
@@ -43,6 +55,10 @@ class Path {
     
     /// Capacity of the path (the minimum edge flow in the path).
     var capacity: Int? {
+        if edges.count < 1 {
+            return nil
+        }
+        
         var minimumFlow = edges.first!.flow!
         
         for edge in edges {
@@ -82,12 +98,28 @@ class Path {
         return string
     }
     
-    init(_ edges: [Edge] = [Edge]()) {
+    init(usesFlow: Bool = false) {
+        self.usesFlow = usesFlow
+    }
+    
+    init(_ path: Path) {
+        self.nodes = path.nodes
+        self.edges = path.edges
+        self.usesFlow = path.usesFlow
+        self.reversedEdges = path.reversedEdges
+    }
+    
+    init(_ edges: [Edge] = [Edge](), usesFlow: Bool = false) {
         self.edges = edges
+        self.usesFlow = usesFlow
         
         nodes = [Node]()
         
         for edge in edges {
+            if usesFlow {
+                reversedEdges.append(edge.reversed())
+            }
+            
             nodes.append(edge.startNode)
             
             if edge == edges.last {
@@ -96,21 +128,23 @@ class Path {
         }
     }
     
-    init(_ nodes: [Node]) {
-        var edges = [Edge]()
+    init(_ nodes: [Node], usesFlow: Bool = false) {
+        self.nodes = nodes
+        self.usesFlow = usesFlow
+        
+        edges = [Edge]()
         
         for (i, _) in nodes.enumerated() {
             if i < nodes.count - 1 {
-                let commonEdge = nodes[i].edges.union(nodes[i + 1].edges).first
-                
-                if commonEdge != nil {
-                    edges.append(commonEdge!)
+                if let commonEdge = nodes[i].edges.union(nodes[i + 1].edges).first {
+                    edges.append(commonEdge)
+                    
+                    if usesFlow {
+                        reversedEdges.append(commonEdge.reversed())
+                    }
                 }
             }
         }
-        
-        self.nodes = nodes
-        self.edges = edges
     }
     
     /// Appends a new edge to the path, given a node.
@@ -127,6 +161,11 @@ class Path {
             for edge in commonEdges {
                 if edge.startNode == secondLastNode && edge.endNode == node {
                     edges.append(edge)
+                    
+                    if usesFlow {
+                        reversedEdges.append(edge.reversed())
+                    }
+                    
                     break
                 }
             }
@@ -139,6 +178,10 @@ class Path {
     ///
     func append(_ edge: Edge) {
         edges.append(edge)
+        
+        if usesFlow {
+            reversedEdges.append(edge.reversed())
+        }
         
         if edge.startNode != nodes.last {
             nodes.append(edge.startNode)
@@ -153,10 +196,8 @@ class Path {
     /// - parameter to: Another node at the other end of the edge.
     ///
     func append(from startNode: Node, to endNode: Node) {
-        let commonEdge = startNode.edges.union(endNode.edges).first
-        
-        if commonEdge != nil {
-            append(commonEdge!)
+        if let commonEdge = startNode.edges.union(endNode.edges).first {
+            append(commonEdge)
         }
     }
     
@@ -165,13 +206,7 @@ class Path {
     /// - parameter node: The node being searched for in the path.
     ///
     func contains(_ node: Node) -> Bool {
-        for edge in edges {
-            if edge.startNode == node || edge.endNode == node {
-                return true
-            }
-        }
-        
-        return false
+        return nodes.contains(node)
     }
     
     /// Outlines the path, including nodes and edges.
