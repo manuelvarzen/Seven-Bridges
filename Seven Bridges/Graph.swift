@@ -662,26 +662,29 @@ import UIKit
         
         mode = .viewOnly
         
-        var reverseFlow = [Edge: Int]()
-        
         // initialize all edges to flow of zero
         for edge in edges {
             edge.flow = 0
-            reverseFlow[edge] = 0
+            edge.reverseFlow = 0
         }
         
-        // returns a path from origin to target
-        func validPath(from origin: Node, to target: Node, path: Path = Path()) -> Path? {
+        // returns an augmenting path from origin to target
+        func augmentedPath(from origin: Node, to target: Node, path: Path = Path()) -> Path? {
             if origin == target {
                 return path
             }
             
+            // iterate over all edges connected to the origin
             for edge in origin.edges {
                 if edge.residualCapacity! > 0 && !path.edges.contains(edge) {
-                    let newPath = path
+                    let newPath = Path(path)
                     newPath.append(edge)
                     
-                    if let result = validPath(from: edge.endNode!, to: target, path: newPath) {
+                    print("\(origin): \(edge) has \(edge.residualCapacity!) units free.")
+                    print("endNode = \(edge.endNode!)")
+                    print("target = \(target)")
+                    
+                    if let result = augmentedPath(from: edge.endNode!, to: target, path: newPath) {
                         return result
                     }
                 }
@@ -690,22 +693,36 @@ import UIKit
             return nil
         }
         
-        var path = validPath(from: selectedNodes.first!, to: selectedNodes.last!)
+        var path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!)
+        
+        print("First iteration of the path is computed.")
         
         // while there is a path from s to t where all edges have capacity > 0...
         while path != nil {
-            let flow = path!.capacity!
+            var residuals = [Int]()
+            edges.forEach({
+                residuals.append($0.residualCapacity!)
+            })
             
-            for edge in path!.edges {
-                edge.flow! += flow
-                reverseFlow[edge]! -= flow
+            if let flow = residuals.min() {
+                for edge in path!.edges {
+                    edge.flow! += flow
+                    edge.reverseFlow! -= flow
+                }
             }
             
-            path = validPath(from: selectedNodes.first!, to: selectedNodes.last!)
+            path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!)
         }
         
+        var flowSum = 0
+        selectedNodes.first!.edges.forEach({
+            flowSum += $0.flow!
+        })
+        
+        print("We have a max flow!")
+        
         // announce the max flow
-        Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is FLOW.")
+        Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(flowSum).")
         
         deselectNodes()
     }

@@ -15,8 +15,6 @@ class Path {
     /// All edges that make up the path.
     var edges = [Edge]()
     
-    var reversedEdges: [Edge]!
-    
     /// First node in the path.
     var first: Node? {
         return nodes.first
@@ -30,16 +28,6 @@ class Path {
     /// Number of nodes in the path (number of edges + 1).
     var length: Int {
         return nodes.count
-    }
-    
-    var usesFlow: Bool {
-        didSet {
-            if self.usesFlow {
-                reversedEdges = [Edge]()
-            } else {
-                reversedEdges = nil
-            }
-        }
     }
     
     /// Aggregate weight of all edges in the path.
@@ -98,28 +86,17 @@ class Path {
         return string
     }
     
-    init(usesFlow: Bool = false) {
-        self.usesFlow = usesFlow
-    }
-    
     init(_ path: Path) {
         self.nodes = path.nodes
         self.edges = path.edges
-        self.usesFlow = path.usesFlow
-        self.reversedEdges = path.reversedEdges
     }
     
-    init(_ edges: [Edge] = [Edge](), usesFlow: Bool = false) {
+    init(_ edges: [Edge] = [Edge]()) {
         self.edges = edges
-        self.usesFlow = usesFlow
         
         nodes = [Node]()
         
         for edge in edges {
-            if usesFlow {
-                reversedEdges.append(edge.reversed())
-            }
-            
             nodes.append(edge.startNode)
             
             if edge == edges.last {
@@ -128,9 +105,8 @@ class Path {
         }
     }
     
-    init(_ nodes: [Node], usesFlow: Bool = false) {
+    init(_ nodes: [Node]) {
         self.nodes = nodes
-        self.usesFlow = usesFlow
         
         edges = [Edge]()
         
@@ -138,10 +114,6 @@ class Path {
             if i < nodes.count - 1 {
                 if let commonEdge = nodes[i].edges.union(nodes[i + 1].edges).first {
                     edges.append(commonEdge)
-                    
-                    if usesFlow {
-                        reversedEdges.append(commonEdge.reversed())
-                    }
                 }
             }
         }
@@ -162,10 +134,6 @@ class Path {
                 if edge.startNode == secondLastNode && edge.endNode == node {
                     edges.append(edge)
                     
-                    if usesFlow {
-                        reversedEdges.append(edge.reversed())
-                    }
-                    
                     break
                 }
             }
@@ -178,10 +146,6 @@ class Path {
     ///
     func append(_ edge: Edge) {
         edges.append(edge)
-        
-        if usesFlow {
-            reversedEdges.append(edge.reversed())
-        }
         
         if edge.startNode != nodes.last {
             nodes.append(edge.startNode)

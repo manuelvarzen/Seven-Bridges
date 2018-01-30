@@ -27,14 +27,6 @@ import UIKit
     /// Node at end of edge.
     var endNode: Node!
     
-    var reversed: Edge {
-        let reversedEdge = self.copy() as! Edge
-        reversedEdge.startNode = self.endNode
-        reversedEdge.endNode = self.startNode
-        
-        return reversedEdge
-    }
-    
     /// Weight of the edge.
     var weight = 1 {
         didSet {
@@ -52,6 +44,8 @@ import UIKit
             }
         }
     }
+    
+    var reverseFlow: Int?
     
     /// Remaining capacity of the edge (weight - flow).
     var residualCapacity: Int? {
@@ -109,6 +103,14 @@ import UIKit
     required init?(coder aDecoder: NSCoder) {
         self.isVisible = true
         super.init(coder: aDecoder)
+    }
+    
+    func reversed(isVisible: Bool = false) -> Edge {
+        let reversedEdge = Edge(from: self.endNode, to: self.startNode)
+        reversedEdge.isVisible = isVisible
+        reversedEdge.flow = flow
+        
+        return reversedEdge
     }
     
     /// Updates size, origin, and path of line relative to the start node and end node.
