@@ -680,10 +680,6 @@ import UIKit
                     let newPath = Path(path)
                     newPath.append(edge)
                     
-                    print("\(origin): \(edge) has \(edge.residualCapacity!) units free.")
-                    print("endNode = \(edge.endNode!)")
-                    print("target = \(target)")
-                    
                     if let result = augmentedPath(from: edge.endNode!, to: target, path: newPath) {
                         return result
                     }
@@ -695,12 +691,10 @@ import UIKit
         
         var path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!)
         
-        print("First iteration of the path is computed.")
-        
         // while there is a path from s to t where all edges have capacity > 0...
         while path != nil {
             var residuals = [Int]()
-            edges.forEach({
+            path!.edges.forEach({
                 residuals.append($0.residualCapacity!)
             })
             
@@ -718,8 +712,6 @@ import UIKit
         selectedNodes.first!.edges.forEach({
             flowSum += $0.flow!
         })
-        
-        print("We have a max flow!")
         
         // announce the max flow
         Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(flowSum).")
