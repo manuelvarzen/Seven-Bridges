@@ -397,7 +397,7 @@ import UIKit
             var shortest: Path?
             var shortestAggregateWeight = 0 // equals 0 when shortest is nil
             
-            for node in origin.adjacentNodes() {
+            for node in origin.adjacentNodes(directed: isDirected) {
                 if !path.contains(node) {
                     if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
                         
@@ -482,7 +482,7 @@ import UIKit
             distance.removeValue(forKey: currentNode)
             pool.remove(currentNode)
             
-            for nextNode in currentNode.adjacentNodes {
+            for nextNode in currentNode.adjacentNodes(directed: false) {
                 if let edge = currentNode.getEdge(to: nextNode) {
                     let newDistance = edge.weight
                     

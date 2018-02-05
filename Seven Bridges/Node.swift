@@ -18,35 +18,6 @@ import UIKit
     /// Edges connected to the node.
     var edges = Set<Edge>()
     
-    /// All nodes that are connected to this node.
-    var adjacentNodes: Set<Node> {
-        var results = Set<Node>()
-        
-        for edge in edges {
-            if edge.startNode! != self {
-                results.insert(edge.startNode!)
-            } else if edge.endNode! != self {
-                results.insert(edge.endNode!)
-            }
-        }
-        
-        return results
-    }
-    
-    func adjacentNodes(directed: Bool = true) -> Set<Node> {
-        var results = Set<Node>()
-        
-        for edge in edges {
-            if edge.startNode! != self && !directed {
-                results.insert(edge.startNode!)
-            } else if edge.endNode! != self {
-                results.insert(edge.endNode!)
-            }
-        }
-        
-        return results
-    }
-    
     // Width of the node's border.
     static var lineWidth: CGFloat = diameter / 6
     
@@ -144,11 +115,27 @@ import UIKit
         backgroundColor = UIColor.clear
     }
     
+    /// All nodes adjacent to this node.
+    func adjacentNodes(directed: Bool = true) -> Set<Node> {
+        var results = Set<Node>()
+        
+        for edge in edges {
+            if edge.startNode! != self && !directed {
+                results.insert(edge.startNode!)
+            } else if edge.endNode! != self {
+                results.insert(edge.endNode!)
+            }
+        }
+        
+        return results
+    }
+    
     /// Determines whether a given node is adjacent to this node.
     ///
     /// - parameter to: The node to test whether it is adjacent.
-    func isAdjacent(to node: Node) -> Bool {
-        if adjacentNodes.contains(node) {
+    ///
+    func isAdjacent(to node: Node, directed: Bool = true) -> Bool {
+        if adjacentNodes(directed: directed).contains(node) {
             return true
         } else {
             return false
