@@ -371,7 +371,7 @@ import UIKit
     /// Outlines each path in an array of paths.
     private func outlineTraversals(_ traversals: [Path]) {
         for (index, path) in traversals.enumerated() {
-            path.outline(duration: path.length, delay: index * path.length)
+            path.outline(duration: path.nodes.count, delay: index * path.nodes.count)
         }
     }
     
@@ -385,10 +385,9 @@ import UIKit
         mode = .viewOnly // do not allow the graph to be altered during execution
         
         var traversals = [Path]()
-        var steps = 0
         
         func findShortestPath(from origin: Node, to target: Node, shortestPath: Path = Path()) -> Path? {
-            let path = shortestPath
+            let path = Path(shortestPath)
             path.append(origin)
             
             if target == origin {
@@ -398,15 +397,12 @@ import UIKit
             var shortest: Path?
             var shortestAggregateWeight = 0 // equals 0 when shortest is nil
             
-            for node in matrixForm[origin]! {
+            for node in origin.adjacentNodes() {
                 if !path.contains(node) {
                     if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
                         
                         // add the new path to the history of traversals
                         traversals.append(newPath)
-                        
-                        // add the count of the nodes to the steps???
-                        steps += newPath.length
                         
                         // calculate the aggregate weight of newPath
                         let aggregateWeight = newPath.weight
@@ -431,42 +427,15 @@ import UIKit
             // remove the shortest path from the traversal history
             traversals.removeLast()
             
-            // outline the traversals
-            outlineTraversals(traversals)
+            // FIXME: outline the traversals
+            //outlineTraversals(traversals)
             
             // outline the shortest path
-            path.outline(delay: steps)
+            path.outline()
         } else {
             // create modal alert for no path found
             Announcement.new(title: "Shortest Path", message: "No path found from \(originNode) to \(targetNode).")
         }
-    }
-    
-    private func findShortestPath(from origin: Node, to target: Node, shortestPath: Path = Path()) -> Path? {
-        let path = shortestPath
-        path.append(origin)
-        
-        if target == origin {
-            return path
-        }
-        
-        var shortest: Path?
-        var shortestAggregateWeight = 0 // equals 0 when shortest is nil
-        
-        for node in matrixForm[origin]! {
-            if !path.contains(node) {
-                if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
-                    let aggregateWeight = newPath.weight
-                    
-                    if shortest == nil || aggregateWeight < shortestAggregateWeight {
-                        shortest = newPath
-                        shortestAggregateWeight = aggregateWeight
-                    }
-                }
-            }
-        }
-        
-        return shortest
     }
     
     /// Reduces the graph to find a minimum spanning tree using Prim's Algorithm.

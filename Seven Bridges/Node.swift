@@ -33,6 +33,20 @@ import UIKit
         return results
     }
     
+    func adjacentNodes(directed: Bool = true) -> Set<Node> {
+        var results = Set<Node>()
+        
+        for edge in edges {
+            if edge.startNode! != self && !directed {
+                results.insert(edge.startNode!)
+            } else if edge.endNode! != self {
+                results.insert(edge.endNode!)
+            }
+        }
+        
+        return results
+    }
+    
     // Width of the node's border.
     static var lineWidth: CGFloat = diameter / 6
     

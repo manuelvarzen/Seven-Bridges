@@ -25,11 +25,6 @@ class Path {
         return nodes.last
     }
     
-    /// Number of nodes in the path (number of edges + 1).
-    var length: Int {
-        return nodes.count
-    }
-    
     /// Aggregate weight of all edges in the path.
     var weight: Int {
         var w = 0
@@ -173,7 +168,7 @@ class Path {
         return nodes.contains(node)
     }
     
-    /// Outlines the path, including nodes and edges.
+    /// Outlines the path gradually, including nodes and edges.
     ///
     /// - parameter duration: The total duration of the outlining.
     /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
@@ -182,27 +177,62 @@ class Path {
         for (index, edge) in edges.enumerated() {
             let deadline = delay + index
             
-            let startNode = edge.startNode
-            let endNode = edge.endNode
-            
-            // highlight nodes after 'index' seconds
+            // highlight
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
-                startNode?.isHighlighted = true
-                endNode?.isHighlighted = true
+                edge.startNode?.isHighlighted = true
                 
                 edge.isHighlighted = true
+                
+                edge.endNode?.isHighlighted = true
             })
             
-            // unhighlight node after set duration
+            // unhighlight - if duration is nil, path is outlined indefinitely
             if duration != nil {
                 let runtime = delay + duration!
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(runtime), execute: {
-                    startNode?.isHighlighted = false
-                    endNode?.isHighlighted = false
+                    edge.startNode?.isHighlighted = false
                     
                     edge.isHighlighted = false
+                    
+                    edge.endNode?.isHighlighted = false
                 })
             }
         }
+    }
+    
+    /// Outlines the path gradually, including nodes and edges.
+    ///
+    /// - parameter duration: The total duration of the outlining.
+    /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
+    ///
+    func outline(delay: Int = 0) {
+        var deadline = 0
+        
+        for (index, edge) in edges.enumerated() {
+            deadline = delay + index
+            
+            // highlight
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
+                edge.startNode?.isHighlighted = true
+            })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline + 1), execute: {
+                edge.isHighlighted = true
+            })
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(nodes.count + edges.count), execute: {
+            self.nodes.last?.isHighlighted = true
+        })
+    }
+    
+    /// Outlines the path immediately, including nodes and edges.
+    func outline() {
+        for edge in edges {
+            edge.startNode?.isHighlighted = true
+            edge.isHighlighted = true
+        }
+        
+        nodes.last?.isHighlighted = true
     }
 }
