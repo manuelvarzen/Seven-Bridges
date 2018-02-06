@@ -21,18 +21,6 @@ import UIKit
     // Width of the node's border.
     static var lineWidth: CGFloat = diameter / 6
     
-    private let highlightColor = UIColor.black
-    
-    var isHighlighted: Bool = false {
-        didSet {
-            if self.isHighlighted {
-                color = highlightColor
-            } else {
-                color = initialColor
-            }
-        }
-    }
-    
     var isSelected: Bool = false {
         didSet {
             if self.isSelected {
@@ -45,24 +33,24 @@ import UIKit
         }
     }
     
-    // Color that the node is initialized with.
+    /// Color that the node is initialized with.
     private let initialColor: UIColor
     
-    // Color of the node's border stroke.
+    /// Color of the node's border stroke.
     var strokeColor: UIColor! {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    // Color of the node's center fill.
+    /// Color of the node's center fill.
     var fillColor: UIColor! {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    // Unified color of the node's fill and border.
+    /// Unified color of the node's fill and border.
     var color: UIColor! {
         didSet {
             strokeColor = self.color
@@ -70,9 +58,10 @@ import UIKit
         }
     }
     
-    // Label for the node.
+    /// Label for the node.
     var label = UILabel()
     
+    /// Whether the node is currently being dragged by the user.
     private var isBeingDragged = false
     
     override var description: String {
@@ -181,6 +170,14 @@ import UIKit
         }
         
         return cheapest
+    }
+    
+    func highlight(_ enable: Bool = true, color: UIColor = UIColor.black) {
+        if enable {
+            self.color = color
+        } else {
+            self.color = initialColor
+        }
     }
     
     override func draw(_ rect: CGRect) {

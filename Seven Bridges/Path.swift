@@ -5,7 +5,7 @@
 //  Created by Dillon Fagan on 11/21/17.
 //
 
-import Foundation
+import UIKit
 
 class Path {
     
@@ -200,39 +200,31 @@ class Path {
         }
     }
     
-    /// Outlines the path gradually, including nodes and edges.
+    /// Outlines the path, including nodes and edges.
     ///
-    /// - parameter duration: The total duration of the outlining.
-    /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
+    /// - parameter duration: The total duration of the outlining. If nil, outlining does not expire.
     ///
-    func outline(delay: Int = 0) {
-        var deadline = 0
-        
-        for (index, edge) in edges.enumerated() {
-            deadline = delay + index
+    func outline(duration: Int? = nil, wait: Int = 0, color: UIColor = UIColor.black) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(wait), execute: {
+            for edge in self.edges {
+                edge.startNode?.highlight(color: color)
+                edge.highlight(color: color)
+            }
             
-            // highlight
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
-                edge.startNode?.isHighlighted = true
-            })
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline + 1), execute: {
-                edge.isHighlighted = true
-            })
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(nodes.count + edges.count), execute: {
-            self.nodes.last?.isHighlighted = true
+            self.nodes.last?.highlight(color: color)
         })
-    }
-    
-    /// Outlines the path immediately, including nodes and edges.
-    func outline() {
-        for edge in edges {
-            edge.startNode?.isHighlighted = true
-            edge.isHighlighted = true
-        }
         
-        nodes.last?.isHighlighted = true
+        if duration != nil {
+            let completionTime = wait + duration!
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(completionTime), execute: {
+                for edge in self.edges {
+                    edge.startNode?.highlight(false)
+                    edge.highlight(false)
+                }
+                
+                self.nodes.last?.highlight(false)
+            })
+        }
     }
 }

@@ -371,7 +371,7 @@ import UIKit
     /// Outlines each path in an array of paths.
     private func outlineTraversals(_ traversals: [Path]) {
         for (index, path) in traversals.enumerated() {
-            path.outline(duration: path.nodes.count, delay: index * path.nodes.count)
+            path.outline(duration: 2, wait: index * 3, color: path.first!.color)
         }
     }
     
@@ -428,10 +428,10 @@ import UIKit
             traversals.removeLast()
             
             // FIXME: outline the traversals
-            //outlineTraversals(traversals)
+            outlineTraversals(traversals)
             
             // outline the shortest path
-            path.outline()
+            path.outline(duration: nil, wait: traversals.count * 3)
         } else {
             // create modal alert for no path found
             Announcement.new(title: "Shortest Path", message: "No path found from \(originNode) to \(targetNode).")
@@ -512,7 +512,7 @@ import UIKit
         
         buildPath(from: root)
         
-        path.outline()
+        path.outline(wait: 0)
     }
     
     /// Kruskal's Algorithm
@@ -564,7 +564,7 @@ import UIKit
         
         deselectNodes()
         
-        e.outline()
+        e.outline(wait: 0)
     }
     
     /// Bellman-Ford Algorithm

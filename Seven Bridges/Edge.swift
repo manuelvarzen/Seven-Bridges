@@ -12,6 +12,8 @@ import UIKit
     /// Thickness of the line.
     private let lineWidth: CGFloat = 4
     
+    private var highlightColor: UIColor!
+    
     /// Path of the line.
     private var path = UIBezierPath()
     
@@ -103,6 +105,15 @@ import UIKit
     required init?(coder aDecoder: NSCoder) {
         self.isVisible = true
         super.init(coder: aDecoder)
+    }
+    
+    func highlight(_ enable: Bool = true, color: UIColor = UIColor.black) {
+        if enable {
+            highlightColor = color
+            isHighlighted = true
+        } else {
+            isHighlighted = false
+        }
     }
     
     func reversed(isVisible: Bool = false) -> Edge {
@@ -213,12 +224,12 @@ import UIKit
         
         // if the edge is highlighted, stroke in black
         if isHighlighted {
-            UIColor.black.setStroke()
+            highlightColor.setStroke()
         } else {
             // set color of line to stroke color of start node if graph is directed
             // otherwise, stroke color is gray
             if (superview as! Graph).isDirected {
-                startNode?.strokeColor.setStroke()
+                startNode.color.setStroke()
             } else {
                 UIColor.lightGray.setStroke()
             }
