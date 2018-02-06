@@ -262,10 +262,10 @@ import UIKit
         // unhighlight all nodes
         if unhighlight {
             for node in nodes {
-                node.isHighlighted = false
+                node.highlight(false)
                 
                 for edge in node.edges {
-                    edge.isHighlighted = false
+                    edge.highlight(false)
                 }
             }
         }
@@ -617,7 +617,7 @@ import UIKit
         
         deselectNodes()
         
-        path.outline(delay: path.nodes.count)
+        path.outline()
         
         print(path.description)
     }

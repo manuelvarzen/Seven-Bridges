@@ -98,6 +98,7 @@ class ViewController: UIViewController {
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {
         graph.clear()
+        enterSelectMode(selectModeButton)
     }
     
 }

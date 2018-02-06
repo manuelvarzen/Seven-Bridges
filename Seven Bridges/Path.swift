@@ -168,41 +168,11 @@ class Path {
         return nodes.contains(node)
     }
     
-    /// Outlines the path gradually, including nodes and edges.
-    ///
-    /// - parameter duration: The total duration of the outlining.
-    /// - parameter delay: The delay, in seconds, between the highlighting of each node in the path.
-    ///
-    func outline(duration: Int? = nil, delay: Int = 0) {
-        for (index, edge) in edges.enumerated() {
-            let deadline = delay + index
-            
-            // highlight
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(deadline), execute: {
-                edge.startNode?.isHighlighted = true
-                
-                edge.isHighlighted = true
-                
-                edge.endNode?.isHighlighted = true
-            })
-            
-            // unhighlight - if duration is nil, path is outlined indefinitely
-            if duration != nil {
-                let runtime = delay + duration!
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(runtime), execute: {
-                    edge.startNode?.isHighlighted = false
-                    
-                    edge.isHighlighted = false
-                    
-                    edge.endNode?.isHighlighted = false
-                })
-            }
-        }
-    }
-    
     /// Outlines the path, including nodes and edges.
     ///
     /// - parameter duration: The total duration of the outlining. If nil, outlining does not expire.
+    /// - parameter wait: How many seconds to wait before outlining.
+    /// - parameter color: The color the path will be outlined with. Defaults to black.
     ///
     func outline(duration: Int? = nil, wait: Int = 0, color: UIColor = UIColor.black) {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(wait), execute: {
