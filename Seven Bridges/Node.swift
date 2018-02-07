@@ -180,6 +180,22 @@ import UIKit
         }
     }
     
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//
+//        if isBeingDragged {
+//            layer.shadowOffset = CGSize(width: 4, height: 4)
+//            layer.shadowColor = UIColor.black.cgColor
+//            layer.shadowRadius = 4
+//            layer.shadowOpacity = 0.4
+//            layer.masksToBounds = false
+//            layer.shouldRasterize = true
+//            layer.shadowPath = UIBezierPath(ovalIn: bounds).cgPath
+//        } else {
+//            // disable shadow
+//        }
+//    }
+    
     override func draw(_ rect: CGRect) {
         let path = UIBezierPath(ovalIn: rect.insetBy(dx: Node.lineWidth / 2, dy: Node.lineWidth / 2))
         path.lineWidth = Node.lineWidth
@@ -201,6 +217,12 @@ import UIKit
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard !isBeingDragged else {
             isBeingDragged = false
+            
+            // shrink back to original size when finished dragging
+            UIView.animate(withDuration: 0.6, delay: 0, animations: {
+                self.transform = CGAffineTransform.identity
+            })
+            
             return
         }
         
@@ -231,7 +253,12 @@ import UIKit
             
             isBeingDragged = true
             
-            frame = frame.offsetBy(dx: (location.x - previousLocation.x), dy: (location.y - previousLocation.y))
+            // node grows slightly while dragging
+            UIView.animate(withDuration: 0.6, delay: 0, animations: {
+                self.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+            })
+            
+            frame = frame.offsetBy(dx: (location.x - previousLocation.x) * 1.5, dy: (location.y - previousLocation.y) * 1.5)
         }
         
         // update size and origin of connected edges to move with node

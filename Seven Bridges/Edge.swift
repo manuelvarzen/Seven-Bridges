@@ -135,12 +135,10 @@ import UIKit
     /// Updates size of the frame based on the distance between the start node and end node.
     private func updateSize() {
         // determine size of frame
-        let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + Node.diameter
-        let height = abs(startNode!.frame.origin.y - endNode!.frame.origin.y) + Node.diameter
-        let size = CGSize(width: width, height: height)
+        let width = abs(startNode!.center.x - endNode!.center.x) + Node.radius
+        let height = abs(startNode!.center.y - endNode!.center.y) + Node.radius
         
-        // set size of frame
-        frame.size = size
+        frame.size = CGSize(width: width, height: height)
     }
     
     /// Updates origin of the frame based on the leftmost node.

@@ -32,6 +32,7 @@
 		51839D1F1EFD95EC003B7B40 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		51839D211EFDABAB003B7B40 /* Edge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
 		5186D1DC200C41E60043E175 /* Announcement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Announcement.swift; sourceTree = "<group>"; };
+		51A5B0D8202A5F7C00B34E57 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		51B24C461EFDC9DF00AE209F /* Graph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 		51CA75BF1F687776003D7F2D /* ActionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,6 +53,7 @@
 			children = (
 				51839D0C1EFD9240003B7B40 /* Seven Bridges */,
 				51839D0B1EFD9240003B7B40 /* Products */,
+				51A5B0D7202A5F7B00B34E57 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +82,14 @@
 				51839D191EFD9240003B7B40 /* Info.plist */,
 			);
 			path = "Seven Bridges";
+			sourceTree = "<group>";
+		};
+		51A5B0D7202A5F7B00B34E57 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				51A5B0D8202A5F7C00B34E57 /* QuartzCore.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
