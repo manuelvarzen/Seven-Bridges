@@ -70,7 +70,7 @@ import UIKit
     var edges = Set<Edge>()
     
     /// Matrix representation of the graph.
-    var matrixForm = [Node: Set<Node>]()
+    var nodeMatrix = [Node: Set<Node>]()
     
     /// Nodes that have been selected.
     var selectedNodes = [Node]()
@@ -133,7 +133,7 @@ import UIKit
         edges.removeAll()
         
         // reset matrix form
-        matrixForm.removeAll()
+        nodeMatrix.removeAll()
         
         // reset color cycle
         colorCycle = 0
@@ -167,7 +167,7 @@ import UIKit
             edges.insert(edge)
             
             // add new edge to matrix representation
-            matrixForm[selectedNodes[0]]?.insert(endNode)
+            nodeMatrix[selectedNodes[0]]?.insert(endNode)
         }
         
         // return selected node to original color config
@@ -288,7 +288,7 @@ import UIKit
         
         nodes.remove(at: nodes.index(of: node)!)
         
-        matrixForm.removeValue(forKey: node)
+        nodeMatrix.removeValue(forKey: node)
     }
     
     /// Deletes all selected nodes and their edges.
@@ -313,7 +313,7 @@ import UIKit
             edges.remove(edge)
             
             // remove edge from matrix and list forms
-            matrixForm[edge.startNode]?.remove(edge.endNode)
+            nodeMatrix[edge.startNode]?.remove(edge.endNode)
             
             edge.removeFromSuperview()
             
@@ -325,7 +325,7 @@ import UIKit
     func removeAllEdges() {
         for node in nodes {
             node.edges.removeAll()
-            matrixForm[node]?.removeAll()
+            nodeMatrix[node]?.removeAll()
         }
         
         for edge in edges {
@@ -706,7 +706,7 @@ import UIKit
             nodes.append(node)
             
             // add node to matrix representation
-            matrixForm[node] = Set<Node>()
+            nodeMatrix[node] = Set<Node>()
             
             // add new node to the view
             addSubview(node)

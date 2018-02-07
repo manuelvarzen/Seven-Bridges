@@ -53,27 +53,36 @@ class ViewController: UIViewController {
         graph.deleteSelectedNodes()
     }
     
-    @IBAction func enterSelectMode(_ sender: UIBarButtonItem) {
+    @IBAction func selectButtonTapped(_ sender: UIBarButtonItem) {
         if graph.mode != .select && graph.mode != .viewOnly {
-            // tapping "Select"
-            graph.mode = .select
-            
-            sender.title = "Done"
-            sender.style = .done
-            
-            nodesModeButton.isEnabled = false
-            edgesModeButton.isEnabled = false
+            enterSelectMode(sender)
         } else {
-            // tapping "Done"
-            graph.deselectNodes(unhighlight: true, resetEdgeProperties: true)
-            graph.mode = .nodes
-            
-            sender.title = "Select"
-            sender.style = .plain
-            
-            nodesModeButton.isEnabled = true
-            edgesModeButton.isEnabled = true
+            exitSelectMode(sender)
         }
+    }
+    
+    private func enterSelectMode(_ sender: UIBarButtonItem) {
+        graph.mode = .select
+        
+        sender.title = "Done"
+        sender.style = .done
+        
+        nodesModeButton.isEnabled = false
+        edgesModeButton.isEnabled = false
+    }
+    
+    private func exitSelectMode(_ sender: UIBarButtonItem, graphWasJustCleared: Bool = false) {
+        if !graphWasJustCleared {
+            graph.deselectNodes(unhighlight: true, resetEdgeProperties: true)
+        }
+        
+        graph.mode = .nodes
+        
+        sender.title = "Select"
+        sender.style = .plain
+        
+        nodesModeButton.isEnabled = true
+        edgesModeButton.isEnabled = true
     }
     
     @IBAction func enterNodesMode(_ sender: UIBarButtonItem) {
@@ -98,7 +107,7 @@ class ViewController: UIViewController {
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {
         graph.clear()
-        enterSelectMode(selectModeButton)
+        exitSelectMode(selectModeButton, graphWasJustCleared: true)
     }
     
 }
