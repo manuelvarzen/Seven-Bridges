@@ -72,9 +72,6 @@ import UIKit
     /// Matrix representation of the graph.
     var matrixForm = [Node: Set<Node>]()
     
-    /// List representation of the graph.
-    var listForm = [Node: Node?]()
-    
     /// Nodes that have been selected.
     var selectedNodes = [Node]()
     
@@ -138,9 +135,6 @@ import UIKit
         // reset matrix form
         matrixForm.removeAll()
         
-        // reset list form
-        listForm.removeAll()
-        
         // reset color cycle
         colorCycle = 0
         
@@ -174,9 +168,6 @@ import UIKit
             
             // add new edge to matrix representation
             matrixForm[selectedNodes[0]]?.insert(endNode)
-            
-            // add new edge to list representation
-            listForm[selectedNodes[0]] = endNode
         }
         
         // return selected node to original color config
@@ -215,7 +206,7 @@ import UIKit
     }
     
     private func updatePropertiesToolbar() {
-        if selectedNodes.count == 0 {
+        if selectedNodes.isEmpty {
             vc?.propertiesToolbar.isHidden = true
             return
         }
@@ -259,7 +250,7 @@ import UIKit
             }
         }
         
-        // unhighlight all nodes
+        // unhighlight all nodes and edges
         if unhighlight {
             for node in nodes {
                 node.highlight(false)
@@ -298,7 +289,6 @@ import UIKit
         nodes.remove(at: nodes.index(of: node)!)
         
         matrixForm.removeValue(forKey: node)
-        listForm.removeValue(forKey: node)
     }
     
     /// Deletes all selected nodes and their edges.
@@ -325,8 +315,6 @@ import UIKit
             // remove edge from matrix and list forms
             matrixForm[edge.startNode]?.remove(edge.endNode)
             
-            listForm[edge.startNode]? = nil
-            
             edge.removeFromSuperview()
             
             updatePropertiesToolbar()
@@ -337,8 +325,6 @@ import UIKit
     func removeAllEdges() {
         for node in nodes {
             node.edges.removeAll()
-            
-            listForm[node] = nil
             matrixForm[node]?.removeAll()
         }
         
@@ -721,9 +707,6 @@ import UIKit
             
             // add node to matrix representation
             matrixForm[node] = Set<Node>()
-            
-            // add node to list representation
-            listForm[node] = nil
             
             // add new node to the view
             addSubview(node)
