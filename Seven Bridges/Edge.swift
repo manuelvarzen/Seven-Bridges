@@ -144,7 +144,7 @@ import UIKit
     /// Updates origin of the frame based on the leftmost node.
     private func updateOrigin() {
         // set location of frame around nodes
-        frame.origin = CGPoint(x: min(startNode!.frame.origin.x, endNode!.frame.origin.x), y: min(startNode!.frame.origin.y, endNode!.frame.origin.y))
+        frame.origin = CGPoint(x: min(startNode!.center.x - Node.radius, endNode!.center.x - Node.radius), y: min(startNode!.center.y - Node.radius, endNode!.center.y - Node.radius))
     }
     
     /// Determines the corner points of the start node and end node.
@@ -156,16 +156,16 @@ import UIKit
         let lowerRight = CGPoint(x: frame.size.width - Node.radius, y: frame.size.height - Node.radius)
         
         // locate nodes within frame and set start and end points of line
-        if startNode!.frame.origin.y > frame.origin.y {
-            if startNode!.frame.origin.x <= frame.origin.x {
+        if startNode!.center.y - Node.radius > frame.origin.y {
+            if startNode!.center.x - Node.radius <= frame.origin.x {
                 startPoint = lowerLeft
                 endPoint = upperRight
             } else {
                 startPoint = lowerRight
                 endPoint = upperLeft
             }
-        } else if startNode!.frame.origin.y <= frame.origin.y {
-            if startNode!.frame.origin.x <= frame.origin.x {
+        } else if startNode!.center.y - Node.radius <= frame.origin.y {
+            if startNode!.center.x - Node.radius <= frame.origin.x {
                 startPoint = upperLeft
                 endPoint = lowerRight
             } else {
