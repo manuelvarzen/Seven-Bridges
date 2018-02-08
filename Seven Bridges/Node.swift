@@ -18,9 +18,36 @@ import UIKit
     /// Edges connected to the node.
     var edges = Set<Edge>()
     
-    // Width of the node's border.
+    /// Flow coming into the node from connected edges.
+    var inboundFlow: Int {
+        var flowSum = 0
+        
+        edges.filter({ $0.endNode! == self }).forEach({
+            if let flow = $0.flow {
+                flowSum += flow
+            }
+        })
+        
+        return flowSum
+    }
+    
+    /// Flow coming out of the node from connected edges.
+    var outboundFlow: Int {
+        var flowSum = 0
+        
+        edges.filter({ $0.startNode! == self }).forEach({
+            if let flow = $0.flow {
+                flowSum += flow
+            }
+        })
+        
+        return flowSum
+    }
+    
+    /// Width of the node's border.
     static var lineWidth: CGFloat = diameter / 6
     
+    /// Whether the node is in the selected state.
     var isSelected: Bool = false {
         didSet {
             if self.isSelected {
