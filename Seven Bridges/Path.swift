@@ -37,7 +37,7 @@ class Path {
     }
     
     /// Capacity of the path (the minimum edge flow in the path).
-    var capacity: Int? {
+    var flow: Int? {
         if edges.count < 1 {
             return nil
         }
@@ -166,6 +166,31 @@ class Path {
     ///
     func contains(_ node: Node) -> Bool {
         return nodes.contains(node)
+    }
+    
+    /// Returns the parent of a given node in the path.
+    ///
+    /// - parameter node: A node in the path.
+    ///
+    func parent(_ node: Node) -> Node? {
+        if let index = nodes.index(of: node) {
+            return nodes[index - 1]
+        }
+        
+        return nil
+    }
+    
+    /// Returns an edge in the path between two given nodes.
+    ///
+    /// - parameter from: The start node of the edge.
+    /// - parameter to: The end node of the edge.
+    ///
+    func edge(from a: Node, to b: Node) -> Edge? {
+        if let edge = edges.first(where: { $0.startNode! == a && $0.endNode! == b }) {
+            return edge
+        }
+        
+        return nil
     }
     
     /// Outlines the path, including nodes and edges.
