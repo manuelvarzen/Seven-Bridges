@@ -36,26 +36,26 @@ class Path {
         return w
     }
     
-    /// Capacity of the path (the minimum edge flow in the path).
+    /// Total residual capacity of the edges in the path.
+    var residualCapacity: Int? {
+        var residuals = [Int]()
+        edges.forEach({
+            residuals.append($0.residualCapacity!)
+        })
+        
+        return residuals.min()
+    }
+    
+    /// Total flow in the path.
     var flow: Int? {
-        if edges.count < 1 {
-            return nil
-        }
-        
-        var minimumFlow = edges.first!.flow!
-        
-        for edge in edges {
-            if let flow = edge.flow {
-                if flow < minimumFlow {
-                    minimumFlow = flow
-                }
-            } else {
-                // not all edges have an initialized flow
-                return nil
+        var totalFlow = 0
+        edges.forEach({
+            if let f = $0.flow {
+                totalFlow += f
             }
-        }
+        })
         
-        return minimumFlow
+        return totalFlow
     }
     
     /// Whether the path is a loop (starting node is the same as the last).

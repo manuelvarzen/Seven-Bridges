@@ -628,50 +628,88 @@ import UIKit
             if origin == target {
                 return path
             }
-            
+
             // iterate over all edges connected to the origin
             for edge in origin.edges {
                 if edge.residualCapacity! > 0 && !path.edges.contains(edge) {
                     let newPath = Path(path)
                     newPath.append(edge)
-                    
+
                     if let result = augmentedPath(from: edge.endNode!, to: target, path: newPath) {
                         return result
                     }
                 }
             }
-            
+
             return nil
         }
-        
+
         var path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!)
-        
+
         // while there is a path from s to t where all edges have capacity > 0...
         while path != nil {
-            var residuals = [Int]()
-            path!.edges.forEach({
-                residuals.append($0.residualCapacity!)
-            })
+            print(path!.description)
             
-            if let flow = residuals.min() {
+            if let flow = path?.residualCapacity {
                 for edge in path!.edges {
                     edge.flow! += flow
                     edge.reverseFlow! -= flow
                 }
             }
-            
+
             path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!)
         }
-        
-        var flowSum = 0
-        selectedNodes.first!.edges.forEach({
-            flowSum += $0.flow!
-        })
-        
+
         // announce the max flow
-        Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(flowSum).")
+        Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(selectedNodes.last!.inboundFlow).")
         
         deselectNodes()
+    }
+    
+    func edmondsKarp() {
+        func bfs(s: Node, t: Node, path: inout Path) -> Bool {
+            var visited = Set<Node>()
+            var queue = [Node]()
+            
+            queue.append(s)
+            visited.insert(s)
+            
+            while !queue.isEmpty {
+                let u = queue.removeFirst()
+                
+                for node in nodeMatrix[u]! {
+                    if !visited.contains(node) && node.inboundFlow > 0 {
+                        queue.append(node)
+                        visited.insert(node)
+                        path.append(from: u, to: node)
+                    }
+                }
+            }
+            
+            return visited.contains(t)
+        }
+        
+        var path = Path()
+        var maxFlow = 0
+        
+        while bfs(s: selectedNodes.first!, t: selectedNodes.last!, path: &path) {
+            maxFlow += path.flow!
+            
+            var v = selectedNodes.last!
+            
+            while v != selectedNodes.first! {
+                let u = path.parent(v)!
+                
+                path.edge(from: u, to: v)?.flow! += path.flow!
+                path.edge(from: u, to: v)?.reverseFlow! -= path.flow!
+                
+                // NOTE: may want to imitate residual graph matrix from python example
+                
+                v = u
+            }
+        }
+        
+        Announcement.new(title: "Edmonds-Karp Max Flow", message: "The max flow is \(maxFlow).")
     }
     
     /// Shifts a selected edge's weight by a given integer value.
