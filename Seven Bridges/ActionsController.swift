@@ -24,7 +24,8 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         "Shortest Path (Bellman-Ford)",
         "Minimum Spanning Tree (Prim)",
         "Minimum Spanning Tree (Kruskal)",
-        "Max Flow (Ford-Fulkerson)"
+        "Max Flow (Ford-Fulkerson)",
+        "Load Flow Network Example"
     ]
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,6 +48,8 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         dismiss(animated: true, completion: nil)
         
         switch action {
+        case "Load Flow Network Example":
+            graph?.prepareGraph()
         case "Toggle Direction":
             graph?.isDirected = !(graph?.isDirected)!
         case "Max Flow (Ford-Fulkerson)":

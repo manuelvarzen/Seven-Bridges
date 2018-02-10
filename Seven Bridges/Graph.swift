@@ -620,8 +620,9 @@ import UIKit
         // initialize all edges to flow of zero
         for edge in edges {
             edge.flow = 0
-            edge.reverseFlow = 0
         }
+        
+        var backwardEdges = Set<Edge>()
         
         // returns an augmenting path from origin to target
         func augmentedPath(from origin: Node, to target: Node, path: Path = Path()) -> Path? {
@@ -631,33 +632,49 @@ import UIKit
 
             // iterate over all edges connected to the origin
             for edge in origin.edges {
-                if edge.residualCapacity! > 0 && !path.edges.contains(edge) {
+                if !path.edges.contains(edge) {
                     let newPath = Path(path)
-                    newPath.append(edge)
-
-                    if let result = augmentedPath(from: edge.endNode!, to: target, path: newPath) {
-                        return result
+                    
+                    // edge forward
+                    if edge.residualCapacity! > 0 && origin == edge.startNode {
+                        newPath.append(edge)
+                        
+                        if let result = augmentedPath(from: edge.endNode!, to: target, path: newPath) {
+                            return result
+                        }
+                    }
+                    
+                    // edge backward
+                    if edge.flow! > 0 && origin == edge.endNode {
+                        newPath.append(edge, ignoreNodes: true)
+                        backwardEdges.insert(edge)
+                        
+                        if let result = augmentedPath(from: edge.startNode!, to: target, path: newPath) {
+                            return result
+                        }
                     }
                 }
             }
 
             return nil
         }
-
-        var path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!)
-
+        
         // while there is a path from s to t where all edges have capacity > 0...
-        while path != nil {
-            print(path!.description)
+        while let path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!) {
+            print(path.description)
             
-            if let flow = path?.residualCapacity {
-                for edge in path!.edges {
-                    edge.flow! += flow
-                    edge.reverseFlow! -= flow
+            // move flow along edges in path
+            if let flow = path.residualCapacity {
+                for edge in path.edges {
+                    if backwardEdges.contains(edge) {
+                        edge.flow! -= flow
+                    } else {
+                        edge.flow! += flow
+                    }
                 }
+                
+                backwardEdges.removeAll()
             }
-
-            path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!)
         }
 
         // announce the max flow
@@ -712,6 +729,74 @@ import UIKit
         Announcement.new(title: "Edmonds-Karp Max Flow", message: "The max flow is \(maxFlow).")
     }
     
+    /// Prepares a pre-designed graph for debugging purposes.
+    func prepareGraph() {
+        clear()
+        
+        for i in 1...4 {
+            var x = center.x
+            var y = center.y
+            
+            switch i {
+            case 1:
+                x -= 250
+            case 2:
+                y -= 200
+            case 3:
+                y += 200
+            case 4:
+                x += 250
+            default:
+                continue
+            }
+            
+            let point = CGPoint(x: x, y: y)
+            let node = Node(color: colors[colorCycle], at: point)
+            
+            node.label.text = String(i)
+            
+            nodeMatrix[node] = Set<Node>()
+            nodes.append(node)
+            addSubview(node)
+            
+            incrementColorCycle()
+        }
+        
+        // create edge from 1 to 2
+        makeEdge(from: nodes[0])
+        makeEdge(to: nodes[1])
+        edge(from: nodes[0], to: nodes[1])?.weight = 5
+        
+        // edge from 1 to 3
+        makeEdge(from: nodes[0])
+        makeEdge(to: nodes[2])
+        edge(from: nodes[0], to: nodes[2])?.weight = 5
+        
+        // edge from 2 to 3
+        makeEdge(from: nodes[1])
+        makeEdge(to: nodes[2])
+        edge(from: nodes[1], to: nodes[2])?.weight = 3
+        
+        // edge from 2 to 4
+        makeEdge(from: nodes[1])
+        makeEdge(to: nodes[3])
+        edge(from: nodes[1], to: nodes[3])?.weight = 3
+        
+        // edge from 3 to 4
+        makeEdge(from: nodes[2])
+        makeEdge(to: nodes[3])
+        edge(from: nodes[2], to: nodes[3])?.weight = 7
+    }
+    
+    /// Returns an edge in the graph given a start node and an end node
+    ///
+    /// - parameter from: The edge's start node.
+    /// - paramater to: The edge's end node.
+    ///
+    func edge(from a: Node, to b: Node) -> Edge? {
+        return edges.first(where: { $0.startNode == a && $0.endNode == b })
+    }
+    
     /// Shifts a selected edge's weight by a given integer value.
     func shiftSelectedEdgeWeight(by shift: Int) {
         if let edge = selectedEdge {
@@ -749,12 +834,15 @@ import UIKit
             // add new node to the view
             addSubview(node)
             
-            // cycle through colors
-            if colorCycle < colors.count - 1 {
-                colorCycle += 1
-            } else {
-                colorCycle = 0
-            }
+            incrementColorCycle()
+        }
+    }
+    
+    private func incrementColorCycle() {
+        if colorCycle < colors.count - 1 {
+            colorCycle += 1
+        } else {
+            colorCycle = 0
         }
     }
     

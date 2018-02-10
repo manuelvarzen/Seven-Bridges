@@ -139,14 +139,16 @@ class Path {
     ///
     /// - parameter edge: The edge to be appended.
     ///
-    func append(_ edge: Edge) {
+    func append(_ edge: Edge, ignoreNodes: Bool = false) {
         edges.append(edge)
         
-        if edge.startNode != nodes.last {
+        if edge.startNode != nodes.last && !ignoreNodes {
             nodes.append(edge.startNode)
         }
         
-        nodes.append(edge.endNode)
+        if !ignoreNodes {
+            nodes.append(edge.endNode)
+        }
     }
     
     /// Appends a new edge to the path, given two nodes.
@@ -174,7 +176,9 @@ class Path {
     ///
     func parent(_ node: Node) -> Node? {
         if let index = nodes.index(of: node) {
-            return nodes[index - 1]
+            if index > 0 {
+                return nodes[index - 1]
+            }
         }
         
         return nil
