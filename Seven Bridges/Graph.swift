@@ -645,7 +645,7 @@ import UIKit
                     }
                     
                     // edge backward
-                    if edge.flow! > 0 && origin == edge.endNode {
+                    if edge.flow! > 0 && origin == edge.endNode && !path.nodes.contains(edge.startNode!) {
                         newPath.append(edge, ignoreNodes: true)
                         backwardEdges.insert(edge)
                         
@@ -675,6 +675,11 @@ import UIKit
                 
                 backwardEdges.removeAll()
             }
+        }
+        
+        // TEMP: assert that the outbound flow of every node is equal to its inbound flow
+        for node in nodes {
+            assert(node.outboundFlow == node.inboundFlow)
         }
 
         // announce the max flow
