@@ -553,61 +553,6 @@ import UIKit
         e.outline(wait: 0)
     }
     
-    /// Bellman-Ford Algorithm
-    func bellmanFordShortestPath() {
-        guard mode == .select && selectedNodes.count == 2 else {
-            Announcement.new(title: "Bellman-Ford", message: "Please select an origin node and a target node before running the Bellman-Ford Shortest Path algorithm.")
-            return
-        }
-        
-        var distance = [Node: Int]()
-        var predecessor = [Node: Node?]()
-        
-        for node in nodes {
-            distance[node] = 1024 // set all vertices to "infinite" distance
-            predecessor[node] = nil
-        }
-        
-        distance[selectedNodes.first!] = 0 // origin has no distance from itself
-        
-        for _ in 1..<edges.count {
-            for edge in edges {
-                let u = edge.startNode!
-                let v = edge.endNode!
-                
-                if distance[u]! + edge.weight < distance[v]! {
-                    distance[v] = distance[u]! + edge.weight
-                    predecessor[v] = u
-                }
-            }
-        }
-        
-        for edge in edges {
-            if distance[edge.startNode]! + edge.weight < distance[edge.endNode]! {
-                Announcement.new(title: "Bellman-Ford Shortest Path", message: "ERROR: Graph contains a negative-weight cycle.")
-            }
-        }
-        
-        // build a path (in reverse)
-        let path = Path()
-        var next = selectedNodes.last!
-        
-        repeat {
-            path.append(predecessor[next]!!)
-            next = predecessor[next]!!
-        } while next != selectedNodes.first!
-        
-        // reverse the path into correct order
-        path.nodes = path.nodes.reversed()
-        path.edges = path.edges.reversed()
-        
-        deselectNodes()
-        
-        path.outline()
-        
-        print(path.description)
-    }
-    
     /// Ford-Fulkerson Algorithm
     func fordFulkersonMaxFlow() {
         guard mode == .select && selectedNodes.count == 2 else {
@@ -645,7 +590,7 @@ import UIKit
                     }
                     
                     // edge backward
-                    if edge.flow! > 0 && origin == edge.endNode && !path.nodes.contains(edge.startNode!) {
+                    if edge.flow! > 0 && edge.residualCapacity! > 0 && origin == edge.endNode {
                         newPath.append(edge, ignoreNodes: true)
                         backwardEdges.insert(edge)
                         
@@ -661,8 +606,6 @@ import UIKit
         
         // while there is a path from s to t where all edges have capacity > 0...
         while let path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!) {
-            print(path.description)
-            
             // move flow along edges in path
             if let flow = path.residualCapacity {
                 for edge in path.edges {
@@ -677,61 +620,19 @@ import UIKit
             }
         }
         
-        // TEMP: assert that the outbound flow of every node is equal to its inbound flow
-        for node in nodes {
-            assert(node.outboundFlow == node.inboundFlow)
+        // assert that the outbound flow of every node (except s and t) is equal to its inbound flow
+        for (i, node) in nodes.enumerated() {
+            if i != 0 && i != nodes.count - 1 {
+                let outbound = node.outboundFlow
+                let inbound = node.inboundFlow
+                assert(outbound == inbound, "\(node)'s inbound flow was \(inbound) but its outbound flow was \(outbound).")
+            }
         }
 
         // announce the max flow
         Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(selectedNodes.last!.inboundFlow).")
         
         deselectNodes()
-    }
-    
-    func edmondsKarp() {
-        func bfs(s: Node, t: Node, path: inout Path) -> Bool {
-            var visited = Set<Node>()
-            var queue = [Node]()
-            
-            queue.append(s)
-            visited.insert(s)
-            
-            while !queue.isEmpty {
-                let u = queue.removeFirst()
-                
-                for node in nodeMatrix[u]! {
-                    if !visited.contains(node) && node.inboundFlow > 0 {
-                        queue.append(node)
-                        visited.insert(node)
-                        path.append(from: u, to: node)
-                    }
-                }
-            }
-            
-            return visited.contains(t)
-        }
-        
-        var path = Path()
-        var maxFlow = 0
-        
-        while bfs(s: selectedNodes.first!, t: selectedNodes.last!, path: &path) {
-            maxFlow += path.flow!
-            
-            var v = selectedNodes.last!
-            
-            while v != selectedNodes.first! {
-                let u = path.parent(v)!
-                
-                path.edge(from: u, to: v)?.flow! += path.flow!
-                path.edge(from: u, to: v)?.reverseFlow! -= path.flow!
-                
-                // NOTE: may want to imitate residual graph matrix from python example
-                
-                v = u
-            }
-        }
-        
-        Announcement.new(title: "Edmonds-Karp Max Flow", message: "The max flow is \(maxFlow).")
     }
     
     /// Prepares a pre-designed graph for debugging purposes.

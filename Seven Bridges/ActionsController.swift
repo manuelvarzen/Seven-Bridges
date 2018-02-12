@@ -21,7 +21,6 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         "Reset Edge Weights",
         "Remove All Edges",
         "Shortest Path (Dijkstra)",
-        "Shortest Path (Bellman-Ford)",
         "Minimum Spanning Tree (Prim)",
         "Minimum Spanning Tree (Kruskal)",
         "Max Flow (Ford-Fulkerson)",
@@ -60,8 +59,6 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
             graph?.primMinimumSpanningTree()
         case "Shortest Path (Dijkstra)":
             graph?.shortestPath()
-        case "Shortest Path (Bellman-Ford)":
-            graph?.bellmanFordShortestPath()
         case "Renumber Nodes":
             graph?.renumberNodes()
         case "Reset Edge Weights":
