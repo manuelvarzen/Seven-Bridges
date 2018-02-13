@@ -122,6 +122,7 @@ import UIKit
     
     /// Clears the graph of all nodes and edges.
     func clear() {
+        // remove all subviews from the graph
         for subview in subviews {
             subview.removeFromSuperview()
         }
@@ -140,6 +141,9 @@ import UIKit
         
         // deselect all selected nodes
         selectedNodes.removeAll()
+        
+        // update the properties toolbar so that it is hidden
+        updatePropertiesToolbar()
     }
     
     // Selects a start node for making a new edge.
