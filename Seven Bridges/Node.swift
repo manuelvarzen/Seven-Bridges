@@ -233,19 +233,12 @@ import UIKit
         
         let graph = superview as! Graph
         
-        if graph.mode == .edges {
-            // select this node as a start node for a new edge if the selected node is nil
-            if graph.selectedNodes.isEmpty {
-                graph.makeEdge(from: self)
-            } else {
-                graph.makeEdge(to: self)
-            }
-            
-            return
-        }
-        
-        if graph.mode == .select {
+        if graph.mode == .select || graph.mode == .edges {
             graph.selectNode(self)
+            
+            if graph.mode == .edges && graph.selectedNodes.count == 2 {
+                graph.addEdge(from: graph.selectedNodes.first!, to: graph.selectedNodes.last!)
+            }
         }
     }
     

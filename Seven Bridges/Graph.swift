@@ -120,6 +120,15 @@ import UIKit
         self.vc = vc
     }
     
+    /// Increments the cycle of the color assigned to the next node that is created.
+    private func incrementColorCycle() {
+        if colorCycle < colors.count - 1 {
+            colorCycle += 1
+        } else {
+            colorCycle = 0
+        }
+    }
+    
     /// Clears the graph of all nodes and edges.
     func clear() {
         // remove all subviews from the graph
@@ -146,75 +155,101 @@ import UIKit
         updatePropertiesToolbar()
     }
     
-    // Selects a start node for making a new edge.
-    func makeEdge(from startNode: Node) {
-        selectedNodes.append(startNode)
-        startNode.isSelected = true
+    /// Returns an edge in the graph given a start node and an end node
+    ///
+    /// - parameter from: The edge's start node.
+    /// - paramater to: The edge's end node.
+    ///
+    func edge(from a: Node, to b: Node) -> Edge? {
+        return edges.first(where: { $0.startNode == a && $0.endNode == b })
     }
     
-    // Makes a new edge between the selected node and an end node.
-    func makeEdge(to endNode: Node) {
-        guard selectedNodes.count == 1 else { return }
-        
-        // check if start node and end node are not the same
-        // if so, make an edge
-        if endNode != selectedNodes[0] && !endNode.isAdjacent(to: selectedNodes[0]) {
+    /// Adds an edge to the graph between two given nodes.
+    ///
+    /// - parameter from: The edge's start node.
+    /// - parameter to: The edge's end node.
+    ///
+    func addEdge(from a: Node, to b: Node) {
+        // check to make sure a and b are not the same node and do not already have a common edge
+        if a != b && !b.isAdjacent(to: a) {
             // create the edge
-            let edge = Edge(from: selectedNodes[0], to: endNode)
+            let edge = Edge(from: a, to: b)
             
-            // add the edge to the graph
+            // add edge to the graph
             addSubview(edge)
             
             // send edge to the back
             sendSubview(toBack: edge)
             
+            // add to edge set
             edges.insert(edge)
             
-            // add new edge to matrix representation
-            nodeMatrix[selectedNodes[0]]?.insert(endNode)
+            // add connection to matrix
+            nodeMatrix[a]?.insert(b)
         }
         
-        // return selected node to original color config
-        selectedNodes[0].isSelected = false
+        // deselect nodes
+        a.isSelected = false
+        b.isSelected = false
         
-        // clear the selected node
+        // clear selected nodes
         selectedNodes.removeAll()
     }
     
-    // Adds the given node to an array and updates the state of the node.
+    /// Adds a new node to the graph at the location of the touch(es) given.
+    ///
+    /// - paramater with: The set of touches used to determine the location of the node.
+    ///
+    private func addNode(with touches: Set<UITouch>) {
+        for touch in touches {
+            // get location of the touch
+            let location = touch.location(in: self)
+            
+            // create new node at location of touch
+            let node = Node(color: colors[colorCycle], at: location)
+            node.label.text = String(nodes.count + 1)
+            
+            // add node to nodes array
+            nodes.append(node)
+            
+            // add node to matrix representation
+            nodeMatrix[node] = Set<Node>()
+            
+            // add new node to the view
+            addSubview(node)
+            
+            incrementColorCycle()
+        }
+    }
+    
+    /// Adds the given node to an array and updates the state of the node.
     func selectNode(_ node: Node) {
         if (selectedNodes.contains(node)) {
+            // update state of node
             node.isSelected = false
             
+            // remove node from the array
             selectedNodes.remove(at: selectedNodes.index(of: node)!)
-            
-            // hide properties toolbar if no nodes are selected
-            if selectedNodes.count == 0 {
-                vc?.propertiesToolbar.isHidden = true
-            } else {
-                updatePropertiesToolbar()
-            }
         } else {
             // update state of node
             node.isSelected = true
             
             // add node to array
             selectedNodes.append(node)
-            
-            // show properties toolbar
-            vc?.propertiesToolbar.isHidden = false
-            
-            // update items in the toolbars based on selection
-            updatePropertiesToolbar()
         }
+        
+        updatePropertiesToolbar()
     }
     
+    /// Updates the appearance of the properties toolbar based on which nodes are selected.
     private func updatePropertiesToolbar() {
+        // hide the toolbar if no nodes are selected
         if selectedNodes.isEmpty {
             vc?.propertiesToolbar.isHidden = true
             return
         }
         
+        // detect a selected edge between two nodes
         if let edge = selectedEdge {
             vc?.edgeWeightIndicator.title = String(edge.weight)
             
@@ -241,7 +276,11 @@ import UIKit
         }
     }
     
-    // Clears the selected nodes array and returns the nodes to their original state.
+    /// Clears the selected nodes array and returns the nodes to their original state.
+    ///
+    /// - parameter unhighlight: If unhighlight is true, all nodes and edges will be unhighlighted.
+    /// - parameter resetEdgeProperties: If true, edge flow will be reset to nil.
+    ///
     func deselectNodes(unhighlight: Bool = false, resetEdgeProperties: Bool = false) {
         // return all nodes in selected nodes array to original state
         for node in selectedNodes {
@@ -273,7 +312,7 @@ import UIKit
     
     /// Deletes a given node and its edges.
     ///
-    /// - parameter _: The node to be deleted.
+    /// - parameter node: The node to be deleted.
     ///
     func deleteNode(_ node: Node) {
         node.removeFromSuperview()
@@ -281,10 +320,12 @@ import UIKit
         for edge in node.edges {
             edge.removeFromSuperview()
             
+            // remove edge from its start node
             if let index = edge.startNode?.edges.index(of: edge) {
                 edge.startNode?.edges.remove(at: index)
             }
             
+            // remove edge from its end node
             if let index = edge.endNode?.edges.index(of: edge) {
                 edge.endNode?.edges.remove(at: index)
             }
@@ -297,7 +338,7 @@ import UIKit
     
     /// Deletes all selected nodes and their edges.
     func deleteSelectedNodes() {
-        guard selectedNodes.count > 0 else { return }
+        guard !selectedNodes.isEmpty else { return }
         
         for node in selectedNodes {
             deleteNode(node)
@@ -639,7 +680,7 @@ import UIKit
         deselectNodes()
     }
     
-    /// Prepares a pre-designed graph for debugging purposes.
+    /// Prepares a pre-designed flow network.
     func prepareGraph() {
         clear()
         
@@ -673,41 +714,30 @@ import UIKit
         }
         
         // create edge from 1 to 2
-        makeEdge(from: nodes[0])
-        makeEdge(to: nodes[1])
+        addEdge(from: nodes[0], to: nodes[1])
         edge(from: nodes[0], to: nodes[1])?.weight = 5
         
         // edge from 1 to 3
-        makeEdge(from: nodes[0])
-        makeEdge(to: nodes[2])
+        addEdge(from: nodes[0], to: nodes[2])
         edge(from: nodes[0], to: nodes[2])?.weight = 5
         
         // edge from 2 to 3
-        makeEdge(from: nodes[1])
-        makeEdge(to: nodes[2])
+        addEdge(from: nodes[1], to: nodes[2])
         edge(from: nodes[1], to: nodes[2])?.weight = 3
         
         // edge from 2 to 4
-        makeEdge(from: nodes[1])
-        makeEdge(to: nodes[3])
+        addEdge(from: nodes[1], to: nodes[3])
         edge(from: nodes[1], to: nodes[3])?.weight = 3
         
         // edge from 3 to 4
-        makeEdge(from: nodes[2])
-        makeEdge(to: nodes[3])
+        addEdge(from: nodes[2], to: nodes[3])
         edge(from: nodes[2], to: nodes[3])?.weight = 7
     }
     
-    /// Returns an edge in the graph given a start node and an end node
-    ///
-    /// - parameter from: The edge's start node.
-    /// - paramater to: The edge's end node.
-    ///
-    func edge(from a: Node, to b: Node) -> Edge? {
-        return edges.first(where: { $0.startNode == a && $0.endNode == b })
-    }
-    
     /// Shifts a selected edge's weight by a given integer value.
+    ///
+    /// - parameter by: The value by which to shift the edge's weight.
+    ///
     func shiftSelectedEdgeWeight(by shift: Int) {
         if let edge = selectedEdge {
             edge.weight += shift
@@ -717,43 +747,13 @@ import UIKit
         }
     }
     
+    /// Called when all touches on the screen have ended.
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // continue if graph is in nodes mode
         guard mode == .nodes else { return }
         
         // make new node where the graph view was touched
-        makeNode(with: touches)
-    }
-    
-    /// Makes a new node at the location of the touch(es) given.
-    private func makeNode(with touches: Set<UITouch>) {
-        for touch in touches {
-            // get location of the touch
-            let location = touch.location(in: self)
-            
-            // create new node at location of touch
-            let node = Node(color: colors[colorCycle], at: location)
-            node.label.text = String(nodes.count + 1)
-            
-            // add node to nodes array
-            nodes.append(node)
-            
-            // add node to matrix representation
-            nodeMatrix[node] = Set<Node>()
-            
-            // add new node to the view
-            addSubview(node)
-            
-            incrementColorCycle()
-        }
-    }
-    
-    private func incrementColorCycle() {
-        if colorCycle < colors.count - 1 {
-            colorCycle += 1
-        } else {
-            colorCycle = 0
-        }
+        addNode(with: touches)
     }
     
 }
