@@ -12,16 +12,20 @@ import UIKit
     /// Thickness of the line.
     private let lineWidth: CGFloat = 4
     
+    /// Color used for highlighting the edge.
     private var highlightColor: UIColor!
     
     /// Path of the line.
     private var path = UIBezierPath()
     
-    /// Start point of the line.
+    /// Start point of the line in the parent view.
     private var startPoint: CGPoint?
     
-    /// End point of the line.
+    /// End point of the line in the parent view.
     private var endPoint: CGPoint?
+    
+    /// Contains active info for the edge, including weight and flow.
+    private var label: UILabel!
     
     /// Node at beginning of edge.
     var startNode: Node!
@@ -32,18 +36,14 @@ import UIKit
     /// Weight of the edge.
     var weight = 1 {
         didSet {
-            if self.isVisible {
-                setNeedsDisplay()
-            }
+            setNeedsDisplay()
         }
     }
     
     /// Flow of the edge being used.
     var flow: Int? {
         didSet {
-            if self.isVisible {
-                setNeedsDisplay()
-            }
+            setNeedsDisplay()
         }
     }
     
@@ -65,14 +65,7 @@ import UIKit
         }
     }
     
-    var isVisible: Bool {
-        didSet {
-            if self.isVisible {
-                setNeedsDisplay()
-            }
-        }
-    }
-    
+    /// String representation of the edge.
     override var description: String {
         let start = startNode.label.text!
         let end = endNode.label.text!
@@ -83,7 +76,6 @@ import UIKit
     init(from startNode: Node, to endNode: Node, isVisible: Bool = true) {
         self.startNode = startNode
         self.endNode = endNode
-        self.isVisible = isVisible
         
         super.init(frame: CGRect())
         
@@ -91,22 +83,32 @@ import UIKit
         startNode.edges.insert(self)
         endNode.edges.insert(self)
         
-        if isVisible {
-            updateSize()
-            
-            updateOrigin()
-            
-            backgroundColor = UIColor.clear
-            
-            clearsContextBeforeDrawing = true
-        }
+        updateSize()
+        
+        updateOrigin()
+        
+        clipsToBounds = false
+        
+        label = UILabel(frame: CGRect(x: bounds.midX, y: bounds.midY, width: 64, height: 64))
+        label.textColor = UIColor.black
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textAlignment = NSTextAlignment.left
+        addSubview(label)
+        
+        backgroundColor = UIColor.clear
+        
+        clearsContextBeforeDrawing = true
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.isVisible = true
         super.init(coder: aDecoder)
     }
     
+    /// Highlights the edge with a different color (black is the default).
+    ///
+    /// - parameter enable: If true, the edge is highlighted. If false, it is unhighlighted.
+    /// - parameter color: The color that the edge will be highlighted.
+    ///
     func highlight(_ enable: Bool = true, color: UIColor = UIColor.black) {
         if enable {
             highlightColor = color
@@ -116,12 +118,9 @@ import UIKit
         }
     }
     
-    func reversed(isVisible: Bool = false) -> Edge {
-        let reversedEdge = Edge(from: self.endNode, to: self.startNode)
-        reversedEdge.isVisible = isVisible
-        reversedEdge.flow = flow
-        
-        return reversedEdge
+    /// Reverses the direction of the edge.
+    func reverse() {
+        swap(&startNode, &endNode)
     }
     
     /// Updates size, origin, and path of line relative to the start node and end node.
@@ -130,6 +129,21 @@ import UIKit
         updateOrigin()
         updatePath()
         setNeedsDisplay()
+    }
+    
+    /// Updates the content of the edge's label.
+    private func updateLabel() {
+        if weight < 2 {
+            // label should be blank (invisible) if the edge's weight is 1
+            label.text = nil
+        } else if flow != nil {
+            label.text = "\(flow!) / \(weight)"
+        } else {
+            label.text = String(weight)
+        }
+        
+        // update location of label
+        label.frame.origin = CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
     /// Updates size of the frame based on the distance between the start node and end node.
@@ -196,6 +210,8 @@ import UIKit
         
         let cosine = (endPoint!.x - startPoint!.x) / length
         let sine = (endPoint!.y - startPoint!.y) / length
+        
+        // reorient the line to match slope between nodes
         let transform = CGAffineTransform(a: cosine, b: sine, c: -sine, d: cosine, tx: startPoint!.x, ty: startPoint!.y)
         
         let linePath = CGMutablePath()
@@ -218,11 +234,9 @@ import UIKit
     
     /// Draws a line from the start node to the end node.
     override func draw(_ rect: CGRect) {
-        guard isVisible else { return }
-        
         updatePath()
         
-        // if the edge is highlighted, stroke in black
+        // if the edge is highlighted, stroke using highlightColor
         if isHighlighted {
             highlightColor.setStroke()
         } else {
@@ -241,21 +255,7 @@ import UIKit
         // stroke the line
         path.stroke()
         
-        // draw a label containing the weight of the edge near the middle of rect
-        if weight > 1 || flow != nil {
-            let infoLabel = UILabel()
-            
-            if flow != nil {
-                infoLabel.text = "\(flow!) / \(weight)"
-            } else {
-                infoLabel.text = String(weight)
-            }
-            
-            infoLabel.textColor = UIColor.black
-            infoLabel.font = UIFont.boldSystemFont(ofSize: 18)
-            
-            infoLabel.drawText(in: rect.insetBy(dx: rect.width / 2, dy: rect.height / 2))
-        }
+        updateLabel()
     }
     
 }
