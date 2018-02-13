@@ -190,11 +190,7 @@ class Path {
     /// - parameter to: The end node of the edge.
     ///
     func edge(from a: Node, to b: Node) -> Edge? {
-        if let edge = edges.first(where: { $0.startNode! == a && $0.endNode! == b }) {
-            return edge
-        }
-        
-        return nil
+        return edges.first(where: { $0.startNode! == a && $0.endNode! == b })
     }
     
     /// Outlines the path, including nodes and edges.

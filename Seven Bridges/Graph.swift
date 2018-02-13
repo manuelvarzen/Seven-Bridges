@@ -402,7 +402,7 @@ import UIKit
     /// Outlines each path in an array of paths.
     private func outlineTraversals(_ traversals: [Path]) {
         for (index, path) in traversals.enumerated() {
-            path.outline(duration: 2, wait: index * 3, color: path.first!.color)
+            path.outline(duration: 2, wait: index * 3, color: UIColor.lightGray)
         }
     }
     
