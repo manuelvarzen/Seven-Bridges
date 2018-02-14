@@ -561,6 +561,9 @@ import UIKit
     
     /// Kruskal's Algorithm
     func kruskalMinimumSpanningTree() {
+        // enter select mode in order to properly clear highlighted edges when algorithm completes
+        vc?.enterSelectMode((vc?.selectModeButton)!)
+        
         mode = .viewOnly
         
         func resumeFunction() {

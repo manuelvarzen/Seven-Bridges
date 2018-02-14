@@ -61,7 +61,7 @@ class ViewController: UIViewController {
         }
     }
     
-    private func enterSelectMode(_ sender: UIBarButtonItem) {
+    func enterSelectMode(_ sender: UIBarButtonItem) {
         graph.mode = .select
         
         sender.title = "Done"
@@ -71,7 +71,7 @@ class ViewController: UIViewController {
         edgesModeButton.isEnabled = false
     }
     
-    private func exitSelectMode(_ sender: UIBarButtonItem, graphWasJustCleared: Bool = false) {
+    func exitSelectMode(_ sender: UIBarButtonItem, graphWasJustCleared: Bool = false) {
         if !graphWasJustCleared {
             graph.deselectNodes(unhighlight: true, resetEdgeProperties: true)
         }
