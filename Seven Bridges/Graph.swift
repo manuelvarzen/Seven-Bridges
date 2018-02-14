@@ -484,72 +484,79 @@ import UIKit
         
         mode = .viewOnly // make graph view-only
         
-        isDirected = false // FIXME: add pop-up to notify user of the change
-        
-        var pool = Set<Node>(nodes) // all nodes
-        var distance = [Node: Int]() // distance from a node to the root
-        var parent = [Node: Node?]()
-        var children = [Node: [Node]]()
-        
-        // finds the node with the minimum distance from a dictionary
-        func getMin(from d: [Node: Int]) -> Node {
-            var shortest: Node?
+        func resumeFunction() {
+            isDirected = false // FIXME: add pop-up to notify user of the change
             
-            for (node, distance) in d {
-                if shortest == nil || distance < d[shortest!]! {
-                    shortest = node
+            var pool = Set<Node>(nodes) // all nodes
+            var distance = [Node: Int]() // distance from a node to the root
+            var parent = [Node: Node?]()
+            var children = [Node: [Node]]()
+            
+            // finds the node with the minimum distance from a dictionary
+            func getMin(from d: [Node: Int]) -> Node {
+                var shortest: Node?
+                
+                for (node, distance) in d {
+                    if shortest == nil || distance < d[shortest!]! {
+                        shortest = node
+                    }
                 }
+                
+                return shortest!
             }
             
-            return shortest!
-        }
-        
-        // "initialize" all nodes
-        for node in pool {
-            distance[node] = Int.max // distance is "infinity"
-            parent[node] = nil
-            children[node] = [Node]()
-        }
-        
-        var root = selectedNodes.first!
-        distance[root] = 0 // distance from root to itself is 0
-        
-        while !pool.isEmpty {
-            let currentNode = getMin(from: distance)
-            distance.removeValue(forKey: currentNode)
-            pool.remove(currentNode)
+            // "initialize" all nodes
+            for node in pool {
+                distance[node] = Int.max // distance is "infinity"
+                parent[node] = nil
+                children[node] = [Node]()
+            }
             
-            for nextNode in currentNode.adjacentNodes(directed: false) {
-                if let edge = currentNode.getEdge(to: nextNode) {
-                    let newDistance = edge.weight
-                    
-                    if pool.contains(nextNode) && newDistance < distance[nextNode]! {
-                        parent[nextNode] = currentNode
-                        children[currentNode]!.append(nextNode)
-                        distance[nextNode] = newDistance
+            var root = selectedNodes.first!
+            distance[root] = 0 // distance from root to itself is 0
+            
+            while !pool.isEmpty {
+                let currentNode = getMin(from: distance)
+                distance.removeValue(forKey: currentNode)
+                pool.remove(currentNode)
+                
+                for nextNode in currentNode.adjacentNodes(directed: false) {
+                    if let edge = currentNode.getEdge(to: nextNode) {
+                        let newDistance = edge.weight
+                        
+                        if pool.contains(nextNode) && newDistance < distance[nextNode]! {
+                            parent[nextNode] = currentNode
+                            children[currentNode]!.append(nextNode)
+                            distance[nextNode] = newDistance
+                        }
                     }
                 }
             }
-        }
-        
-        deselectNodes()
-        
-        // tree as path of edges
-        var path = Path()
-        
-        // recurses through the children dictionary to build a path of edges
-        func buildPath(from parent: Node) {
-            for child in children[parent]! {
-                if let edge = parent.getEdge(to: child) {
-                    path.append(edge)
-                    buildPath(from: child)
+            
+            deselectNodes()
+            
+            // tree as path of edges
+            var path = Path()
+            
+            // recurses through the children dictionary to build a path of edges
+            func buildPath(from parent: Node) {
+                for child in children[parent]! {
+                    if let edge = parent.getEdge(to: child) {
+                        path.append(edge)
+                        buildPath(from: child)
+                    }
                 }
             }
+            
+            buildPath(from: root)
+            
+            path.outline(wait: 0)
         }
         
-        buildPath(from: root)
-        
-        path.outline(wait: 0)
+        // notify user that edges must be undirected in order for the algorithm to run
+        Announcement.new(title: "Minimum Spanning Tree", message: "Edges will be made undirected in order for the algorithm to run.", action: { (action: UIAlertAction!) -> Void in
+            resumeFunction()
+        })
     }
     
     /// Kruskal's Algorithm
