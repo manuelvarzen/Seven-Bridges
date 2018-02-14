@@ -234,7 +234,7 @@ import UIKit
         let graph = superview as! Graph
         
         if graph.mode == .select || graph.mode == .edges {
-            graph.selectNode(self)
+            graph.select(self)
             
             if graph.mode == .edges && graph.selectedNodes.count == 2 {
                 graph.addEdge(from: graph.selectedNodes.first!, to: graph.selectedNodes.last!)

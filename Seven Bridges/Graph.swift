@@ -59,10 +59,6 @@ import UIKit
         }
     }
     
-    /// The root node of the graph; mostly used for tree algorithms.
-    /// By default, the root is the first node added to the Graph.
-    var root: Node!
-    
     /// All nodes in the graph.
     var nodes = [Node]()
     
@@ -148,6 +144,7 @@ import UIKit
     ///
     /// - parameter from: The edge's start node.
     /// - paramater to: The edge's end node.
+    /// - parameter directed: Whether edge direction should be considered.
     ///
     func edge(from a: Node, to b: Node, directed: Bool = true) -> Edge? {
         if directed {
@@ -225,7 +222,10 @@ import UIKit
     }
     
     /// Adds the given node to the selectedNodes array and updates the state of the node.
-    func selectNode(_ node: Node) {
+    ///
+    /// - parameter node: The node to be selected.
+    ///
+    func select(_ node: Node) {
         if (selectedNodes.contains(node)) {
             // update state of node
             node.isSelected = false
@@ -511,7 +511,7 @@ import UIKit
             children[node] = [Node]()
         }
         
-        root = selectedNodes.first!
+        var root = selectedNodes.first!
         distance[root] = 0 // distance from root to itself is 0
         
         while !pool.isEmpty {
