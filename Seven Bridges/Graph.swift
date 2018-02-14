@@ -75,22 +75,11 @@ import UIKit
     /// Nodes that have been selected.
     var selectedNodes = [Node]()
     
-    /// Returns the selected edge when exactly two connected nodes are selected. Otherwise, returns nil.
+    /// Returns the selected edge when exactly two adjacent nodes are selected. Otherwise, returns nil.
     var selectedEdge: Edge? {
         guard selectedNodes.count == 2 else { return nil }
         
-        var selectedEdge: Edge?
-        let firstNode = selectedNodes.first!
-        let secondNode = selectedNodes.last!
-        
-        for edge in firstNode.edges {
-            if edge.endNode == secondNode || edge.startNode == secondNode {
-                selectedEdge = edge
-                break
-            }
-        }
-        
-        return selectedEdge
+        return edge(from: selectedNodes.first!, to: selectedNodes.last!, directed: false)
     }
     
     /// Current index in the colors array for cycling through.
@@ -160,8 +149,21 @@ import UIKit
     /// - parameter from: The edge's start node.
     /// - paramater to: The edge's end node.
     ///
-    func edge(from a: Node, to b: Node) -> Edge? {
-        return edges.first(where: { $0.startNode == a && $0.endNode == b })
+    func edge(from a: Node, to b: Node, directed: Bool = true) -> Edge? {
+        if directed {
+            return edges.first(where: { $0.startNode == a && $0.endNode == b })
+        } else {
+            var e: Edge?
+            
+            for edge in a.edges {
+                if edge.endNode == b || edge.startNode == b {
+                    e = edge
+                    break
+                }
+            }
+            
+            return e
+        }
     }
     
     /// Adds an edge to the graph between two given nodes.
@@ -222,7 +224,7 @@ import UIKit
         }
     }
     
-    /// Adds the given node to an array and updates the state of the node.
+    /// Adds the given node to the selectedNodes array and updates the state of the node.
     func selectNode(_ node: Node) {
         if (selectedNodes.contains(node)) {
             // update state of node
@@ -238,7 +240,9 @@ import UIKit
             selectedNodes.append(node)
         }
         
-        updatePropertiesToolbar()
+        if mode != .edges {
+            updatePropertiesToolbar()
+        }
     }
     
     /// Updates the appearance of the properties toolbar based on which nodes are selected.
@@ -248,6 +252,8 @@ import UIKit
             vc?.propertiesToolbar.isHidden = true
             return
         }
+        
+        vc?.propertiesToolbar.isHidden = false
         
         // detect a selected edge between two nodes
         if let edge = selectedEdge {
@@ -314,7 +320,7 @@ import UIKit
     ///
     /// - parameter node: The node to be deleted.
     ///
-    func deleteNode(_ node: Node) {
+    func delete(_ node: Node) {
         node.removeFromSuperview()
         
         for edge in node.edges {
@@ -341,7 +347,7 @@ import UIKit
         guard !selectedNodes.isEmpty else { return }
         
         for node in selectedNodes {
-            deleteNode(node)
+            delete(node)
         }
         
         selectedNodes.removeAll()
