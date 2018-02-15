@@ -81,7 +81,7 @@ import UIKit
     /// Current index in the colors array for cycling through.
     private var colorCycle = 0
     
-    /// Colors to cycle through when making a new node.
+    /// Colors to cycle through when adding a new node to the graph.
     private let colors = [
         // green
         UIColor(red: 100/255, green: 210/255, blue: 185/255, alpha: 1.0),
@@ -303,10 +303,10 @@ import UIKit
         if unhighlight {
             for node in nodes {
                 node.highlight(false)
-                
-                for edge in node.edges {
-                    edge.highlight(false)
-                }
+            }
+            
+            for edge in edges {
+                edge.highlight(false)
             }
         }
         
