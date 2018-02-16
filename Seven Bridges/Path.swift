@@ -172,9 +172,9 @@ class Path {
     
     /// Returns the parent of a given node in the path.
     ///
-    /// - parameter node: A node in the path.
+    /// - parameter of: A node in the path.
     ///
-    func parent(_ node: Node) -> Node? {
+    func parent(of node: Node) -> Node? {
         if let index = nodes.index(of: node) {
             if index > 0 {
                 return nodes[index - 1]

@@ -464,11 +464,11 @@ import UIKit
             // remove the shortest path from the traversal history
             traversals.removeLast()
             
-            // FIXME: outline the traversals
-            outlineTraversals(traversals)
+            // outline the traversals
+            //outlineTraversals(traversals)
             
             // outline the shortest path
-            path.outline(duration: nil, wait: traversals.count * 3)
+            path.outline(wait: 0)
         } else {
             // create modal alert for no path found
             Announcement.new(title: "Shortest Path", message: "No path found from \(originNode) to \(targetNode).")
