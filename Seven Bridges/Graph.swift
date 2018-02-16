@@ -421,58 +421,71 @@ import UIKit
         
         mode = .viewOnly // do not allow the graph to be altered during execution
         
-        var traversals = [Path]()
-        
-        func findShortestPath(from origin: Node, to target: Node, shortestPath: Path = Path()) -> Path? {
-            let path = Path(shortestPath)
-            path.append(origin)
+        func resumeFunction() {
+            isDirected = true
             
-            if target == origin {
-                return path
-            }
+            var traversals = [Path]()
             
-            var shortest: Path?
-            var shortestAggregateWeight = 0 // equals 0 when shortest is nil
-            
-            for node in origin.adjacentNodes(directed: isDirected) {
-                if !path.contains(node) {
-                    if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
-                        
-                        // add the new path to the history of traversals
-                        traversals.append(newPath)
-                        
-                        // calculate the aggregate weight of newPath
-                        let aggregateWeight = newPath.weight
-                        
-                        if shortest == nil || aggregateWeight < shortestAggregateWeight {
-                            shortest = newPath
-                            shortestAggregateWeight = aggregateWeight
+            func findShortestPath(from origin: Node, to target: Node, shortestPath: Path = Path()) -> Path? {
+                let path = Path(shortestPath)
+                path.append(origin)
+                
+                if target == origin {
+                    return path
+                }
+                
+                var shortest: Path?
+                var shortestAggregateWeight = 0 // equals 0 when shortest is nil
+                
+                for node in origin.adjacentNodes(directed: isDirected) {
+                    if !path.contains(node) {
+                        if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
+                            
+                            // add the new path to the history of traversals
+                            traversals.append(newPath)
+                            
+                            // calculate the aggregate weight of newPath
+                            let aggregateWeight = newPath.weight
+                            
+                            if shortest == nil || aggregateWeight < shortestAggregateWeight {
+                                shortest = newPath
+                                shortestAggregateWeight = aggregateWeight
+                            }
                         }
                     }
                 }
+                
+                return shortest
             }
             
-            return shortest
+            let originNode = selectedNodes.first!
+            let targetNode = selectedNodes.last!
+            
+            deselectNodes()
+            
+            if let path = findShortestPath(from: originNode, to: targetNode) {
+                // remove the shortest path from the traversal history
+                traversals.removeLast()
+                
+                // outline the traversals
+                //outlineTraversals(traversals)
+                
+                // outline the shortest path
+                path.outline(wait: 0)
+                
+                if !isDirected {
+                    print(path)
+                }
+            } else {
+                // create modal alert for no path found
+                Announcement.new(title: "Shortest Path", message: "No path found from \(originNode) to \(targetNode).")
+            }
         }
         
-        let originNode = selectedNodes.first!
-        let targetNode = selectedNodes.last!
-        
-        deselectNodes()
-        
-        if let path = findShortestPath(from: originNode, to: targetNode) {
-            // remove the shortest path from the traversal history
-            traversals.removeLast()
-            
-            // outline the traversals
-            //outlineTraversals(traversals)
-            
-            // outline the shortest path
-            path.outline(wait: 0)
-        } else {
-            // create modal alert for no path found
-            Announcement.new(title: "Shortest Path", message: "No path found from \(originNode) to \(targetNode).")
-        }
+        // notify user that edges must be directed in order for the algorithm to run
+        Announcement.new(title: "Shortest Path", message: "Edges will be made directed in order for the algorithm to run.", action: { (action: UIAlertAction!) -> Void in
+            resumeFunction()
+        })
     }
     
     /// Reduces the graph to find a minimum spanning tree using Prim's Algorithm.

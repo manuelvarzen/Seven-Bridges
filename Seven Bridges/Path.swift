@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Path {
+class Path: CustomStringConvertible {
     
     /// All nodes that make up the path.
     var nodes = [Node]()
@@ -67,6 +67,7 @@ class Path {
         }
     }
     
+    /// String representation of the path as a sequence of nodes.
     var description: String {
         var string = ""
         
