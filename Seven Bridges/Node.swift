@@ -132,6 +132,9 @@ import UIKit
     }
     
     /// All nodes adjacent to this node.
+    ///
+    /// - parameter directed: Whether direction should be accounted for.
+    ///
     func adjacentNodes(directed: Bool = true) -> Set<Node> {
         var results = Set<Node>()
         
@@ -199,6 +202,11 @@ import UIKit
         return cheapest
     }
     
+    /// Highlights or unhighlights the node.
+    ///
+    /// - parameter enable: Whether the node is being highlighted or unhighlighted.
+    /// - parameter color: The color used to highlight the node.
+    ///
     func highlighted(_ enable: Bool = true, color: UIColor = UIColor.black) {
         if enable {
             self.color = color
@@ -243,7 +251,8 @@ import UIKit
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard (superview as! Graph).mode != .viewOnly else { return } // if in view mode, do not allow dragging
+        // do not allow dragging in view-only mode
+        guard (superview as! Graph).mode != .viewOnly else { return }
         
         for touch in touches {
             let location = touch.location(in: self)
@@ -260,6 +269,4 @@ import UIKit
         }
     }
     
-    
- 
 }
