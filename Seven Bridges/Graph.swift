@@ -302,11 +302,11 @@ import UIKit
         // unhighlight all nodes and edges
         if unhighlight {
             for node in nodes {
-                node.highlight(false)
+                node.highlighted(false)
             }
             
             for edge in edges {
-                edge.highlight(false)
+                edge.highlighted(false)
             }
         }
         
@@ -405,13 +405,6 @@ import UIKit
         }
     }
     
-    /// Outlines each path in an array of paths.
-    private func outlineTraversals(_ traversals: [Path]) {
-        for (index, path) in traversals.enumerated() {
-            path.outline(duration: 2, wait: index * 3, color: UIColor.lightGray)
-        }
-    }
-    
     /// Finds and identifies the shortest path between two selected nodes.
     func shortestPath() {
         guard mode == .select && selectedNodes.count == 2 else {
@@ -422,8 +415,6 @@ import UIKit
         mode = .viewOnly // do not allow the graph to be altered during execution
         
         func resumeFunction() {
-            isDirected = true
-            
             var traversals = [Path]()
             
             func findShortestPath(from origin: Node, to target: Node, shortestPath: Path = Path()) -> Path? {
@@ -434,8 +425,11 @@ import UIKit
                     return path
                 }
                 
+                // the shortest path that will be returned
                 var shortest: Path?
-                var shortestAggregateWeight = 0 // equals 0 when shortest is nil
+                
+                // equals 0 when shortest is nil
+                var shortestAggregateWeight = 0
                 
                 for node in origin.adjacentNodes(directed: isDirected) {
                     if !path.contains(node) {
@@ -468,24 +462,27 @@ import UIKit
                 traversals.removeLast()
                 
                 // outline the traversals
-                //outlineTraversals(traversals)
+                for (i, path) in traversals.enumerated() {
+                    path.outline(duration: 2, wait: i * 3, color: UIColor.lightGray)
+                }
                 
                 // outline the shortest path
-                path.outline(wait: 0)
-                
-                if !isDirected {
-                    print(path)
-                }
+                path.outline(wait: traversals.count * 3)
             } else {
                 // create modal alert for no path found
                 Announcement.new(title: "Shortest Path", message: "No path found from \(originNode) to \(targetNode).")
             }
         }
         
-        // notify user that edges must be directed in order for the algorithm to run
-        Announcement.new(title: "Shortest Path", message: "Edges will be made directed in order for the algorithm to run.", action: { (action: UIAlertAction!) -> Void in
+        if !isDirected {
+            // notify user that edges must be directed in order for the algorithm to run
+            Announcement.new(title: "Shortest Path", message: "Edges will be made directed in order for the algorithm to run.", action: { (action: UIAlertAction!) -> Void in
+                self.isDirected = true
+                resumeFunction()
+            })
+        } else {
             resumeFunction()
-        })
+        }
     }
     
     /// Reduces the graph to find a minimum spanning tree using Prim's Algorithm.
@@ -498,8 +495,6 @@ import UIKit
         mode = .viewOnly // make graph view-only
         
         func resumeFunction() {
-            isDirected = false // FIXME: add pop-up to notify user of the change
-            
             var pool = Set<Node>(nodes) // all nodes
             var distance = [Node: Int]() // distance from a node to the root
             var parent = [Node: Node?]()
@@ -566,10 +561,15 @@ import UIKit
             path.outline(wait: 0)
         }
         
-        // notify user that edges must be undirected in order for the algorithm to run
-        Announcement.new(title: "Minimum Spanning Tree", message: "Edges will be made undirected in order for the algorithm to run.", action: { (action: UIAlertAction!) -> Void in
+        if isDirected {
+            // notify user that edges must be undirected in order for the algorithm to run
+            Announcement.new(title: "Minimum Spanning Tree", message: "Edges will be made undirected in order for the algorithm to run.", action: { (action: UIAlertAction!) -> Void in
+                self.isDirected = false
+                resumeFunction()
+            })
+        } else {
             resumeFunction()
-        })
+        }
     }
     
     /// Kruskal's Algorithm
@@ -580,8 +580,6 @@ import UIKit
         mode = .viewOnly
         
         func resumeFunction() {
-            isDirected = false
-            
             var s = [Edge](edges) // all edges in the graph
             var f = Set<Set<Node>>() // forest of trees
             
@@ -628,10 +626,15 @@ import UIKit
             e.outline(wait: 0)
         }
         
-        // notify user that edges must be undirected in order for the algorithm to run
-        Announcement.new(title: "Minimum Spanning Tree", message: "Edges will be made undirected in order for the algorithm to run.", action: { (action: UIAlertAction!) -> Void in
+        if isDirected {
+            // notify user that edges must be undirected in order for the algorithm to run
+            Announcement.new(title: "Minimum Spanning Tree", message: "Edges will be made undirected in order for the algorithm to run.", action: { (action: UIAlertAction!) -> Void in
+                self.isDirected = false
+                resumeFunction()
+            })
+        } else {
             resumeFunction()
-        })
+        }
     }
     
     /// Ford-Fulkerson Algorithm

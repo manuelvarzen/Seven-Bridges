@@ -199,7 +199,7 @@ import UIKit
         return cheapest
     }
     
-    func highlight(_ enable: Bool = true, color: UIColor = UIColor.black) {
+    func highlighted(_ enable: Bool = true, color: UIColor = UIColor.black) {
         if enable {
             self.color = color
         } else {

@@ -194,7 +194,7 @@ class Path: CustomStringConvertible {
         return edges.first(where: { $0.startNode! == a && $0.endNode! == b })
     }
     
-    /// Outlines the path, including nodes and edges.
+    /// Outlines the path by highlighting all nodes and edges.
     ///
     /// - parameter duration: The total duration of the outlining. If nil, outlining does not expire.
     /// - parameter wait: How many seconds to wait before outlining.
@@ -202,24 +202,26 @@ class Path: CustomStringConvertible {
     ///
     func outline(duration: Int? = nil, wait: Int = 0, color: UIColor = UIColor.black) {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(wait), execute: {
-            for edge in self.edges {
-                edge.startNode?.highlight(color: color)
-                edge.highlight(color: color)
-            }
+            self.nodes.forEach({ node in
+                node.highlighted(color: color)
+            })
             
-            self.nodes.last?.highlight(color: color)
+            self.edges.forEach({ edge in
+                edge.highlighted(color: color)
+            })
         })
         
         if duration != nil {
             let completionTime = wait + duration!
             
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(completionTime), execute: {
-                for edge in self.edges {
-                    edge.startNode?.highlight(false)
-                    edge.highlight(false)
-                }
+                self.nodes.forEach({ node in
+                    node.highlighted(false)
+                })
                 
-                self.nodes.last?.highlight(false)
+                self.edges.forEach({ edge in
+                    edge.highlighted(false)
+                })
             })
         }
     }

@@ -109,7 +109,7 @@ import UIKit
     /// - parameter enable: If true, the edge is highlighted. If false, it is unhighlighted.
     /// - parameter color: The color that the edge will be highlighted.
     ///
-    func highlight(_ enable: Bool = true, color: UIColor = UIColor.black) {
+    func highlighted(_ enable: Bool = true, color: UIColor = UIColor.black) {
         if enable {
             highlightColor = color
             isHighlighted = true
