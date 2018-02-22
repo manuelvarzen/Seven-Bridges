@@ -387,6 +387,9 @@ import UIKit
     }
     
     /// Changes all edge weights to the given weight or resets them all to the default value of 1.
+    ///
+    /// - parameter to: The weight that will be applied to all edges.
+    ///
     func resetAllEdgeWeights(to weight: Int = 1) {
         for edge in edges {
             edge.weight = weight
@@ -717,6 +720,46 @@ import UIKit
         Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(selectedNodes.last!.inboundFlow).")
         
         deselectNodes()
+    }
+    
+    /// Bron-Kerbosch community detection algorithm
+    func bronKerbosch() {
+        mode = .viewOnly
+        
+        func recurse(r: inout Set<Node>, p: inout Set<Node>, x: inout Set<Node>) {
+            if p.isEmpty && x.isEmpty {
+                // r should now be a community
+                return
+            }
+            
+            for node in Set<Node>(p) {
+                r.insert(node)
+                
+                //var rt = r.union([node])
+                var pt = p.intersection(node.adjacentNodes(directed: isDirected))
+                var xt = x.intersection(node.adjacentNodes(directed: isDirected))
+                
+                recurse(r: &r, p: &pt, x: &xt)
+                
+                r.remove(node)
+                p.remove(node)
+                x.insert(node)
+            }
+        }
+        
+        var r = Set<Node>()
+        var p = Set<Node>(nodes)
+        var x = Set<Node>()
+        
+        recurse(r: &r, p: &p, x: &x)
+        
+        if r.isEmpty {
+            Announcement.new(title: "Bron-Kerbosch", message: "No community could be found in the graph.")
+        } else {
+            for node in r {
+                node.highlighted()
+            }
+        }
     }
     
     /// Prepares a pre-designed flow network.

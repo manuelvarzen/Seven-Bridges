@@ -24,6 +24,7 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         "Minimum Spanning Tree (Prim)",
         "Minimum Spanning Tree (Kruskal)",
         "Max Flow (Ford-Fulkerson)",
+        "Community Detection (Bron-Kerbosch)",
         "Load Flow Network Example"
     ]
     
@@ -47,6 +48,8 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         dismiss(animated: true, completion: nil)
         
         switch action {
+        case "Community Detection (Bron-Kerbosch)":
+            graph?.bronKerbosch()
         case "Load Flow Network Example":
             graph?.prepareGraph()
         case "Toggle Direction":
