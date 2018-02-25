@@ -732,17 +732,18 @@ import UIKit
                 return
             }
             
-            for node in Set<Node>(p) {
+            // mutable copy of p
+            var pCopy = Set<Node>(p)
+            
+            for node in p {
                 r.insert(node)
-                
-                //var rt = r.union([node])
-                var pt = p.intersection(node.adjacentNodes(directed: isDirected))
+                var pt = pCopy.intersection(node.adjacentNodes(directed: isDirected))
                 var xt = x.intersection(node.adjacentNodes(directed: isDirected))
                 
                 recurse(r: &r, p: &pt, x: &xt)
                 
                 r.remove(node)
-                p.remove(node)
+                pCopy.remove(node)
                 x.insert(node)
             }
         }
