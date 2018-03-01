@@ -99,11 +99,8 @@ import UIKit
         UIColor(red: 195/255, green: 155/255, blue: 245/255, alpha: 1.0)
     ]
     
-    private var vc: ViewController?
-    
-    func assignViewController(_ vc: ViewController) {
-        self.vc = vc
-    }
+    /// ViewController that contains the graph.
+    weak var parentVC: ViewController?
     
     /// Increments the cycle of the color assigned to the next node that is created.
     private func incrementColorCycle() {
@@ -150,16 +147,14 @@ import UIKit
         if directed {
             return edges.first(where: { $0.startNode == a && $0.endNode == b })
         } else {
-            var e: Edge?
-            
             for edge in a.edges {
                 if edge.endNode == b || edge.startNode == b {
-                    e = edge
-                    break
+                    return edge
                 }
             }
             
-            return e
+            // a matching edge could not be found
+            return nil
         }
     }
     
@@ -249,36 +244,36 @@ import UIKit
     private func updatePropertiesToolbar() {
         // hide the toolbar if no nodes are selected
         if selectedNodes.isEmpty {
-            vc?.propertiesToolbar.isHidden = true
+            parentVC?.propertiesToolbar.isHidden = true
             return
         }
         
-        vc?.propertiesToolbar.isHidden = false
+        parentVC?.propertiesToolbar.isHidden = false
         
         // detect a selected edge between two nodes
         if let edge = selectedEdge {
-            vc?.edgeWeightIndicator.title = String(edge.weight)
+            parentVC?.edgeWeightIndicator.title = String(edge.weight)
             
-            vc?.edgeWeightMinusButton.title = "-"
-            vc?.edgeWeightMinusButton.isEnabled = true
+            parentVC?.edgeWeightMinusButton.title = "-"
+            parentVC?.edgeWeightMinusButton.isEnabled = true
             
-            vc?.edgeWeightPlusButton.title = "+"
-            vc?.edgeWeightPlusButton.isEnabled = true
+            parentVC?.edgeWeightPlusButton.title = "+"
+            parentVC?.edgeWeightPlusButton.isEnabled = true
             
-            vc?.removeEdgeButton.title = "Remove \(edge.description)"
-            vc?.removeEdgeButton.isEnabled = true
+            parentVC?.removeEdgeButton.title = "Remove \(edge.description)"
+            parentVC?.removeEdgeButton.isEnabled = true
         } else {
-            vc?.edgeWeightIndicator.title = ""
-            vc?.edgeWeightIndicator.isEnabled = false
+            parentVC?.edgeWeightIndicator.title = ""
+            parentVC?.edgeWeightIndicator.isEnabled = false
             
-            vc?.edgeWeightMinusButton.title = ""
-            vc?.edgeWeightMinusButton.isEnabled = false
+            parentVC?.edgeWeightMinusButton.title = ""
+            parentVC?.edgeWeightMinusButton.isEnabled = false
             
-            vc?.edgeWeightPlusButton.title = ""
-            vc?.edgeWeightPlusButton.isEnabled = false
+            parentVC?.edgeWeightPlusButton.title = ""
+            parentVC?.edgeWeightPlusButton.isEnabled = false
             
-            vc?.removeEdgeButton.title = ""
-            vc?.removeEdgeButton.isEnabled = false
+            parentVC?.removeEdgeButton.title = ""
+            parentVC?.removeEdgeButton.isEnabled = false
         }
     }
     
@@ -578,7 +573,7 @@ import UIKit
     /// Kruskal's Algorithm
     func kruskalMinimumSpanningTree() {
         // enter select mode in order to properly clear highlighted edges when algorithm completes
-        vc?.enterSelectMode((vc?.selectModeButton)!)
+        parentVC?.enterSelectMode((parentVC?.selectModeButton)!)
         
         mode = .viewOnly
         
@@ -726,13 +721,15 @@ import UIKit
     func bronKerbosch() {
         mode = .viewOnly
         
+        // recursively detects a community
+        // when finished, the community should be stored in the r set
         func recurse(r: inout Set<Node>, p: inout Set<Node>, x: inout Set<Node>) {
             if p.isEmpty && x.isEmpty {
-                // r should now be a community
+                // r should now be a community, so exit
                 return
             }
             
-            // mutable copy of p
+            // create mutable copy of p to iterate over elements even when its contents change
             var pCopy = Set<Node>(p)
             
             for node in p {
@@ -752,6 +749,7 @@ import UIKit
         var p = Set<Node>(nodes)
         var x = Set<Node>()
         
+        // recurse until a community is detected
         recurse(r: &r, p: &p, x: &x)
         
         if r.isEmpty {
@@ -764,7 +762,7 @@ import UIKit
     }
     
     /// Prepares a pre-designed flow network.
-    func prepareGraph() {
+    func prepareFlowNetworkExample() {
         clear()
         
         for i in 1...4 {
@@ -826,7 +824,7 @@ import UIKit
             edge.weight += shift
             
             // update weight label
-            vc?.edgeWeightIndicator.title = String(edge.weight)
+            parentVC?.edgeWeightIndicator.title = String(edge.weight)
         }
     }
     

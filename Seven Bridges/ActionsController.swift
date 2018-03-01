@@ -51,7 +51,7 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         case "Community Detection (Bron-Kerbosch)":
             graph?.bronKerbosch()
         case "Load Flow Network Example":
-            graph?.prepareGraph()
+            graph?.prepareFlowNetworkExample()
         case "Toggle Direction":
             graph?.isDirected = !(graph?.isDirected)!
         case "Max Flow (Ford-Fulkerson)":

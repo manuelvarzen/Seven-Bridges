@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        graph.assignViewController(self)
+        graph.parentVC = self
     }
     
     @IBOutlet weak var selectModeButton: UIBarButtonItem!
@@ -53,6 +53,7 @@ class ViewController: UIViewController {
         graph.deleteSelectedNodes()
     }
     
+    /// Called when the selectModeButton is tapped.
     @IBAction func selectButtonTapped(_ sender: UIBarButtonItem) {
         if graph.mode != .select && graph.mode != .viewOnly {
             enterSelectMode(sender)
@@ -61,6 +62,7 @@ class ViewController: UIViewController {
         }
     }
     
+    /// Puts the graph in select mode and updates the selectModeButton.
     func enterSelectMode(_ sender: UIBarButtonItem) {
         graph.mode = .select
         
