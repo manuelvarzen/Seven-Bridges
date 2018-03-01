@@ -221,6 +221,8 @@ import UIKit
     /// - parameter node: The node to be selected.
     ///
     func select(_ node: Node) {
+        // if the node is already selected, deselect it
+        // otherwise, select it
         if (selectedNodes.contains(node)) {
             // update state of node
             node.isSelected = false
@@ -235,6 +237,7 @@ import UIKit
             selectedNodes.append(node)
         }
         
+        // as long as the graph is not in edges mode, update the properties toolbar
         if mode != .edges {
             updatePropertiesToolbar()
         }
@@ -251,6 +254,7 @@ import UIKit
         parentVC?.propertiesToolbar.isHidden = false
         
         // detect a selected edge between two nodes
+        // if nil, disable UI elements related to a selected edge
         if let edge = selectedEdge {
             parentVC?.edgeWeightIndicator.title = String(edge.weight)
             
@@ -260,7 +264,7 @@ import UIKit
             parentVC?.edgeWeightPlusButton.title = "+"
             parentVC?.edgeWeightPlusButton.isEnabled = true
             
-            parentVC?.removeEdgeButton.title = "Remove \(edge.description)"
+            parentVC?.removeEdgeButton.title = "Remove \(edge)"
             parentVC?.removeEdgeButton.isEnabled = true
         } else {
             parentVC?.edgeWeightIndicator.title = ""
@@ -280,7 +284,7 @@ import UIKit
     /// Clears the selected nodes array and returns the nodes to their original state.
     ///
     /// - parameter unhighlight: If unhighlight is true, all nodes and edges will be unhighlighted.
-    /// - parameter resetEdgeProperties: If true, edge flow will be reset to nil.
+    /// - parameter resetEdgeProperties: If true, edge flow for each edge will be reset to nil.
     ///
     func deselectNodes(unhighlight: Bool = false, resetEdgeProperties: Bool = false) {
         // return all nodes in selected nodes array to original state
@@ -288,6 +292,7 @@ import UIKit
             node.isSelected = false
         }
         
+        // if resetEdgeProperties is true, reset flow for all edges back to nil
         if resetEdgeProperties {
             for edge in edges {
                 edge.flow = nil
@@ -316,9 +321,11 @@ import UIKit
     /// - parameter node: The node to be deleted.
     ///
     func delete(_ node: Node) {
+        // remove it from view
         node.removeFromSuperview()
         
         for edge in node.edges {
+            // remove edge from view
             edge.removeFromSuperview()
             
             // remove edge from its start node
@@ -332,36 +339,45 @@ import UIKit
             }
         }
         
+        // remove node from the nodes array
         nodes.remove(at: nodes.index(of: node)!)
         
+        // remove node from the matrix
         nodeMatrix.removeValue(forKey: node)
     }
     
     /// Deletes all selected nodes and their edges.
     func deleteSelectedNodes() {
+        // proceed only if selectedNodes is not empty
         guard !selectedNodes.isEmpty else { return }
         
+        // delete all selected nodes
         for node in selectedNodes {
             delete(node)
         }
         
+        // empty the selectedNodes array
         selectedNodes.removeAll()
         
         updatePropertiesToolbar()
     }
     
     /// Removes the selected edge from the Graph.
+    /// The two selected nodes on each end will remain selected after the edge is removed.
     func removeSelectedEdge() {
         if let edge = selectedEdge {
+            // remove from view
+            edge.removeFromSuperview()
+            
+            // remove from both ends (nodes)
             selectedNodes.first!.edges.remove(edge)
             selectedNodes.last!.edges.remove(edge)
             
+            // remove from edges set
             edges.remove(edge)
             
             // remove edge from matrix and list forms
             nodeMatrix[edge.startNode]?.remove(edge.endNode)
-            
-            edge.removeFromSuperview()
             
             updatePropertiesToolbar()
         }
@@ -369,15 +385,18 @@ import UIKit
     
     /// Removes all edges from the graph.
     func removeAllEdges() {
+        // remove all edges from each node and empty all connections from the matrix
         for node in nodes {
             node.edges.removeAll()
             nodeMatrix[node]?.removeAll()
         }
         
+        // remove all edges from view
         for edge in edges {
             edge.removeFromSuperview()
         }
         
+        // remove all from edges set
         edges.removeAll()
     }
     
@@ -393,11 +412,13 @@ import UIKit
     
     /// Renumbers all nodes by the order that they were added to the graph.
     func renumberNodes() {
+        // proceed if there are any nodes to renumber
         guard !nodes.isEmpty else {
             Announcement.new(title: "Renumber Nodes", message: "There are no nodes to renumber.")
             return
         }
         
+        // renumer according to index + 1
         for (index, node) in nodes.enumerated() {
             node.label.text = String(index + 1)
         }
@@ -415,11 +436,11 @@ import UIKit
         func resumeFunction() {
             var traversals = [Path]()
             
-            func findShortestPath(from origin: Node, to target: Node, shortestPath: Path = Path()) -> Path? {
+            func findShortestPath(from source: Node, to sink: Node, shortestPath: Path = Path()) -> Path? {
                 let path = Path(shortestPath)
-                path.append(origin)
+                path.append(source)
                 
-                if target == origin {
+                if sink == source {
                     return path
                 }
                 
@@ -429,10 +450,9 @@ import UIKit
                 // equals 0 when shortest is nil
                 var shortestAggregateWeight = 0
                 
-                for node in origin.adjacentNodes(directed: isDirected) {
+                for node in source.adjacentNodes(directed: isDirected) {
                     if !path.contains(node) {
-                        if let newPath = findShortestPath(from: node, to: target, shortestPath: path) {
-                            
+                        if let newPath = findShortestPath(from: node, to: sink, shortestPath: path) {
                             // add the new path to the history of traversals
                             traversals.append(newPath)
                             
@@ -450,12 +470,13 @@ import UIKit
                 return shortest
             }
             
-            let originNode = selectedNodes.first!
-            let targetNode = selectedNodes.last!
+            // save source and sink before deselecting nodes
+            let a = selectedNodes.first!
+            let b = selectedNodes.last!
             
             deselectNodes()
             
-            if let path = findShortestPath(from: originNode, to: targetNode) {
+            if let path = findShortestPath(from: a, to: b) {
                 // remove the shortest path from the traversal history
                 traversals.removeLast()
                 
@@ -468,7 +489,7 @@ import UIKit
                 path.outline(wait: traversals.count * 3)
             } else {
                 // create modal alert for no path found
-                Announcement.new(title: "Shortest Path", message: "No path found from \(originNode) to \(targetNode).")
+                Announcement.new(title: "Shortest Path", message: "No path found from \(a) to \(b).")
             }
         }
         
@@ -523,6 +544,7 @@ import UIKit
             
             while !pool.isEmpty {
                 let currentNode = getMin(from: distance)
+                
                 distance.removeValue(forKey: currentNode)
                 pool.remove(currentNode)
                 
@@ -652,31 +674,31 @@ import UIKit
         var backwardEdges = Set<Edge>()
         
         // returns an augmenting path from origin to target
-        func augmentedPath(from origin: Node, to target: Node, path: Path = Path()) -> Path? {
-            if origin == target {
+        func augmentedPath(from source: Node, to sink: Node, path: Path = Path()) -> Path? {
+            if source == sink {
                 return path
             }
 
             // iterate over all edges connected to the origin
-            for edge in origin.edges {
+            for edge in source.edges {
                 if !path.edges.contains(edge) {
                     let newPath = Path(path)
                     
                     // edge forward
-                    if edge.residualCapacity! > 0 && origin == edge.startNode {
+                    if edge.residualCapacity! > 0 && source == edge.startNode {
                         newPath.append(edge)
                         
-                        if let result = augmentedPath(from: edge.endNode!, to: target, path: newPath) {
+                        if let result = augmentedPath(from: edge.endNode!, to: sink, path: newPath) {
                             return result
                         }
                     }
                     
                     // edge backward
-                    if edge.flow! > 0 && edge.residualCapacity! > 0 && origin == edge.endNode {
+                    if edge.flow! > 0 && edge.residualCapacity! > 0 && source == edge.endNode {
                         newPath.append(edge, ignoreNodes: true)
                         backwardEdges.insert(edge)
                         
-                        if let result = augmentedPath(from: edge.startNode!, to: target, path: newPath) {
+                        if let result = augmentedPath(from: edge.startNode!, to: sink, path: newPath) {
                             return result
                         }
                     }
@@ -717,47 +739,49 @@ import UIKit
         deselectNodes()
     }
     
-    /// Bron-Kerbosch community detection algorithm
+    /// Bron-Kerbosch maximal clique algorithm
     func bronKerbosch() {
         mode = .viewOnly
         
-        // recursively detects a community
-        // when finished, the community should be stored in the r set
-        func recurse(r: inout Set<Node>, p: inout Set<Node>, x: inout Set<Node>) {
+        var potentialCliques = Set<Set<Node>>()
+        
+        // recursively finds a clique
+        // when finished, the maximal clique should be stored in the r set
+        func recurse(r: Set<Node>, p: Set<Node>, x: Set<Node>) {
             if p.isEmpty && x.isEmpty {
-                // r should now be a community, so exit
+                // r should now be a maximal clique, so exit
+                potentialCliques.insert(r)
                 return
             }
             
-            // create mutable copy of p to iterate over elements even when its contents change
+            // create mutable copies of p and x
             var pCopy = Set<Node>(p)
+            var xCopy = Set<Node>(x)
             
             for node in p {
-                r.insert(node)
-                var pt = pCopy.intersection(node.adjacentNodes(directed: isDirected))
-                var xt = x.intersection(node.adjacentNodes(directed: isDirected))
+                let ru = r.intersection([node])
+                let pu = pCopy.intersection(node.adjacentNodes(directed: isDirected))
+                let xu = xCopy.intersection(node.adjacentNodes(directed: isDirected))
                 
-                recurse(r: &r, p: &pt, x: &xt)
+                recurse(r: ru, p: pu, x: xu)
                 
-                r.remove(node)
                 pCopy.remove(node)
-                x.insert(node)
+                xCopy.insert(node)
             }
         }
         
-        var r = Set<Node>()
-        var p = Set<Node>(nodes)
-        var x = Set<Node>()
+        // recurse until a maximal clique is detected
+        recurse(r: Set<Node>(), p: Set<Node>(nodes), x: Set<Node>())
         
-        // recurse until a community is detected
-        recurse(r: &r, p: &p, x: &x)
-        
-        if r.isEmpty {
+        if potentialCliques.isEmpty {
             Announcement.new(title: "Bron-Kerbosch", message: "No community could be found in the graph.")
         } else {
-            for node in r {
-                node.highlighted()
-            }
+            print("Maximal clique found: highlighting nodes...")
+            let maxClique = potentialCliques.max(by: { $0.count > $1.count })!
+            
+            assert(!maxClique.isEmpty, "The max clique was empty.")
+            
+            maxClique.forEach({ $0.highlighted() })
         }
     }
     
