@@ -741,16 +741,22 @@ import UIKit
     
     /// Bron-Kerbosch maximal clique algorithm
     func bronKerbosch() {
+        guard nodes.count > 1 else {
+            Announcement.new(title: "Bron-Kerbosch", message: "The graph must have 2 or more nodes in order for Bron-Kerbosch to run.")
+            return
+        }
+        
         mode = .viewOnly
         
-        var potentialCliques = Set<Set<Node>>()
+        // value will be false until a maximal clique has been found
+        var report = false
         
         // recursively finds a clique
         // when finished, the maximal clique should be stored in the r set
-        func recurse(r: Set<Node>, p: Set<Node>, x: Set<Node>) {
+        func recurse(r: inout Set<Node>, p: inout Set<Node>, x: inout Set<Node>) {
             if p.isEmpty && x.isEmpty {
-                // r should now be a maximal clique, so exit
-                potentialCliques.insert(r)
+                // r should now be a maximal clique, so report as found and return
+                report = true
                 return
             }
             
@@ -759,29 +765,36 @@ import UIKit
             var xCopy = Set<Node>(x)
             
             for node in p {
-                let ru = r.intersection([node])
-                let pu = pCopy.intersection(node.adjacentNodes(directed: isDirected))
-                let xu = xCopy.intersection(node.adjacentNodes(directed: isDirected))
+                r.insert(node)
                 
-                recurse(r: ru, p: pu, x: xu)
+                var pu = pCopy.intersection(node.adjacentNodes(directed: isDirected))
+                var xu = xCopy.intersection(node.adjacentNodes(directed: isDirected))
                 
+                recurse(r: &r, p: &pu, x: &xu)
+                
+                // if the maximal clique has been found, return
+                if report == true {
+                    return
+                }
+                
+                r.remove(node)
                 pCopy.remove(node)
                 xCopy.insert(node)
             }
         }
         
-        // recurse until a maximal clique is detected
-        recurse(r: Set<Node>(), p: Set<Node>(nodes), x: Set<Node>())
+        // initial sets for the algorithm
+        var r = Set<Node>()
+        var p = Set<Node>(nodes)
+        var x = Set<Node>()
         
-        if potentialCliques.isEmpty {
+        // recurse until a maximal clique is detected
+        recurse(r: &r, p: &p, x: &x)
+        
+        if r.isEmpty {
             Announcement.new(title: "Bron-Kerbosch", message: "No community could be found in the graph.")
         } else {
-            print("Maximal clique found: highlighting nodes...")
-            let maxClique = potentialCliques.max(by: { $0.count > $1.count })!
-            
-            assert(!maxClique.isEmpty, "The max clique was empty.")
-            
-            maxClique.forEach({ $0.highlighted() })
+            r.forEach({ $0.highlighted() })
         }
     }
     
