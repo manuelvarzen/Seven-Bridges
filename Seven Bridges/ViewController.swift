@@ -23,6 +23,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var edgesModeButton: UIBarButtonItem!
     
+    @IBOutlet weak var actionsMenuButton: UIBarButtonItem!
+    
     @IBOutlet weak var mainToolbar: UIToolbar!
     
     @IBOutlet weak var propertiesToolbar: UIToolbar!
@@ -83,8 +85,13 @@ class ViewController: UIViewController {
         sender.title = "Select"
         sender.style = .plain
         
+        // re-enable toolbar buttons
         nodesModeButton.isEnabled = true
         edgesModeButton.isEnabled = true
+        
+        // actionsMenuButton is disabled from the graph after running an algorithm
+        // therefore, undo
+        graph.justRanAlgorithm = false
     }
     
     @IBAction func enterNodesMode(_ sender: UIBarButtonItem) {

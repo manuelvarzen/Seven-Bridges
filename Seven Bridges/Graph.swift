@@ -47,6 +47,18 @@ import UIKit
         case edges
     }
     
+    /// Will be true when an algorithm was just run.
+    /// When true, the actions menu button is disabled.
+    var justRanAlgorithm = false {
+        didSet {
+            if justRanAlgorithm {
+                parentVC?.actionsMenuButton.isEnabled = false
+            } else {
+                parentVC?.actionsMenuButton.isEnabled = true
+            }
+        }
+    }
+    
     /// Determines the interactive behavior of the Graph.
     var mode = Mode.nodes
     
@@ -500,6 +512,8 @@ import UIKit
                 
                 // outline the shortest path
                 path.outline(wait: traversals.count * 3)
+                
+                justRanAlgorithm = true
             } else {
                 // create modal alert for no path found
                 Announcement.new(title: "Shortest Path", message: "No path found from \(a) to \(b).")
@@ -592,6 +606,8 @@ import UIKit
             buildPath(from: root)
             
             path.outline(wait: 0)
+            
+            justRanAlgorithm = true
         }
         
         if isDirected {
@@ -657,6 +673,8 @@ import UIKit
             deselectNodes()
             
             e.outline(wait: 0)
+            
+            justRanAlgorithm = true
         }
         
         if isDirected {
@@ -745,6 +763,8 @@ import UIKit
                 assert(outbound == inbound, "\(node)'s inbound flow was \(inbound) but its outbound flow was \(outbound).")
             }
         }
+        
+        justRanAlgorithm = true
 
         // announce the max flow
         Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(selectedNodes.last!.inboundFlow).")
@@ -811,6 +831,8 @@ import UIKit
             }) {
                 maxClique.forEach({ $0.highlighted() })
             }
+            
+            justRanAlgorithm = true
         }
     }
     

@@ -112,6 +112,7 @@
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="actionsMenuButton" destination="043-P4-I9w" id="Gup-rc-ORs"/>
                         <outlet property="edgeWeightIndicator" destination="r8F-wu-KsD" id="cxQ-t3-xMq"/>
                         <outlet property="edgeWeightMinusButton" destination="rQw-gE-GQy" id="4VQ-8f-xAd"/>
                         <outlet property="edgeWeightPlusButton" destination="akk-5O-cz9" id="xJs-Za-1Nv"/>
