@@ -400,6 +400,19 @@ import UIKit
         edges.removeAll()
     }
     
+    /// Shifts a selected edge's weight by a given integer value.
+    ///
+    /// - parameter by: The value by which to shift the edge's weight.
+    ///
+    func shiftSelectedEdgeWeight(by shift: Int) {
+        if let edge = selectedEdge {
+            edge.weight += shift
+            
+            // update weight label
+            parentVC?.edgeWeightIndicator.title = String(edge.weight)
+        }
+    }
+    
     /// Changes all edge weights to the given weight or resets them all to the default value of 1.
     ///
     /// - parameter to: The weight that will be applied to all edges.
@@ -746,6 +759,9 @@ import UIKit
             return
         }
         
+        // enter select mode in order to properly clear highlighted nodes when algorithm completes
+        parentVC?.enterSelectMode((parentVC?.selectModeButton)!)
+        
         mode = .viewOnly
         
         // value will be false until a maximal clique has been found
@@ -850,19 +866,6 @@ import UIKit
         // edge from 3 to 4
         addEdge(from: nodes[2], to: nodes[3])
         edge(from: nodes[2], to: nodes[3])?.weight = 7
-    }
-    
-    /// Shifts a selected edge's weight by a given integer value.
-    ///
-    /// - parameter by: The value by which to shift the edge's weight.
-    ///
-    func shiftSelectedEdgeWeight(by shift: Int) {
-        if let edge = selectedEdge {
-            edge.weight += shift
-            
-            // update weight label
-            parentVC?.edgeWeightIndicator.title = String(edge.weight)
-        }
     }
     
     /// Called when all touches on the screen have ended.
