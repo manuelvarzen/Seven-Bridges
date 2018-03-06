@@ -24,7 +24,7 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         "Minimum Spanning Tree (Prim)",
         "Minimum Spanning Tree (Kruskal)",
         "Max Flow (Ford-Fulkerson)",
-        "Community Detection (Bron-Kerbosch)",
+        "Maximal Clique (Bron-Kerbosch)",
         "Load Flow Network Example"
     ]
     
@@ -40,37 +40,35 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let action = actions[indexPath.row]
-        didSelectAction(action)
+        didSelectAction(indexPath.row)
     }
     
-    private func didSelectAction(_ action: String) {
+    private func didSelectAction(_ i: Int) {
         dismiss(animated: true, completion: nil)
         
-        switch action {
-        case "Community Detection (Bron-Kerbosch)":
-            graph?.bronKerbosch()
-        case "Load Flow Network Example":
-            graph?.prepareFlowNetworkExample()
-        case "Toggle Direction":
+        switch i {
+        case 0:
             graph?.isDirected = !(graph?.isDirected)!
-        case "Max Flow (Ford-Fulkerson)":
-            graph?.fordFulkersonMaxFlow()
-        case "Minimum Spanning Tree (Kruskal)":
-            graph?.kruskalMinimumSpanningTree()
-        case "Minimum Spanning Tree (Prim)":
-            graph?.primMinimumSpanningTree()
-        case "Shortest Path (Dijkstra)":
-            graph?.shortestPath()
-        case "Renumber Nodes":
+        case 1:
             graph?.renumberNodes()
-        case "Reset Edge Weights":
+        case 2:
             graph?.resetAllEdgeWeights()
-        case "Remove All Edges":
+        case 3:
             graph?.removeAllEdges()
+        case 4:
+            graph?.shortestPath()
+        case 5:
+            graph?.primMinimumSpanningTree()
+        case 6:
+            graph?.kruskalMinimumSpanningTree()
+        case 7:
+            graph?.fordFulkersonMaxFlow()
+        case 8:
+            graph?.bronKerbosch()
+        case 9:
+            graph?.prepareFlowNetworkExample()
         default:
-            print("An action with that name could not be found.")
+            print("An unknown action was selected from the ActionsMenu.")
         }
     }
-    
 }
