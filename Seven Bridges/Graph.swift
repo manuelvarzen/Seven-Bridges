@@ -764,15 +764,16 @@ import UIKit
         
         mode = .viewOnly
         
-        // value will be false until a maximal clique has been found
-        var report = false
+        // stores every iteration of cliques found in the recursive function
+        // the clique with the greatest number of nodes will be the maximal clique
+        var cliques = Set<Set<Node>>()
         
         // recursively finds a clique
-        // when finished, the maximal clique should be stored in the r set
+        // when finished, the maximal clique should be stored in the cliques set
         func recurse(r: inout Set<Node>, p: inout Set<Node>, x: inout Set<Node>) {
             if p.isEmpty && x.isEmpty {
-                // r should now be a maximal clique, so report as found and return
-                report = true
+                // r should now be a maximal clique, so insert into cliques and return
+                cliques.insert(r)
                 return
             }
             
@@ -788,11 +789,6 @@ import UIKit
                 
                 recurse(r: &r, p: &pu, x: &xu)
                 
-                // if the maximal clique has been found, return
-                if report == true {
-                    return
-                }
-                
                 r.remove(node)
                 pCopy.remove(node)
                 xCopy.insert(node)
@@ -804,13 +800,17 @@ import UIKit
         var p = Set<Node>(nodes)
         var x = Set<Node>()
         
-        // recurse until a maximal clique is detected
         recurse(r: &r, p: &p, x: &x)
         
-        if r.isEmpty {
+        if cliques.isEmpty {
             Announcement.new(title: "Bron-Kerbosch", message: "No community could be found in the graph.")
         } else {
-            r.forEach({ $0.highlighted() })
+            // get clique with greatest number of nodes and highlight the nodes
+            if let maxClique = cliques.max(by: {
+                $1.count > $0.count
+            }) {
+                maxClique.forEach({ $0.highlighted() })
+            }
         }
     }
     
