@@ -115,9 +115,11 @@ class ViewController: UIViewController {
     }
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {
-        graph.clear()
-        exitSelectMode(selectModeButton, graphWasJustCleared: true)
+        // prompt user before clearing graph
+        Announcement.new(title: "Clear Graph", message: "Are you sure you want to clear the graph?", action: { (action: UIAlertAction!) -> Void in
+            self.graph.clear()
+            self.exitSelectMode(self.selectModeButton, graphWasJustCleared: true)
+        }, cancelable: true)
     }
-    
 }
 

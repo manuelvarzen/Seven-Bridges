@@ -9,12 +9,18 @@ import UIKit
 
 class Announcement {
     
-    static func new(title: String, message: String, action: ((UIAlertAction) -> Void)? = nil) {
+    static func new(title: String, message: String, action: ((UIAlertAction) -> Void)? = nil, cancelable: Bool = false) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: action))
+        // add the "Cancel" button if the announcement is cancelable
+        if cancelable {
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        }
         
+        // add the "Clear" button
+        alert.addAction(UIAlertAction(title: "Clear", style: .default, handler: action))
+        
+        // present the announcement
         UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
-    
 }
