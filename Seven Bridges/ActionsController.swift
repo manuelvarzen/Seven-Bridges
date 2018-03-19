@@ -28,6 +28,11 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         "Load Flow Network Example"
     ]
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        preferredContentSize.height = CGFloat(actions.count * 44)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return actions.count
     }

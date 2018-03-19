@@ -784,16 +784,19 @@ import UIKit
         
         mode = .viewOnly
         
-        // stores every iteration of cliques found in the recursive function
+        // stores the clique iteration with the most nodes
         // the clique with the greatest number of nodes will be the maximal clique
-        var cliques = Set<Set<Node>>()
+        var maxClique: Set<Node>?
         
         // recursively finds a clique
         // when finished, the maximal clique should be stored in the cliques set
         func recurse(r: inout Set<Node>, p: inout Set<Node>, x: inout Set<Node>) {
             if p.isEmpty && x.isEmpty {
                 // r should now be a maximal clique, so insert into cliques and return
-                cliques.insert(r)
+                if maxClique == nil || r.count > (maxClique?.count)! {
+                    maxClique = r
+                }
+                
                 return
             }
             
@@ -822,15 +825,11 @@ import UIKit
         
         recurse(r: &r, p: &p, x: &x)
         
-        if cliques.isEmpty {
+        if maxClique == nil || (maxClique?.isEmpty)! {
             Announcement.new(title: "Bron-Kerbosch", message: "No community could be found in the graph.")
         } else {
-            // get clique with greatest number of nodes and highlight the nodes
-            if let maxClique = cliques.max(by: {
-                $1.count > $0.count
-            }) {
-                maxClique.forEach({ $0.highlighted() })
-            }
+            // highlight the max clique
+            maxClique?.forEach({ $0.highlighted() })
             
             justRanAlgorithm = true
         }
