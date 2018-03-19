@@ -73,7 +73,7 @@ class ActionsController: UIViewController, UITableViewDataSource, UITableViewDel
         case 9:
             graph?.prepareFlowNetworkExample()
         default:
-            print("An unknown action was selected from the ActionsMenu.")
+            print("An unknown action was selected from the Actions Menu.")
         }
     }
 }

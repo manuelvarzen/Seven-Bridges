@@ -18,7 +18,6 @@ class ViewController: UIViewController {
         
         // prepare Actions Menu
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
         actionsVC = storyboard.instantiateViewController(withIdentifier: "actionsViewController") as! ActionsController
         actionsVC.modalPresentationStyle = .popover
         actionsVC.graph = graph
