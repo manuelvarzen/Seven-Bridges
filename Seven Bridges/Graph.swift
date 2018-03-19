@@ -807,8 +807,8 @@ import UIKit
             for node in p {
                 r.insert(node)
                 
-                var pu = pCopy.intersection(node.adjacentNodes(directed: isDirected))
-                var xu = xCopy.intersection(node.adjacentNodes(directed: isDirected))
+                var pu = pCopy.intersection(node.adjacentNodes(directed: false))
+                var xu = xCopy.intersection(node.adjacentNodes(directed: false))
                 
                 recurse(r: &r, p: &pu, x: &xu)
                 
