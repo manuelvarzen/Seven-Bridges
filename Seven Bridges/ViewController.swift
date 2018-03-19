@@ -15,7 +15,17 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         graph.parentVC = self
+        
+        // prepare Actions Menu
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        actionsVC = storyboard.instantiateViewController(withIdentifier: "actionsViewController") as! ActionsController
+        actionsVC.modalPresentationStyle = .popover
+        actionsVC.graph = graph
+        actionsVC.viewControllerDelegate = self
     }
+    
+    private var actionsVC: ActionsController!
     
     @IBOutlet weak var selectModeButton: UIBarButtonItem!
     
@@ -103,14 +113,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func openActionsPopover(_ sender: UIBarButtonItem) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        let actionsVC = storyboard.instantiateViewController(withIdentifier: "actionsViewController") as! ActionsController
-        actionsVC.modalPresentationStyle = .popover
         actionsVC.popoverPresentationController?.barButtonItem = sender
-        actionsVC.graph = graph
-        actionsVC.viewControllerDelegate = self
-        
         present(actionsVC, animated: true)
     }
     
