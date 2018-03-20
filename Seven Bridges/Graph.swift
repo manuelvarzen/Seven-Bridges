@@ -219,8 +219,8 @@ import UIKit
             selectedNodes.append(node)
         }
         
-        // as long as the graph is not in edges mode, update the properties toolbar
-        if mode != .edges {
+        // as long as the graph is in select mode, update the properties toolbar
+        if mode == .select {
             updatePropertiesToolbar()
         }
     }
