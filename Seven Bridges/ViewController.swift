@@ -9,11 +9,18 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    // If the device is an iPhone, portrait is the only supported orientation.
+    // Otherwise, all but upside down is supported.
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIInterfaceOrientationMask.portrait
+        }
+        
+        return UIInterfaceOrientationMask.allButUpsideDown
+    }
+    
     override func viewDidLoad() {
         graph.parentVC = self
-        
-        // remove top border to create seamless look with status bar
-        mainToolbar.clipsToBounds = true
         
         // prepare Actions Menu
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -44,6 +51,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var edgeWeightIndicator: UIBarButtonItem!
     
     @IBOutlet weak var removeEdgeButton: UIBarButtonItem!
+    
+    @IBOutlet weak var trashButton: UIBarButtonItem!
     
     @IBOutlet var graph: Graph!
     

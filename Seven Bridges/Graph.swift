@@ -9,36 +9,6 @@ import UIKit
 
 @IBDesignable class Graph: UIScrollView {
     
-    /// Border color of the Graph.
-    @IBInspectable var borderColor: UIColor? {
-        get {
-            if let color = layer.borderColor {
-                return UIColor(cgColor: color)
-            }
-            
-            return nil
-        }
-        
-        set {
-            if let color = newValue {
-                layer.borderColor = color.cgColor
-            } else {
-                layer.borderColor = nil
-            }
-        }
-    }
-    
-    /// Border width of the Graph.
-    @IBInspectable var borderWidth: CGFloat {
-        get {
-            return layer.borderWidth
-        }
-        
-        set {
-            layer.borderWidth = newValue
-        }
-    }
-    
     /// Mode defining the action performed by user interaction.
     enum Mode {
         case select
@@ -259,11 +229,10 @@ import UIKit
     private func updatePropertiesToolbar() {
         // hide the toolbar if no nodes are selected
         if selectedNodes.isEmpty {
-            parentVC?.propertiesToolbar.isHidden = true
-            return
+            parentVC?.trashButton.isEnabled = false
+        } else {
+            parentVC?.trashButton.isEnabled = true
         }
-        
-        parentVC?.propertiesToolbar.isHidden = false
         
         // detect a selected edge between two nodes
         // if nil, disable UI elements related to a selected edge

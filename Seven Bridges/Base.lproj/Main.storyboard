@@ -19,17 +19,47 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cri-lb-Lak" customClass="Graph" customModule="Seven_Bridges" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="88" width="375" height="724"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" red="0.86274509799999999" green="0.86274509799999999" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="16"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
+                                <rect key="frame" x="0.0" y="88" width="375" height="646"/>
                             </scrollView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="top" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L0O-dN-50g">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="bottom" barStyle="black" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edS-Wz-lfl">
+                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="rVe-sG-9T5"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="1nW-Wk-KqV"/>
+                                <items>
+                                    <barButtonItem width="24" style="plain" systemItem="fixedSpace" id="jYS-Is-KC7"/>
+                                    <barButtonItem id="rQw-gE-GQy" userLabel="Decrease Edge Weight Button">
+                                        <connections>
+                                            <action selector="decreaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="NRV-id-sal"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="48" id="r8F-wu-KsD" userLabel="Edge Weight Indicator">
+                                        <color key="tintColor" red="1" green="0.5409764051" blue="0.84731429820000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </barButtonItem>
+                                    <barButtonItem id="akk-5O-cz9" userLabel="Increase Edge Weight Button">
+                                        <connections>
+                                            <action selector="increaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="bBn-jZ-ZH2"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="fF4-SN-W9r"/>
+                                    <barButtonItem enabled="NO" id="pjb-zS-hWe">
+                                        <connections>
+                                            <action selector="removeSelectedEdge:" destination="BYZ-38-t0r" id="AOb-VN-eaO"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
+                                    <barButtonItem enabled="NO" systemItem="trash" id="Ldv-SX-xIS">
+                                        <connections>
+                                            <action selector="deleteSelectedNodes:" destination="BYZ-38-t0r" id="Ddf-9i-I9u"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="24" style="plain" systemItem="fixedSpace" id="H80-ch-6kW"/>
+                                </items>
+                                <color key="tintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </toolbar>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="center" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L0O-dN-50g">
                                 <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                                 <items>
                                     <barButtonItem title="Clear" id="IIX-sD-YGu">
@@ -39,19 +69,19 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Dtm-PG-W3d"/>
                                     <barButtonItem title="Select" id="Yun-qL-8ne">
-                                        <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <action selector="selectButtonTapped:" destination="BYZ-38-t0r" id="WcM-bq-z8n"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem title="Node" id="i5c-yZ-CMU">
-                                        <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <action selector="enterNodesMode:" destination="BYZ-38-t0r" id="7a3-TA-t4H"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem title="Edge" id="So3-H1-JxB">
-                                        <color key="tintColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <action selector="enterEdgesMode:" destination="BYZ-38-t0r" id="lKi-wV-EUN"/>
                                         </connections>
@@ -62,36 +92,7 @@
                                         </connections>
                                     </barButtonItem>
                                 </items>
-                            </toolbar>
-                            <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="edS-Wz-lfl">
-                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
-                                <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
-                                <viewLayoutGuide key="safeArea" id="1nW-Wk-KqV"/>
-                                <items>
-                                    <barButtonItem id="rQw-gE-GQy" userLabel="Decrease Edge Weight Button">
-                                        <connections>
-                                            <action selector="decreaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="NRV-id-sal"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="48" id="r8F-wu-KsD" userLabel="Edge Weight Indicator"/>
-                                    <barButtonItem id="akk-5O-cz9" userLabel="Increase Edge Weight Button">
-                                        <connections>
-                                            <action selector="increaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="bBn-jZ-ZH2"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="tDz-dT-hxy"/>
-                                    <barButtonItem enabled="NO" id="pjb-zS-hWe">
-                                        <connections>
-                                            <action selector="removeSelectedEdge:" destination="BYZ-38-t0r" id="AOb-VN-eaO"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
-                                    <barButtonItem systemItem="trash" id="Ldv-SX-xIS">
-                                        <connections>
-                                            <action selector="deleteSelectedNodes:" destination="BYZ-38-t0r" id="Ddf-9i-I9u"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
+                                <color key="tintColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -100,11 +101,11 @@
                             <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="L0O-dN-50g" secondAttribute="bottom" id="3ck-WX-OKy"/>
                             <constraint firstItem="Mz8-m1-zLi" firstAttribute="bottom" secondItem="edS-Wz-lfl" secondAttribute="bottom" id="Awe-Uj-hrk"/>
                             <constraint firstItem="L0O-dN-50g" firstAttribute="leading" secondItem="Mz8-m1-zLi" secondAttribute="leading" id="BJg-30-lmv"/>
-                            <constraint firstItem="edS-Wz-lfl" firstAttribute="trailing" secondItem="Mz8-m1-zLi" secondAttribute="trailing" id="CPX-AL-cyj"/>
                             <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="L0O-dN-50g" secondAttribute="leading" id="CRp-5r-yE8"/>
-                            <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" id="D43-ID-CJ5"/>
-                            <constraint firstItem="edS-Wz-lfl" firstAttribute="leading" secondItem="Mz8-m1-zLi" secondAttribute="leading" id="HYF-an-Jzj"/>
-                            <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" id="XD5-9i-hCY"/>
+                            <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" constant="78" id="D43-ID-CJ5"/>
+                            <constraint firstItem="edS-Wz-lfl" firstAttribute="leading" secondItem="L0O-dN-50g" secondAttribute="leading" id="JCl-FG-bEo"/>
+                            <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" constant="78" id="XD5-9i-hCY"/>
+                            <constraint firstItem="edS-Wz-lfl" firstAttribute="trailing" secondItem="L0O-dN-50g" secondAttribute="trailing" id="e7d-SD-99o"/>
                             <constraint firstItem="Mz8-m1-zLi" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="fRm-Gn-SKc"/>
                             <constraint firstItem="L0O-dN-50g" firstAttribute="top" secondItem="Mz8-m1-zLi" secondAttribute="top" id="j1t-zf-yTz"/>
                             <constraint firstItem="Mz8-m1-zLi" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="nD6-AB-hqj"/>
@@ -124,6 +125,7 @@
                         <outlet property="propertiesToolbar" destination="edS-Wz-lfl" id="5GS-xq-2k2"/>
                         <outlet property="removeEdgeButton" destination="pjb-zS-hWe" id="zUA-Kc-amE"/>
                         <outlet property="selectModeButton" destination="Yun-qL-8ne" id="xV9-QU-oIi"/>
+                        <outlet property="trashButton" destination="Ldv-SX-xIS" id="U0l-FY-8VP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -143,7 +145,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="bvk-1D-RbA" style="IBUITableViewCellStyleDefault" id="bzz-Aw-lmu">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="bvk-1D-RbA" style="IBUITableViewCellStyleDefault" id="bzz-Aw-lmu">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bzz-Aw-lmu" id="M1f-iG-yb2">
