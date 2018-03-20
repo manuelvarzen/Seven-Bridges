@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina5_5" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,16 +14,12 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController title="7 Bridges" id="BYZ-38-t0r" customClass="ViewController" customModule="Seven_Bridges" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cri-lb-Lak" customClass="Graph" customModule="Seven_Bridges" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="724"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                         <color key="value" red="0.86274509799999999" green="0.86274509799999999" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -32,37 +29,8 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </scrollView>
-                            <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edS-Wz-lfl">
-                                <rect key="frame" x="0.0" y="692" width="414" height="44"/>
-                                <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
-                                <items>
-                                    <barButtonItem id="rQw-gE-GQy" userLabel="Decrease Edge Weight Button">
-                                        <connections>
-                                            <action selector="decreaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="NRV-id-sal"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="48" id="r8F-wu-KsD" userLabel="Edge Weight Indicator"/>
-                                    <barButtonItem id="akk-5O-cz9" userLabel="Increase Edge Weight Button">
-                                        <connections>
-                                            <action selector="increaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="bBn-jZ-ZH2"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="tDz-dT-hxy"/>
-                                    <barButtonItem enabled="NO" id="pjb-zS-hWe">
-                                        <connections>
-                                            <action selector="removeSelectedEdge:" destination="BYZ-38-t0r" id="AOb-VN-eaO"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
-                                    <barButtonItem systemItem="trash" id="Ldv-SX-xIS">
-                                        <connections>
-                                            <action selector="deleteSelectedNodes:" destination="BYZ-38-t0r" id="Ddf-9i-I9u"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="top" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L0O-dN-50g">
-                                <rect key="frame" x="0.0" y="20" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                                 <items>
                                     <barButtonItem title="Clear" id="IIX-sD-YGu">
                                         <connections>
@@ -95,20 +63,53 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="edS-Wz-lfl">
+                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
+                                <viewLayoutGuide key="safeArea" id="1nW-Wk-KqV"/>
+                                <items>
+                                    <barButtonItem id="rQw-gE-GQy" userLabel="Decrease Edge Weight Button">
+                                        <connections>
+                                            <action selector="decreaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="NRV-id-sal"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="48" id="r8F-wu-KsD" userLabel="Edge Weight Indicator"/>
+                                    <barButtonItem id="akk-5O-cz9" userLabel="Increase Edge Weight Button">
+                                        <connections>
+                                            <action selector="increaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="bBn-jZ-ZH2"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="tDz-dT-hxy"/>
+                                    <barButtonItem enabled="NO" id="pjb-zS-hWe">
+                                        <connections>
+                                            <action selector="removeSelectedEdge:" destination="BYZ-38-t0r" id="AOb-VN-eaO"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
+                                    <barButtonItem systemItem="trash" id="Ldv-SX-xIS">
+                                        <connections>
+                                            <action selector="deleteSelectedNodes:" destination="BYZ-38-t0r" id="Ddf-9i-I9u"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="L0O-dN-50g" secondAttribute="trailing" id="1ov-AO-fEs"/>
-                            <constraint firstItem="edS-Wz-lfl" firstAttribute="leading" secondItem="cri-lb-Lak" secondAttribute="leading" id="ABK-aC-Zrw"/>
-                            <constraint firstItem="L0O-dN-50g" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="BJg-30-lmv"/>
+                            <constraint firstItem="Mz8-m1-zLi" firstAttribute="trailing" secondItem="L0O-dN-50g" secondAttribute="trailing" id="1ov-AO-fEs"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="L0O-dN-50g" secondAttribute="bottom" id="3ck-WX-OKy"/>
+                            <constraint firstItem="Mz8-m1-zLi" firstAttribute="bottom" secondItem="edS-Wz-lfl" secondAttribute="bottom" id="Awe-Uj-hrk"/>
+                            <constraint firstItem="L0O-dN-50g" firstAttribute="leading" secondItem="Mz8-m1-zLi" secondAttribute="leading" id="BJg-30-lmv"/>
+                            <constraint firstItem="edS-Wz-lfl" firstAttribute="trailing" secondItem="Mz8-m1-zLi" secondAttribute="trailing" id="CPX-AL-cyj"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="L0O-dN-50g" secondAttribute="leading" id="CRp-5r-yE8"/>
                             <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" id="D43-ID-CJ5"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="KzS-uz-vml"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="L0O-dN-50g" secondAttribute="bottom" id="gkL-nQ-uub"/>
-                            <constraint firstItem="L0O-dN-50g" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="j1t-zf-yTz"/>
-                            <constraint firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="nD6-AB-hqj"/>
-                            <constraint firstItem="edS-Wz-lfl" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="r6E-tv-vpU"/>
-                            <constraint firstItem="edS-Wz-lfl" firstAttribute="top" secondItem="cri-lb-Lak" secondAttribute="bottom" constant="-44" id="zvL-8N-ncp"/>
+                            <constraint firstItem="edS-Wz-lfl" firstAttribute="leading" secondItem="Mz8-m1-zLi" secondAttribute="leading" id="HYF-an-Jzj"/>
+                            <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" id="XD5-9i-hCY"/>
+                            <constraint firstItem="Mz8-m1-zLi" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="fRm-Gn-SKc"/>
+                            <constraint firstItem="L0O-dN-50g" firstAttribute="top" secondItem="Mz8-m1-zLi" secondAttribute="top" id="j1t-zf-yTz"/>
+                            <constraint firstItem="Mz8-m1-zLi" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="nD6-AB-hqj"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="Mz8-m1-zLi"/>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
@@ -127,18 +128,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="31.884057971014496" y="36.684782608695656"/>
+            <point key="canvasLocation" x="31.199999999999999" y="36.206896551724142"/>
         </scene>
         <!--Actions-->
         <scene sceneID="rd5-J8-NME">
             <objects>
                 <viewController storyboardIdentifier="actionsViewController" title="Actions" id="fYk-Sh-XFh" customClass="ActionsController" customModule="Seven_Bridges" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="WHr-2q-bxT"/>
-                        <viewControllerLayoutGuide type="bottom" id="frV-uk-Isf"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="zad-oU-6bJ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yPk-5x-jxc">
@@ -146,7 +143,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="bvk-1D-RbA" style="IBUITableViewCellStyleDefault" id="bzz-Aw-lmu">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="bvk-1D-RbA" style="IBUITableViewCellStyleDefault" id="bzz-Aw-lmu">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bzz-Aw-lmu" id="M1f-iG-yb2">
@@ -171,6 +168,7 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="S6r-JP-e33"/>
                     </view>
                     <connections>
                         <outlet property="tableView" destination="yPk-5x-jxc" id="59X-0K-Wv1"/>
