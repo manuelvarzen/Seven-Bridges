@@ -22,7 +22,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cri-lb-Lak" customClass="Graph" customModule="Seven_Bridges" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                         <color key="value" red="0.86274509799999999" green="0.86274509799999999" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -32,8 +32,37 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </scrollView>
+                            <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edS-Wz-lfl">
+                                <rect key="frame" x="0.0" y="692" width="414" height="44"/>
+                                <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
+                                <items>
+                                    <barButtonItem id="rQw-gE-GQy" userLabel="Decrease Edge Weight Button">
+                                        <connections>
+                                            <action selector="decreaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="NRV-id-sal"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="48" id="r8F-wu-KsD" userLabel="Edge Weight Indicator"/>
+                                    <barButtonItem id="akk-5O-cz9" userLabel="Increase Edge Weight Button">
+                                        <connections>
+                                            <action selector="increaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="bBn-jZ-ZH2"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="tDz-dT-hxy"/>
+                                    <barButtonItem enabled="NO" id="pjb-zS-hWe">
+                                        <connections>
+                                            <action selector="removeSelectedEdge:" destination="BYZ-38-t0r" id="AOb-VN-eaO"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
+                                    <barButtonItem systemItem="trash" id="Ldv-SX-xIS">
+                                        <connections>
+                                            <action selector="deleteSelectedNodes:" destination="BYZ-38-t0r" id="Ddf-9i-I9u"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="top" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L0O-dN-50g">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                                 <items>
                                     <barButtonItem title="Clear" id="IIX-sD-YGu">
                                         <connections>
@@ -66,35 +95,6 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edS-Wz-lfl">
-                                <rect key="frame" x="0.0" y="692" width="414" height="44"/>
-                                <color key="backgroundColor" red="0.86274509803921573" green="0.86274509803921573" blue="0.86274509803921573" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
-                                <items>
-                                    <barButtonItem id="rQw-gE-GQy" userLabel="Decrease Edge Weight Button">
-                                        <connections>
-                                            <action selector="decreaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="NRV-id-sal"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="48" id="r8F-wu-KsD" userLabel="Edge Weight Indicator"/>
-                                    <barButtonItem id="akk-5O-cz9" userLabel="Increase Edge Weight Button">
-                                        <connections>
-                                            <action selector="increaseSelectedEdgeWeight:" destination="BYZ-38-t0r" id="bBn-jZ-ZH2"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="tDz-dT-hxy"/>
-                                    <barButtonItem enabled="NO" id="pjb-zS-hWe">
-                                        <connections>
-                                            <action selector="removeSelectedEdge:" destination="BYZ-38-t0r" id="AOb-VN-eaO"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eYB-c5-oSO"/>
-                                    <barButtonItem systemItem="trash" id="Ldv-SX-xIS">
-                                        <connections>
-                                            <action selector="deleteSelectedNodes:" destination="BYZ-38-t0r" id="Ddf-9i-I9u"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -102,9 +102,9 @@
                             <constraint firstItem="edS-Wz-lfl" firstAttribute="leading" secondItem="cri-lb-Lak" secondAttribute="leading" id="ABK-aC-Zrw"/>
                             <constraint firstItem="L0O-dN-50g" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="BJg-30-lmv"/>
                             <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" id="D43-ID-CJ5"/>
-                            <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="44" id="FyK-Y9-n44"/>
                             <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="KzS-uz-vml"/>
-                            <constraint firstItem="L0O-dN-50g" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="jkU-jp-H6x"/>
+                            <constraint firstItem="cri-lb-Lak" firstAttribute="top" secondItem="L0O-dN-50g" secondAttribute="bottom" id="gkL-nQ-uub"/>
+                            <constraint firstItem="L0O-dN-50g" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="j1t-zf-yTz"/>
                             <constraint firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="nD6-AB-hqj"/>
                             <constraint firstItem="edS-Wz-lfl" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="r6E-tv-vpU"/>
                             <constraint firstItem="edS-Wz-lfl" firstAttribute="top" secondItem="cri-lb-Lak" secondAttribute="bottom" constant="-44" id="zvL-8N-ncp"/>

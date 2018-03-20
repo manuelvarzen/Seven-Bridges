@@ -9,12 +9,11 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
     override func viewDidLoad() {
         graph.parentVC = self
+        
+        // remove top border to create seamless look with status bar
+        mainToolbar.clipsToBounds = true
         
         // prepare Actions Menu
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
