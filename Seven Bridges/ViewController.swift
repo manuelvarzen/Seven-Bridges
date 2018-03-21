@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIBarPositioningDelegate, UIToolbarDelegate {
     
-    // If the device is an iPhone, portrait is the only supported orientation.
-    // Otherwise, all but upside down is supported.
+    /// If the device is an iPhone, portrait is the only supported orientation.
+    /// Otherwise, all but upside down is supported.
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {
             return UIInterfaceOrientationMask.portrait
@@ -19,10 +19,14 @@ class ViewController: UIViewController {
         return UIInterfaceOrientationMask.allButUpsideDown
     }
     
+    /// Perform additional setup when the view is ready to be shown.
     override func viewDidLoad() {
         graph.parentVC = self
         
-        // prepare Actions Menu
+        // set positioning delegate for the main toolbar
+        mainToolbar.delegate = self
+        
+        // prepare the actions menu
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         actionsVC = storyboard.instantiateViewController(withIdentifier: "actionsViewController") as! ActionsController
         actionsVC.modalPresentationStyle = .popover
@@ -30,6 +34,12 @@ class ViewController: UIViewController {
         actionsVC.viewControllerDelegate = self
     }
     
+    /// Sets the position of the main toolbar to top, so that its shadow is below
+    func position(for bar: UIBarPositioning) -> UIBarPosition {
+        return UIBarPosition.top
+    }
+    
+    /// The actions menu.
     private var actionsVC: ActionsController!
     
     @IBOutlet weak var selectModeButton: UIBarButtonItem!
@@ -92,6 +102,7 @@ class ViewController: UIViewController {
         edgesModeButton.isEnabled = false
     }
     
+    /// Puts the graph into nodes mode and updates the selectModeButton.
     func exitSelectMode(_ sender: UIBarButtonItem, graphWasJustCleared: Bool = false) {
         if !graphWasJustCleared {
             graph.deselectNodes(unhighlight: true, resetEdgeProperties: true)
