@@ -134,15 +134,15 @@
         <!--ActionsTable-->
         <scene sceneID="HcA-hb-Hdc">
             <objects>
-                <tableViewController title="ActionsTable" id="aGz-s1-fy9" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="AAs-ex-ros">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="690"/>
+                <tableViewController title="ActionsTable" id="aGz-s1-fy9" customClass="ActionsController" customModule="Seven_Bridges" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="AAs-ex-ros">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection id="XXy-ye-czu" userLabel="Miscellaneous">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="var-qf-Qc4" userLabel="Directed Edges">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="var-qf-Qc4" userLabel="Directed Edges">
                                         <rect key="frame" x="0.0" y="35" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="var-qf-Qc4" id="m2J-Os-4D5">
@@ -151,7 +151,9 @@
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FAT-yL-ZQ1">
                                                     <rect key="frame" x="310" y="6.6666666666666679" width="51" height="31.000000000000004"/>
-                                                    <color key="tintColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <connections>
+                                                        <action selector="toggleDirectedEdges:" destination="aGz-s1-fy9" eventType="valueChanged" id="GZt-pH-AIl"/>
+                                                    </connections>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Directed Edges" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJc-Bf-7cn">
                                                     <rect key="frame" x="15.999999999999993" y="11.999999999999998" width="117.33333333333331" height="20.333333333333329"/>
@@ -378,44 +380,36 @@
                             <outlet property="delegate" destination="aGz-s1-fy9" id="gYB-5Q-CHt"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Actions" largeTitleDisplayMode="never" id="4Bl-1o-izZ">
+                        <barButtonItem key="leftBarButtonItem" title="Close" id="Rko-js-uxW">
+                            <color key="tintColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="close:" destination="aGz-s1-fy9" id="gKs-W5-til"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4e1-Kc-JfF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1519" y="35"/>
+            <point key="canvasLocation" x="1572" y="36"/>
         </scene>
         <!--Actions-->
-        <scene sceneID="93C-E1-Fok">
+        <scene sceneID="wTU-OD-cIj">
             <objects>
-                <viewController storyboardIdentifier="actionsViewController" title="Actions" id="Lqv-pz-5wD" customClass="ActionsController" customModule="Seven_Bridges" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="baA-G4-GXS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JL3-vs-JwS">
-                                <rect key="frame" x="0.0" y="44" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <items>
-                                    <navigationItem title="Actions" id="Vmi-4r-e5Q">
-                                        <barButtonItem key="leftBarButtonItem" title="Close" id="jOG-fY-h5u"/>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3RB-wz-Ngo">
-                                <rect key="frame" x="0.0" y="88" width="375" height="690"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <connections>
-                                    <segue destination="aGz-s1-fy9" kind="embed" id="F73-jJ-ESh"/>
-                                </connections>
-                            </containerView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="kcw-X0-AFq"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KxR-C2-Phg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController storyboardIdentifier="actionsNavController" title="Actions" automaticallyAdjustsScrollViewInsets="NO" id="Shb-V8-KpE" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ozv-2e-8rI">
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="aGz-s1-fy9" kind="relationship" relationship="rootViewController" id="Iu2-US-tQE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KCb-zd-ste" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="722" y="36"/>
+            <point key="canvasLocation" x="778" y="36"/>
         </scene>
     </scenes>
 </document>

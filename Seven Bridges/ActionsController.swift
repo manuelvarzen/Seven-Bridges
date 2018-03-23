@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ActionsController: UIViewController {
+class ActionsController: UITableViewController {
     
     /// The parent view controller that contains the graph.
-    weak var viewControllerDelegate: ViewController?
+    weak var viewControllerDelegate: ViewController!
     
     /// The graph that the actions will be applied to.
     weak var graph: Graph!

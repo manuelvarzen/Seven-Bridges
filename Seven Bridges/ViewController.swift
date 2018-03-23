@@ -28,19 +28,24 @@ class ViewController: UIViewController, UIBarPositioningDelegate, UIToolbarDeleg
         
         // prepare the actions menu
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        actionsVC = storyboard.instantiateViewController(withIdentifier: "actionsViewController") as! ActionsController
-        actionsVC.modalPresentationStyle = .popover
+        actionsNVC = storyboard.instantiateViewController(withIdentifier: "actionsNavController") as! UINavigationController
+        actionsNVC.modalPresentationStyle = .popover
+        
+        actionsVC = actionsNVC.topViewController as! ActionsController
         actionsVC.graph = graph
         actionsVC.viewControllerDelegate = self
     }
     
-    /// Sets the position of the main toolbar to top, so that its shadow is below
+    /// Sets the position of the main toolbar to top so that its shadow is below
     func position(for bar: UIBarPositioning) -> UIBarPosition {
         return UIBarPosition.top
     }
     
-    /// The actions menu.
+    /// The actions menu table view.
     private var actionsVC: ActionsController!
+    
+    /// The actions menu navigation controller.
+    private var actionsNVC: UINavigationController!
     
     @IBOutlet weak var selectModeButton: UIBarButtonItem!
     
@@ -131,8 +136,8 @@ class ViewController: UIViewController, UIBarPositioningDelegate, UIToolbarDeleg
     }
     
     @IBAction func openActionsPopover(_ sender: UIBarButtonItem) {
-        actionsVC.popoverPresentationController?.barButtonItem = sender
-        present(actionsVC, animated: true)
+        actionsNVC.popoverPresentationController?.barButtonItem = sender
+        present(actionsNVC, animated: true)
     }
     
     @IBAction func clearGraph(sender: UIBarButtonItem) {
