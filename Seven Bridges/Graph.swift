@@ -412,9 +412,10 @@ import UIKit
             return
         }
         
-        // renumer according to index + 1
+        // renumber by index + 1
         for (index, node) in nodes.enumerated() {
             node.label.text = String(index + 1)
+            node.setNeedsDisplay()
         }
     }
     
