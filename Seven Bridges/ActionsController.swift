@@ -24,6 +24,10 @@ class ActionsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section != 0 else {
+            return
+        }
+        
         dismissView()
         
         switch indexPath.section {
