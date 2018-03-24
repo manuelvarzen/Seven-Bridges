@@ -255,11 +255,20 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e67-Pu-TRn">
+                                                    <rect key="frame" x="350" y="13" width="9" height="17"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <color key="textColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="e67-Pu-TRn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bQN-Ei-dj0" secondAttribute="leadingMargin" id="4rH-BC-UaW"/>
                                                 <constraint firstItem="txQ-CY-TLe" firstAttribute="leading" secondItem="bQN-Ei-dj0" secondAttribute="leadingMargin" id="ICx-SA-9ST"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="txQ-CY-TLe" secondAttribute="trailingMargin" id="P8A-Mg-9BX"/>
                                                 <constraint firstItem="txQ-CY-TLe" firstAttribute="centerY" secondItem="bQN-Ei-dj0" secondAttribute="centerY" id="WKk-Ok-5Ka"/>
+                                                <constraint firstItem="e67-Pu-TRn" firstAttribute="centerY" secondItem="bQN-Ei-dj0" secondAttribute="centerY" id="c6f-YM-YhW"/>
+                                                <constraint firstItem="e67-Pu-TRn" firstAttribute="trailing" secondItem="bQN-Ei-dj0" secondAttribute="trailingMargin" id="r6F-Pp-cQ7"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -276,11 +285,20 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="REq-sL-nGd">
+                                                    <rect key="frame" x="351.66666666666669" y="13" width="7.3333333333333144" height="17"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <color key="textColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="REq-sL-nGd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KsU-sc-WQY" secondAttribute="leadingMargin" id="1cT-Qx-INe"/>
+                                                <constraint firstItem="REq-sL-nGd" firstAttribute="centerY" secondItem="KsU-sc-WQY" secondAttribute="centerY" id="3wv-8w-I5u"/>
                                                 <constraint firstItem="P0c-dS-OR5" firstAttribute="centerY" secondItem="KsU-sc-WQY" secondAttribute="centerY" id="7Xi-Bf-Ily"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="P0c-dS-OR5" secondAttribute="trailingMargin" id="FS5-WN-08y"/>
                                                 <constraint firstItem="P0c-dS-OR5" firstAttribute="leading" secondItem="KsU-sc-WQY" secondAttribute="leadingMargin" id="e7q-E5-k6o"/>
+                                                <constraint firstItem="REq-sL-nGd" firstAttribute="trailing" secondItem="KsU-sc-WQY" secondAttribute="trailingMargin" id="kyg-eP-cSM"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -318,10 +336,19 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lnL-g8-qTt">
+                                                    <rect key="frame" x="350" y="13" width="9" height="17"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <color key="textColor" red="0.75488656759999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="m9S-Af-dkE" firstAttribute="leading" secondItem="EKs-bc-wnH" secondAttribute="leadingMargin" id="6xm-Za-5a9"/>
+                                                <constraint firstItem="lnL-g8-qTt" firstAttribute="trailing" secondItem="EKs-bc-wnH" secondAttribute="trailingMargin" id="bp2-SC-cDe"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="m9S-Af-dkE" secondAttribute="trailingMargin" id="eOd-Xw-834"/>
+                                                <constraint firstItem="lnL-g8-qTt" firstAttribute="centerY" secondItem="EKs-bc-wnH" secondAttribute="centerY" id="fkr-cH-SCn"/>
+                                                <constraint firstItem="lnL-g8-qTt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EKs-bc-wnH" secondAttribute="leadingMargin" id="lpf-aJ-ZzJ"/>
                                                 <constraint firstItem="m9S-Af-dkE" firstAttribute="centerY" secondItem="EKs-bc-wnH" secondAttribute="centerY" id="ocC-Mc-Vaf"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -391,7 +418,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4e1-Kc-JfF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1572" y="36"/>
+            <point key="canvasLocation" x="1572" y="35.467980295566505"/>
         </scene>
         <!--Actions-->
         <scene sceneID="wTU-OD-cIj">
