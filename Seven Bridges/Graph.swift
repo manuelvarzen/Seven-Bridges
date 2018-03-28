@@ -748,7 +748,7 @@ import UIKit
     /// Bron-Kerbosch maximal clique algorithm
     func bronKerbosch() {
         guard nodes.count > 1 else {
-            Announcement.new(title: "Bron-Kerbosch", message: "The graph must have 2 or more nodes in order for Bron-Kerbosch to run.")
+            Announcement.new(title: "Bron-Kerbosch Maximal Clique", message: "The graph must have 2 or more nodes in order for Bron-Kerbosch to run.")
             return
         }
         

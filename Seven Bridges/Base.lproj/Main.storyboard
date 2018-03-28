@@ -101,13 +101,11 @@
                             <constraint firstItem="Mz8-m1-zLi" firstAttribute="bottom" secondItem="edS-Wz-lfl" secondAttribute="bottom" id="Awe-Uj-hrk"/>
                             <constraint firstItem="L0O-dN-50g" firstAttribute="leading" secondItem="Mz8-m1-zLi" secondAttribute="leading" id="BJg-30-lmv"/>
                             <constraint firstItem="cri-lb-Lak" firstAttribute="leading" secondItem="L0O-dN-50g" secondAttribute="leading" id="CRp-5r-yE8"/>
-                            <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" constant="78" id="D43-ID-CJ5"/>
                             <constraint firstItem="edS-Wz-lfl" firstAttribute="leading" secondItem="L0O-dN-50g" secondAttribute="leading" id="JCl-FG-bEo"/>
-                            <constraint firstAttribute="bottom" secondItem="cri-lb-Lak" secondAttribute="bottom" constant="78" id="XD5-9i-hCY"/>
+                            <constraint firstItem="edS-Wz-lfl" firstAttribute="top" secondItem="cri-lb-Lak" secondAttribute="bottom" id="Yff-Tt-hm9"/>
                             <constraint firstItem="edS-Wz-lfl" firstAttribute="trailing" secondItem="L0O-dN-50g" secondAttribute="trailing" id="e7d-SD-99o"/>
                             <constraint firstItem="Mz8-m1-zLi" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="fRm-Gn-SKc"/>
                             <constraint firstItem="L0O-dN-50g" firstAttribute="top" secondItem="Mz8-m1-zLi" secondAttribute="top" id="j1t-zf-yTz"/>
-                            <constraint firstItem="Mz8-m1-zLi" firstAttribute="trailing" secondItem="cri-lb-Lak" secondAttribute="trailing" id="nD6-AB-hqj"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Mz8-m1-zLi"/>
                     </view>
