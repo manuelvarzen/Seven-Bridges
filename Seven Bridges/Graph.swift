@@ -19,9 +19,9 @@ import UIKit
     
     /// Will be true when an algorithm was just run.
     /// When true, the actions menu button is disabled.
-    var justRanAlgorithm = false {
+    var isActionsMenuDisabled = false {
         didSet {
-            if justRanAlgorithm {
+            if isActionsMenuDisabled {
                 parentVC?.actionsMenuButton.isEnabled = false
             } else {
                 parentVC?.actionsMenuButton.isEnabled = true
@@ -483,7 +483,7 @@ import UIKit
                 // outline the shortest path
                 path.outline(wait: traversals.count * 3)
                 
-                justRanAlgorithm = true
+                isActionsMenuDisabled = true
             } else {
                 // create modal alert for no path found
                 Announcement.new(title: "Shortest Path", message: "No path found from \(a) to \(b).")
@@ -577,7 +577,7 @@ import UIKit
             
             path.outline(wait: 0)
             
-            justRanAlgorithm = true
+            isActionsMenuDisabled = true
         }
         
         if isDirected {
@@ -644,7 +644,7 @@ import UIKit
             
             e.outline(wait: 0)
             
-            justRanAlgorithm = true
+            isActionsMenuDisabled = true
         }
         
         if isDirected {
@@ -658,7 +658,7 @@ import UIKit
         }
     }
     
-    /// Ford-Fulkerson Algorithm
+    /// Ford-Fulkerson max flow algorithm
     func fordFulkersonMaxFlow() {
         guard mode == .select && selectedNodes.count == 2 else {
             Announcement.new(title: "Ford-Fulkerson", message: "Please select two nodes for calculating max flow before running the Ford-Fulkerson algorithm.")
@@ -674,18 +674,19 @@ import UIKit
         
         var backwardEdges = Set<Edge>()
         
-        // returns an augmenting path from origin to target
+        // returns an augmenting path from source to sink
         func augmentedPath(from source: Node, to sink: Node, path: Path = Path()) -> Path? {
+            // source is sink, so return
             if source == sink {
                 return path
             }
 
-            // iterate over all edges connected to the origin
+            // iterate over all edges connected to the source node
             for edge in source.edges {
                 if !path.edges.contains(edge) {
                     let newPath = Path(path)
                     
-                    // edge forward
+                    // check if flow can be sent forward down the edge
                     if edge.residualCapacity! > 0 && source == edge.startNode {
                         newPath.append(edge)
                         
@@ -694,7 +695,7 @@ import UIKit
                         }
                     }
                     
-                    // edge backward
+                    // check if flow should be sent backward down the edge
                     if edge.flow! > 0 && edge.residualCapacity! > 0 && source == edge.endNode {
                         newPath.append(edge, ignoreNodes: true)
                         backwardEdges.insert(edge)
@@ -726,6 +727,7 @@ import UIKit
         }
         
         // assert that the outbound flow of every node (except s and t) is equal to its inbound flow
+        // this chunk is not necessary, but serves as a good debugging tool
         for (i, node) in nodes.enumerated() {
             if i != 0 && i != nodes.count - 1 {
                 let outbound = node.outboundFlow
@@ -734,9 +736,10 @@ import UIKit
             }
         }
         
-        justRanAlgorithm = true
-
-        // announce the max flow
+        // prevent user from accessing the actions menu
+        isActionsMenuDisabled = true
+        
+        // announce the max flow, which is the total inbound flow of the sink
         Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(selectedNodes.last!.inboundFlow).")
         
         deselectNodes()
@@ -801,7 +804,7 @@ import UIKit
             // highlight the max clique
             maxClique?.forEach({ $0.highlighted() })
             
-            justRanAlgorithm = true
+            isActionsMenuDisabled = true
         }
     }
     

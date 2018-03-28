@@ -124,7 +124,7 @@ class ViewController: UIViewController, UIBarPositioningDelegate, UIToolbarDeleg
         
         // actionsMenuButton is disabled from the graph after running an algorithm
         // therefore, undo
-        graph.justRanAlgorithm = false
+        graph.isActionsMenuDisabled = false
     }
     
     @IBAction func enterNodesMode(_ sender: UIBarButtonItem) {
