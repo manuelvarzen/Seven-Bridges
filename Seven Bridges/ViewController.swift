@@ -36,7 +36,7 @@ class ViewController: UIViewController, UIBarPositioningDelegate, UIToolbarDeleg
         actionsVC.viewControllerDelegate = self
     }
     
-    /// Sets the position of the main toolbar to top so that its shadow is below
+    /// Sets the position of the main toolbar to top so that its shadow is cast down instead of up
     func position(for bar: UIBarPositioning) -> UIBarPosition {
         return UIBarPosition.top
     }
@@ -121,10 +121,6 @@ class ViewController: UIViewController, UIBarPositioningDelegate, UIToolbarDeleg
         // re-enable toolbar buttons
         nodesModeButton.isEnabled = true
         edgesModeButton.isEnabled = true
-        
-        // actionsMenuButton is disabled from the graph after running an algorithm
-        // therefore, undo
-        graph.isActionsMenuDisabled = false
     }
     
     @IBAction func enterNodesMode(_ sender: UIBarButtonItem) {

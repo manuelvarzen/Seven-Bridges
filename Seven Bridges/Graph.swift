@@ -7,30 +7,27 @@
 
 import UIKit
 
-@IBDesignable class Graph: UIScrollView {
+/// Used to define the behavior or presentation of a Graph object.
+enum GraphMode {
+    case select
+    case viewOnly
+    case nodes
+    case edges
+}
+
+class Graph: UIScrollView {
     
-    /// Mode defining the action performed by user interaction.
-    enum Mode {
-        case select
-        case viewOnly
-        case nodes
-        case edges
-    }
-    
-    /// Will be true when an algorithm was just run.
-    /// When true, the actions menu button is disabled.
-    var isActionsMenuDisabled = false {
+    /// Determines the interactive behavior of the graph.
+    /// When the graph is in view-only mode, the actions menu in the main view controller will be disabled.
+    var mode: GraphMode = .nodes {
         didSet {
-            if isActionsMenuDisabled {
+            if mode == .viewOnly {
                 parentVC?.actionsMenuButton.isEnabled = false
             } else {
                 parentVC?.actionsMenuButton.isEnabled = true
             }
         }
     }
-    
-    /// Determines the interactive behavior of the Graph.
-    var mode = Mode.nodes
     
     /// Determines whether the graph draws directed or undirected edges.
     var isDirected: Bool = true {
@@ -426,8 +423,10 @@ import UIKit
             return
         }
         
-        mode = .viewOnly // do not allow the graph to be altered during execution
+        // do not allow the graph to be altered during execution
+        mode = .viewOnly
         
+        // the function that will be resumed should requirements be met
         func resumeFunction() {
             var traversals = [Path]()
             
@@ -482,8 +481,6 @@ import UIKit
                 
                 // outline the shortest path
                 path.outline(wait: traversals.count * 3)
-                
-                isActionsMenuDisabled = true
             } else {
                 // create modal alert for no path found
                 Announcement.new(title: "Shortest Path", message: "No path found from \(a) to \(b).")
@@ -576,8 +573,6 @@ import UIKit
             buildPath(from: root)
             
             path.outline(wait: 0)
-            
-            isActionsMenuDisabled = true
         }
         
         if isDirected {
@@ -643,8 +638,6 @@ import UIKit
             deselectNodes()
             
             e.outline(wait: 0)
-            
-            isActionsMenuDisabled = true
         }
         
         if isDirected {
@@ -672,9 +665,11 @@ import UIKit
             edge.flow = 0
         }
         
+        // edges whose flow can be sent backward to maximize flow
         var backwardEdges = Set<Edge>()
         
         // returns an augmenting path from source to sink
+        // if none exists, returns nil
         func augmentedPath(from source: Node, to sink: Node, path: Path = Path()) -> Path? {
             // source is sink, so return
             if source == sink {
@@ -728,6 +723,7 @@ import UIKit
         
         // assert that the outbound flow of every node (except s and t) is equal to its inbound flow
         // this chunk is not necessary, but serves as a good debugging tool
+        // note that for efficiency's sake, it should be removed for handling large graphs
         for (i, node) in nodes.enumerated() {
             if i != 0 && i != nodes.count - 1 {
                 let outbound = node.outboundFlow
@@ -735,9 +731,6 @@ import UIKit
                 assert(outbound == inbound, "\(node)'s inbound flow was \(inbound) but its outbound flow was \(outbound).")
             }
         }
-        
-        // prevent user from accessing the actions menu
-        isActionsMenuDisabled = true
         
         // announce the max flow, which is the total inbound flow of the sink
         Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(selectedNodes.last!.inboundFlow).")
@@ -803,12 +796,11 @@ import UIKit
         } else {
             // highlight the max clique
             maxClique?.forEach({ $0.highlighted() })
-            
-            isActionsMenuDisabled = true
         }
     }
     
     /// Prepares a pre-designed flow network.
+    /// FIXME: Currently does not work properly on iPhone.
     func prepareFlowNetworkExample() {
         clear()
         
@@ -864,7 +856,7 @@ import UIKit
     
     /// Called when all touches on the screen have ended.
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // continue if graph is in nodes mode
+        // continue only if graph is in nodes mode
         guard mode == .nodes else { return }
         
         // make new node where the graph view was touched

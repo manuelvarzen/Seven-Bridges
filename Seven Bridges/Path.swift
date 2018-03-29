@@ -194,13 +194,13 @@ class Path: CustomStringConvertible {
         return edges.first(where: { $0.startNode! == a && $0.endNode! == b })
     }
     
-    /// Outlines the path by highlighting all nodes and edges.
+    /// Outlines the path by highlighting node-edge pairs.
     ///
     /// - parameter duration: The total duration of the outlining. If nil, outlining does not expire.
-    /// - parameter wait: How many seconds to wait before outlining.
+    /// - parameter wait: How many seconds to wait before outlining each node and edge pair.
     /// - parameter color: The color the path will be outlined with. Defaults to black.
     ///
-    func outline(duration: Int? = nil, wait: Int = 0, color: UIColor = UIColor.black) {
+    func outline(duration: Int? = nil, wait: Int = 0, color: UIColor = .black) {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(wait), execute: {
             self.nodes.forEach({ node in
                 node.highlighted(color: color)
