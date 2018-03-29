@@ -705,6 +705,9 @@ class Graph: UIScrollView {
             return nil
         }
         
+        // counts the iterations in order to properly delay the announcement after path outlining is done
+        var iterations = 0
+        
         // while there is a path from s to t where all edges have capacity > 0...
         while let path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!) {
             // move flow along edges in path
@@ -717,13 +720,18 @@ class Graph: UIScrollView {
                     }
                 }
                 
+                // reset the backward edges set
                 backwardEdges.removeAll()
+                
+                iterations += 1
+                
+                path.outline(duration: 2, wait: 4 * iterations)
             }
         }
         
         // assert that the outbound flow of every node (except s and t) is equal to its inbound flow
         // this chunk is not necessary, but serves as a good debugging tool
-        // note that for efficiency's sake, it should be removed for handling large graphs
+        // note that for efficiency's sake, it should probably be removed for handling large graphs
         for (i, node) in nodes.enumerated() {
             if i != 0 && i != nodes.count - 1 {
                 let outbound = node.outboundFlow
@@ -732,8 +740,13 @@ class Graph: UIScrollView {
             }
         }
         
+        let sinkNode = selectedNodes.last!
+        
         // announce the max flow, which is the total inbound flow of the sink
-        Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(selectedNodes.last!.inboundFlow).")
+        // will be executed when all path outlining has completed
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(iterations * 4 + 1), execute: {
+            Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(sinkNode.inboundFlow).")
+        })
         
         deselectNodes()
     }
@@ -751,11 +764,11 @@ class Graph: UIScrollView {
         mode = .viewOnly
         
         // stores the clique iteration with the most nodes
-        // the clique with the greatest number of nodes will be the maximal clique
+        // this will hold the maximal clique
         var maxClique: Set<Node>?
         
         // recursively finds a clique
-        // when finished, the maximal clique should be stored in the cliques set
+        // when finished, the maximal clique should be stored in the maxClique variable
         func recurse(r: inout Set<Node>, p: inout Set<Node>, x: inout Set<Node>) {
             if p.isEmpty && x.isEmpty {
                 // r should now be a maximal clique, so insert into cliques and return
