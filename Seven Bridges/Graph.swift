@@ -637,7 +637,7 @@ class Graph: UIScrollView {
             
             deselectNodes()
             
-            e.outline(wait: 0)
+            e.outline()
         }
         
         if isDirected {
