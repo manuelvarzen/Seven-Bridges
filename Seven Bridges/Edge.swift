@@ -34,18 +34,10 @@ import UIKit
     var endNode: Node!
     
     /// Weight of the edge.
-    var weight = 1 {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
+    var weight = 1
     
     /// Flow of the edge being used.
-    var flow: Int? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
+    var flow: Int?
     
     var reverseFlow: Int?
     
@@ -133,16 +125,19 @@ import UIKit
     }
     
     /// Updates the content of the edge's label.
-    private func updateLabel() {
+    ///
+    /// - parameter transitionDuration: How long (in seconds) the transition to the updated label will last for.
+    ///
+    func updateLabel(transitionDuration: Double = 0.2) {
         if weight < 2 && flow == nil {
             // label should be blank (invisible) if the edge's weight is 1 and flow is not displayed
             label.text = nil
         } else if flow != nil {
             // when flow is being displayed
-            label.changeTextWithFade(to: "\(flow!) / \(weight)")
+            label.changeTextWithFade(to: "\(flow!) / \(weight)", duration: transitionDuration)
         } else {
             // when the edge has a weight greater than 1 and flow is not displayed
-            label.changeTextWithFade(to: String(weight), duration: 0.2)
+            label.changeTextWithFade(to: String(weight), duration: transitionDuration)
         }
         
         // update location of label
@@ -150,7 +145,7 @@ import UIKit
     }
     
     /// Updates size of the frame based on the distance between the start node and end node.
-    private func updateSize() {
+    func updateSize() {
         // determine size of frame
         let width = abs(startNode!.frame.origin.x - endNode!.frame.origin.x) + Node.diameter
         let height = abs(startNode!.frame.origin.y - endNode!.frame.origin.y) + Node.diameter
@@ -161,7 +156,7 @@ import UIKit
     }
     
     /// Updates origin of the frame based on the leftmost node.
-    private func updateOrigin() {
+    func updateOrigin() {
         // set location of frame around nodes
         frame.origin = CGPoint(x: min(startNode!.frame.origin.x, endNode!.frame.origin.x), y: min(startNode!.frame.origin.y, endNode!.frame.origin.y))
     }
@@ -257,8 +252,6 @@ import UIKit
         
         // stroke the line
         path.stroke()
-        
-        updateLabel()
     }
     
 }

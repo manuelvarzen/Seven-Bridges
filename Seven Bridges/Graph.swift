@@ -169,6 +169,24 @@ class Graph: UIScrollView {
         selectedNodes.removeAll()
     }
     
+    /// Adds a given edge to the graph.
+    ///
+    /// - parameter edge: The edge to be added to the graph.
+    ///
+    func addEdge(_ edge: Edge) {
+        // add edge to the graph
+        addSubview(edge)
+        
+        // send edge to the back
+        sendSubview(toBack: edge)
+        
+        // add to edge set
+        edges.insert(edge)
+        
+        // add connection to matrix
+        nodeMatrix[edge.startNode]?.insert(edge.endNode)
+    }
+    
     /// Adds a new node to the graph at the location of the touch(es) given.
     ///
     /// - paramater with: The set of touches used to determine the location of the node.
@@ -385,6 +403,7 @@ class Graph: UIScrollView {
     func shiftSelectedEdgeWeight(by shift: Int) {
         if let edge = selectedEdge {
             edge.weight += shift
+            edge.updateLabel()
             
             // update weight label
             parentVC?.edgeWeightIndicator.title = String(edge.weight)
@@ -398,6 +417,7 @@ class Graph: UIScrollView {
     func resetAllEdgeWeights(to weight: Int = 1) {
         for edge in edges {
             edge.weight = weight
+            edge.updateLabel()
         }
     }
     
@@ -718,6 +738,11 @@ class Graph: UIScrollView {
                     } else {
                         edge.flow! += flow
                     }
+                    
+                    // update the label in sync with the path outlining
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4 * iterations), execute: {
+                        edge.updateLabel(transitionDuration: 1)
+                    })
                 }
                 
                 // reset the backward edges set
@@ -744,7 +769,7 @@ class Graph: UIScrollView {
         
         // announce the max flow, which is the total inbound flow of the sink
         // will be executed when all path outlining has completed
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(iterations * 4), execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4 * iterations), execute: {
             Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(sinkNode.inboundFlow).")
         })
         
@@ -847,24 +872,34 @@ class Graph: UIScrollView {
         }
         
         // create edge from 1 to 2
-        addEdge(from: nodes[0], to: nodes[1])
-        edge(from: nodes[0], to: nodes[1])?.weight = 5
+        let first = Edge(from: nodes[0], to: nodes[1])
+        first.weight = 5
+        first.updateLabel()
+        addEdge(first)
         
         // edge from 1 to 3
-        addEdge(from: nodes[0], to: nodes[2])
-        edge(from: nodes[0], to: nodes[2])?.weight = 5
+        let second = Edge(from: nodes[0], to: nodes[2])
+        second.weight = 5
+        second.updateLabel()
+        addEdge(second)
         
         // edge from 2 to 3
-        addEdge(from: nodes[1], to: nodes[2])
-        edge(from: nodes[1], to: nodes[2])?.weight = 3
+        let third = Edge(from: nodes[1], to: nodes[2])
+        third.weight = 3
+        third.updateLabel()
+        addEdge(third)
         
         // edge from 2 to 4
-        addEdge(from: nodes[1], to: nodes[3])
-        edge(from: nodes[1], to: nodes[3])?.weight = 3
+        let fourth = Edge(from: nodes[1], to: nodes[3])
+        fourth.weight = 3
+        fourth.updateLabel()
+        addEdge(fourth)
         
         // edge from 3 to 4
-        addEdge(from: nodes[2], to: nodes[3])
-        edge(from: nodes[2], to: nodes[3])?.weight = 7
+        let fifth = Edge(from: nodes[2], to: nodes[3])
+        fifth.weight = 7
+        fifth.updateLabel()
+        addEdge(fifth)
     }
     
     /// Called when all touches on the screen have ended.
