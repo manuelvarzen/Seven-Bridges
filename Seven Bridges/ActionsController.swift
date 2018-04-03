@@ -47,11 +47,11 @@ class ActionsController: UITableViewController {
         
         switch indexPath.section {
         case 1:
-            quickAction(at: indexPath.row)
+            self.quickAction(at: indexPath.row)
         case 2:
-            algorithm(at: indexPath.row)
+            self.algorithm(at: indexPath.row)
         case 3:
-            template(at: indexPath.row)
+            self.template(at: indexPath.row)
         default:
             print("A cell was selected in section: \(indexPath.section)")
         }

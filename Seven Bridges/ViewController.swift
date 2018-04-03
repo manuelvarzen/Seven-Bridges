@@ -36,7 +36,7 @@ class ViewController: UIViewController, UIBarPositioningDelegate, UIToolbarDeleg
         actionsVC.viewControllerDelegate = self
     }
     
-    /// Sets the position of the main toolbar to top so that its shadow is cast down instead of up
+    /// Sets the position of the main toolbar to top so that its shadow is cast down instead of up.
     func position(for bar: UIBarPositioning) -> UIBarPosition {
         return UIBarPosition.top
     }

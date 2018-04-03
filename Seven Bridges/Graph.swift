@@ -670,7 +670,7 @@ class Graph: UIScrollView {
         
         // returns an augmenting path from source to sink
         // if none exists, returns nil
-        func augmentedPath(from source: Node, to sink: Node, path: Path = Path()) -> Path? {
+        func augmentedPath(from source: Node, to sink: Node, along path: Path = Path()) -> Path? {
             // source is sink, so return
             if source == sink {
                 return path
@@ -685,7 +685,7 @@ class Graph: UIScrollView {
                     if edge.residualCapacity! > 0 && source == edge.startNode {
                         newPath.append(edge)
                         
-                        if let result = augmentedPath(from: edge.endNode!, to: sink, path: newPath) {
+                        if let result = augmentedPath(from: edge.endNode!, to: sink, along: newPath) {
                             return result
                         }
                     }
@@ -695,7 +695,7 @@ class Graph: UIScrollView {
                         newPath.append(edge, ignoreNodes: true)
                         backwardEdges.insert(edge)
                         
-                        if let result = augmentedPath(from: edge.startNode!, to: sink, path: newPath) {
+                        if let result = augmentedPath(from: edge.startNode!, to: sink, along: newPath) {
                             return result
                         }
                     }
@@ -723,9 +723,9 @@ class Graph: UIScrollView {
                 // reset the backward edges set
                 backwardEdges.removeAll()
                 
-                iterations += 1
-                
                 path.outline(duration: 2, wait: 4 * iterations)
+                
+                iterations += 1
             }
         }
         
@@ -744,7 +744,7 @@ class Graph: UIScrollView {
         
         // announce the max flow, which is the total inbound flow of the sink
         // will be executed when all path outlining has completed
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(iterations * 4 + 1), execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(iterations * 4), execute: {
             Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(sinkNode.inboundFlow).")
         })
         
