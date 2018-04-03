@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		511031E11FC50CCB0062F026 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511031E01FC50CCB0062F026 /* Path.swift */; };
+		515714B62073E17C0046573A /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 515714B52073E17C0046573A /* UILabel+Extension.swift */; };
 		51839D0E1EFD9240003B7B40 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51839D0D1EFD9240003B7B40 /* AppDelegate.swift */; };
 		51839D101EFD9240003B7B40 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51839D0F1EFD9240003B7B40 /* ViewController.swift */; };
 		51839D131EFD9240003B7B40 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51839D111EFD9240003B7B40 /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		511031E01FC50CCB0062F026 /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
+		515714B52073E17C0046573A /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		51839D0A1EFD9240003B7B40 /* Seven Bridges.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seven Bridges.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		51839D0D1EFD9240003B7B40 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		51839D0F1EFD9240003B7B40 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 				511031E01FC50CCB0062F026 /* Path.swift */,
 				51839D1F1EFD95EC003B7B40 /* Node.swift */,
 				51839D211EFDABAB003B7B40 /* Edge.swift */,
+				515714B52073E17C0046573A /* UILabel+Extension.swift */,
 				51839D111EFD9240003B7B40 /* Main.storyboard */,
 				51839D161EFD9240003B7B40 /* LaunchScreen.storyboard */,
 				51839D141EFD9240003B7B40 /* Assets.xcassets */,
@@ -164,6 +167,7 @@
 				51839D221EFDABAB003B7B40 /* Edge.swift in Sources */,
 				51839D0E1EFD9240003B7B40 /* AppDelegate.swift in Sources */,
 				51839D201EFD95EC003B7B40 /* Node.swift in Sources */,
+				515714B62073E17C0046573A /* UILabel+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -87,6 +87,7 @@ import UIKit
         
         updateOrigin()
         
+        // allow drawing outside its bounds so that its label is not cut off
         clipsToBounds = false
         
         label = UILabel(frame: CGRect(x: bounds.midX, y: bounds.midY, width: 64, height: 64))
@@ -133,13 +134,15 @@ import UIKit
     
     /// Updates the content of the edge's label.
     private func updateLabel() {
-        if weight < 2 {
-            // label should be blank (invisible) if the edge's weight is 1
+        if weight < 2 && flow == nil {
+            // label should be blank (invisible) if the edge's weight is 1 and flow is not displayed
             label.text = nil
         } else if flow != nil {
-            label.text = "\(flow!) / \(weight)"
+            // when flow is being displayed
+            label.changeTextWithFade(to: "\(flow!) / \(weight)")
         } else {
-            label.text = String(weight)
+            // when the edge has a weight greater than 1 and flow is not displayed
+            label.changeTextWithFade(to: String(weight), duration: 0.2)
         }
         
         // update location of label
