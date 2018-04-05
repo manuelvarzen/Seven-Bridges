@@ -699,11 +699,11 @@ class Graph: UIScrollView {
 
             // iterate over all edges connected to the source node
             for edge in source.edges {
-                if !path.edges.contains(edge) {
+                if !path.edges.contains(edge) && edge.residualCapacity! > 0 {
                     let newPath = Path(path)
                     
                     // check if flow can be sent forward down the edge
-                    if edge.residualCapacity! > 0 && source == edge.startNode {
+                    if source == edge.startNode {
                         newPath.append(edge)
                         
                         if let result = augmentedPath(from: edge.endNode!, to: sink, along: newPath) {
@@ -712,7 +712,7 @@ class Graph: UIScrollView {
                     }
                     
                     // check if flow should be sent backward down the edge
-                    if edge.flow! > 0 && edge.residualCapacity! > 0 && source == edge.endNode {
+                    if edge.flow! > 0 && source == edge.endNode {
                         newPath.append(edge, ignoreNodes: true)
                         backwardEdges.insert(edge)
                         
