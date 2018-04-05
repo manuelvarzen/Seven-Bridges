@@ -292,6 +292,7 @@ class Graph: UIScrollView {
         if resetEdgeProperties {
             for edge in edges {
                 edge.flow = nil
+                edge.updateLabel()
             }
         }
         
@@ -752,6 +753,8 @@ class Graph: UIScrollView {
                 
                 iterations += 1
             }
+            
+            print(path) // TEMP
         }
         
         // assert that the outbound flow of every node (except s and t) is equal to its inbound flow
