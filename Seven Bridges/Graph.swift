@@ -116,10 +116,10 @@ class Graph: UIScrollView {
         updatePropertiesToolbar()
     }
     
-    /// Returns an edge in the graph given a start node and an end node
+    /// Returns an edge in the graph given a start node and an end node. If no matching edge exists, returns nil.
     ///
     /// - parameter from: The edge's start node.
-    /// - paramater to: The edge's end node.
+    /// - parameter to: The edge's end node.
     /// - parameter directed: Whether edge direction should be considered.
     ///
     func edge(from a: Node, to b: Node, directed: Bool = true) -> Edge? {
@@ -189,7 +189,7 @@ class Graph: UIScrollView {
     
     /// Adds a new node to the graph at the location of the touch(es) given.
     ///
-    /// - paramater with: The set of touches used to determine the location of the node.
+    /// - parameter with: The set of touches used to determine the location of the node.
     ///
     private func addNode(with touches: Set<UITouch>) {
         for touch in touches {
@@ -373,7 +373,7 @@ class Graph: UIScrollView {
             // remove from edges set
             edges.remove(edge)
             
-            // remove edge from matrix and list forms
+            // remove edge from matrix
             nodeMatrix[edge.startNode]?.remove(edge.endNode)
             
             updatePropertiesToolbar()
@@ -401,9 +401,9 @@ class Graph: UIScrollView {
     ///
     /// - parameter by: The value by which to shift the edge's weight.
     ///
-    func shiftSelectedEdgeWeight(by shift: Int) {
+    func shiftSelectedEdgeWeight(by delta: Int) {
         if let edge = selectedEdge {
-            edge.weight += shift
+            edge.weight += delta
             edge.updateLabel()
             
             // update weight label
@@ -753,8 +753,6 @@ class Graph: UIScrollView {
                 
                 iterations += 1
             }
-            
-            print(path) // TEMP
         }
         
         // assert that the outbound flow of every node (except s and t) is equal to its inbound flow
