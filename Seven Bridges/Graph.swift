@@ -497,11 +497,11 @@ class Graph: UIScrollView {
                 
                 // outline the traversals
                 for (i, path) in traversals.enumerated() {
-                    path.outline(duration: 2, wait: i * 3, color: UIColor.lightGray)
+                    path.outline(duration: 2, wait: i * 4, color: UIColor.lightGray)
                 }
                 
                 // outline the shortest path
-                path.outline(wait: traversals.count * 3)
+                path.outline(wait: traversals.count * 4)
             } else {
                 // create modal alert for no path found
                 Announcement.new(title: "Shortest Path", message: "No path found from \(a) to \(b).")

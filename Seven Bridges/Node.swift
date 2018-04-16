@@ -60,6 +60,9 @@ import UIKit
         }
     }
     
+    /// Whether the node is highlighted.
+    var isHighlighted: Bool = false
+    
     /// Color that the node is initialized with.
     private let initialColor: UIColor
     
@@ -213,6 +216,8 @@ import UIKit
         } else {
             self.color = initialColor
         }
+        
+        isHighlighted = enable
     }
     
     override func draw(_ rect: CGRect) {

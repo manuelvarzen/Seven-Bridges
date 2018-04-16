@@ -203,11 +203,15 @@ class Path: CustomStringConvertible {
     func outline(duration: Int? = nil, wait: Int = 0, color: UIColor = .black) {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(wait), execute: {
             self.nodes.forEach({ node in
-                node.highlighted(color: color)
+                if !node.isHighlighted {
+                    node.highlighted(color: color)
+                }
             })
             
             self.edges.forEach({ edge in
-                edge.highlighted(color: color)
+                if !edge.isHighlighted {
+                    edge.highlighted(color: color)
+                }
             })
         })
         
@@ -216,11 +220,15 @@ class Path: CustomStringConvertible {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(completionTime), execute: {
                 self.nodes.forEach({ node in
-                    node.highlighted(false)
+                    if node.isHighlighted {
+                        node.highlighted(false)
+                    }
                 })
                 
                 self.edges.forEach({ edge in
-                    edge.highlighted(false)
+                    if edge.isHighlighted {
+                        edge.highlighted(false)
+                    }
                 })
             })
         }
