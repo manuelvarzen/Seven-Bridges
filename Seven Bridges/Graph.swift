@@ -451,8 +451,8 @@ class Graph: UIScrollView {
         func resumeFunction() {
             var traversals = [Path]()
             
-            func findShortestPath(from source: Node, to sink: Node, shortestPath: Path = Path()) -> Path? {
-                let path = Path(shortestPath)
+            func findShortestPath(from source: Node, to sink: Node, along path: Path = Path()) -> Path? {
+                let path = Path(path)
                 path.append(source)
                 
                 if sink == source {
@@ -467,7 +467,7 @@ class Graph: UIScrollView {
                 
                 for node in source.adjacentNodes(directed: isDirected) {
                     if !path.contains(node) {
-                        if let newPath = findShortestPath(from: node, to: sink, shortestPath: path) {
+                        if let newPath = findShortestPath(from: node, to: sink, along: path) {
                             // add the new path to the history of traversals
                             traversals.append(newPath)
                             
@@ -839,23 +839,27 @@ class Graph: UIScrollView {
     }
     
     /// Prepares a pre-designed flow network.
-    /// FIXME: Currently does not work properly on iPhone.
     func prepareFlowNetworkExample() {
         clear()
         
+        // the amount by which the x and y coordinates of each node should be adjusted
+        // relative to the bounds of the Graph
+        let dx = floor(bounds.width / 3.5)
+        let dy = min(floor(bounds.height / 3), 250)
+        
         for i in 1...4 {
-            var x = center.x
-            var y = center.y
+            var x = bounds.midX
+            var y = bounds.midY
             
             switch i {
             case 1:
-                x -= 250
+                x -= dx
             case 2:
-                y -= 200
+                y -= dy
             case 3:
-                y += 200
+                y += dy
             case 4:
-                x += 250
+                x += dx
             default:
                 continue
             }
