@@ -681,73 +681,78 @@ class Graph: UIScrollView {
         
         mode = .viewOnly
         
-        // initialize all edges to flow of zero
+        let source = selectedNodes.first!
+        let sink = selectedNodes.last!
+        deselectNodes()
+        
+        // Create a network structure to emulate a residual graph.
+        var reverse = [Edge: Edge]()
+        var net = [Node: Set<Edge>]()
         for edge in edges {
             edge.flow = 0
+            
+            let backwardEdge = Edge()
+            backwardEdge.isHidden = true
+            backwardEdge.startNode = edge.endNode
+            backwardEdge.endNode = edge.startNode
+            backwardEdge.weight = 0
+            backwardEdge.flow = 0
+            
+            reverse[edge] = backwardEdge
+            reverse[backwardEdge] = edge
+            
+            if net[edge.startNode] == nil {
+                net[edge.startNode] = Set<Edge>()
+            }
+            
+            if net[backwardEdge.startNode] == nil {
+                net[backwardEdge.startNode] = Set<Edge>()
+            }
+            
+            net[edge.startNode]?.insert(edge)
+            net[backwardEdge.startNode]?.insert(backwardEdge)
         }
         
-        // edges whose flow can be sent backward to maximize flow
-        var backwardEdges = Set<Edge>()
-        
-        // returns an augmenting path from source to sink
-        // if none exists, returns nil
-        func augmentedPath(from source: Node, to sink: Node, along path: Path = Path()) -> Path? {
-            // source is sink, so return
+        // Returns an augmenting path if one exists. Otherwise, returns nil.
+        func augmentingPath(from source: Node, to sink: Node, along path: Path = Path()) -> Path? {
             if source == sink {
                 return path
             }
-
-            // iterate over all edges connected to the source node
-            for edge in source.edges {
-                if !path.edges.contains(edge) && edge.residualCapacity! > 0 {
+            
+            for edge in net[source]! {
+                if edge.residualCapacity! > 0 && !path.edges.contains(edge) {
                     let newPath = Path(path)
+                    newPath.append(edge, ignoreNodes: true)
                     
-                    // check if flow can be sent forward down the edge
-                    if source == edge.startNode {
-                        newPath.append(edge)
-                        
-                        if let result = augmentedPath(from: edge.endNode!, to: sink, along: newPath) {
-                            return result
-                        }
-                    }
-                    
-                    // check if flow should be sent backward down the edge
-                    if edge.flow! > 0 && source == edge.endNode {
-                        newPath.append(edge, ignoreNodes: true)
-                        backwardEdges.insert(edge)
-                        
-                        if let result = augmentedPath(from: edge.startNode!, to: sink, along: newPath) {
-                            return result
-                        }
+                    if let result = augmentingPath(from: edge.endNode, to: sink, along: newPath) {
+                        return result
                     }
                 }
             }
-
+            
             return nil
         }
         
-        // counts the iterations in order to properly delay the announcement after path outlining is done
+        // Counts the path iterations in order to properly delay the announcement after path outlining is done.
         var iterations = 0
         
-        // while there is a path from s to t where all edges have capacity > 0...
-        while let path = augmentedPath(from: selectedNodes.first!, to: selectedNodes.last!) {
-            // move flow along edges in path
-            if let flow = path.residualCapacity {
+        var maxFlow = 0
+        
+        // While there is a path from s to t where all edges have capacity > 0...
+        while let path = augmentingPath(from: source, to: sink) {
+            // ...move flow along edges in path.
+            if let residualCapacity = path.residualCapacity {
+                maxFlow += residualCapacity
+                
                 for edge in path.edges {
-                    if backwardEdges.contains(edge) {
-                        edge.flow! -= flow
-                    } else {
-                        edge.flow! += flow
-                    }
+                    edge.flow! += residualCapacity
+                    reverse[edge]!.flow! -= residualCapacity
                     
-                    // update the label in sync with the path outlining
+                    // Update the edge's label in sync with the path outlining.
                     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4 * iterations), execute: {
                         edge.updateLabel(transitionDuration: 1)
                     })
                 }
-                
-                // reset the backward edges set
-                backwardEdges.removeAll()
                 
                 path.outline(duration: 2, wait: 4 * iterations)
                 
@@ -755,26 +760,10 @@ class Graph: UIScrollView {
             }
         }
         
-        // assert that the outbound flow of every node (except s and t) is equal to its inbound flow
-        // this chunk is not necessary, but serves as a good debugging tool
-        // note that for efficiency's sake, it should probably be removed for handling large graphs
-        for (i, node) in nodes.enumerated() {
-            if i != 0 && i != nodes.count - 1 {
-                let outbound = node.outboundFlow
-                let inbound = node.inboundFlow
-                assert(outbound == inbound, "\(node)'s inbound flow was \(inbound) but its outbound flow was \(outbound).")
-            }
-        }
-        
-        let sinkNode = selectedNodes.last!
-        
-        // announce the max flow, which is the total inbound flow of the sink
-        // will be executed when all path outlining has completed
+        // Announce the max flow when all path outlining has completed.
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4 * iterations), execute: {
-            Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(sinkNode.inboundFlow).")
+            Announcement.new(title: "Ford-Fulkerson Max Flow", message: "The max flow is \(maxFlow).")
         })
-        
-        deselectNodes()
     }
     
     /// Bron-Kerbosch maximal clique algorithm
@@ -908,6 +897,10 @@ class Graph: UIScrollView {
     }
     
     /// Called when all touches on the screen have ended.
+    ///
+    /// - parameter touches: The set of touches on the screen.
+    /// - parameter with: The UIEvent associated with the touches.
+    ///
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // continue only if graph is in nodes mode
         guard mode == .nodes else { return }

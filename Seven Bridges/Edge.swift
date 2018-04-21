@@ -39,8 +39,6 @@ import UIKit
     /// Flow of the edge being used.
     var flow: Int?
     
-    var reverseFlow: Int?
-    
     /// Remaining capacity of the edge (weight - flow).
     var residualCapacity: Int? {
         if let f = flow {
@@ -65,7 +63,11 @@ import UIKit
         return "\(start) → \(end)"
     }
     
-    init(from startNode: Node, to endNode: Node, isVisible: Bool = true) {
+    init() {
+        super.init(frame: CGRect())
+    }
+    
+    init(from startNode: Node, to endNode: Node) {
         self.startNode = startNode
         self.endNode = endNode
         
@@ -129,6 +131,8 @@ import UIKit
     /// - parameter transitionDuration: How long (in seconds) the transition to the updated label will last for.
     ///
     func updateLabel(transitionDuration: Double = 0.2) {
+        guard label != nil else { return }
+        
         if weight < 2 && flow == nil {
             // label should be blank (invisible) if the edge's weight is 1 and flow is not displayed
             label.text = nil
