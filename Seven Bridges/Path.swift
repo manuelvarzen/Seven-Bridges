@@ -67,15 +67,32 @@ class Path: CustomStringConvertible {
         }
     }
     
+    /// Whether the path does not contain backward edges.
+    var isSequential: Bool {
+        var seen = [Edge]()
+        for edge in edges {
+            if let lastEdge = seen.last {
+                if lastEdge.startNode == edge.endNode && lastEdge.endNode == edge.startNode {
+                    // Backward edge found in the sequence.
+                    return false
+                }
+            }
+            
+            seen.append(edge)
+        }
+        
+        return true
+    }
+    
     /// String representation of the path as a sequence of nodes.
     var description: String {
         var string = ""
         
-        for node in nodes {
-            string += node.description
+        for edge in edges {
+            string += edge.description
             
-            if node != nodes.last! {
-                string += " → "
+            if edge != edges.last! {
+                string += ", "
             }
         }
         

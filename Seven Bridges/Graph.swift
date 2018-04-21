@@ -754,9 +754,12 @@ class Graph: UIScrollView {
                     })
                 }
                 
-                path.outline(duration: 2, wait: 4 * iterations)
-                
-                iterations += 1
+                // Skip outlining paths that contain backward edges.
+                if path.isSequential {
+                    path.outline(duration: 2, wait: 4 * iterations)
+                    
+                    iterations += 1
+                }
             }
         }
         
