@@ -143,9 +143,6 @@ import UIKit
             // when the edge has a weight greater than 1 and flow is not displayed
             label.changeTextWithFade(to: String(weight), duration: transitionDuration)
         }
-        
-        // update location of label
-        label.frame.origin = CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
     /// Updates size of the frame based on the distance between the start node and end node.
@@ -232,6 +229,9 @@ import UIKit
         
         linePath.closeSubpath()
         path.append(UIBezierPath(cgPath: linePath))
+        
+        // update location of label
+        label.frame.origin = CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
     /// Draws a line from the start node to the end node.
