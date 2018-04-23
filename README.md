@@ -6,3 +6,5 @@ Some helpful algorithms included are:
 - Shortest Path
 - Max Flow
 - Maximal Clique Detection
+
+*For user/developer documentation, navigate to the **Wiki** tab.*
